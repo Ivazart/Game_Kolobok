@@ -1,0 +1,13 @@
+button.png
+size:827,475
+filter:Linear,Linear
+pma:true
+activ
+bounds:401,215,211,258
+glow
+bounds:2,40,397,433
+not_active
+bounds:614,215,211,258
+play
+bounds:401,2,211,258
+rotate:90

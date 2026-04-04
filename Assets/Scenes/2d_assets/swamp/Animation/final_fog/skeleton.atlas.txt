@@ -1,0 +1,14 @@
+skeleton.png
+size:1793,1791
+filter:Linear,Linear
+pma:true
+_0000_fog1
+bounds:644,2,1125,640
+_0001_fog2
+bounds:1151,644,1145,640
+rotate:90
+_0002_fog3
+bounds:2,1149,1147,640
+_0003_fog4
+bounds:2,3,1144,640
+rotate:90

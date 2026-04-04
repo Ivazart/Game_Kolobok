@@ -1,0 +1,8 @@
+skeleton.png
+size:1847,1549
+filter:Linear,Linear
+pma:true
+flower_fog
+bounds:2,2,1843,621
+flower_fog2
+bounds:2,625,1822,922
