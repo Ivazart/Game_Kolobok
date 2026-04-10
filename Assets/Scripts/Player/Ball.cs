@@ -6,10 +6,12 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
-    [HideInInspector] public bool isGrounded;
-    [HideInInspector] public Vector3 pos => transform.position;
     [SerializeField] private GameManager gameManager;
     
+    public Vector3 Pos => transform.position;
+    
+    public bool IsGrounded { get; private set; }
+
     private Rigidbody2D rb;
     private void Awake()
     {
@@ -20,7 +22,7 @@ public class Ball : MonoBehaviour
     {
         if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
         {
-            isGrounded = true;
+            IsGrounded = true;
         }
     }
 
@@ -28,7 +30,7 @@ public class Ball : MonoBehaviour
     {
         if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
         {
-            isGrounded = false;
+            IsGrounded = false;
             gameManager.isPushed = false;
         }
     }

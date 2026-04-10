@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (ball.isGrounded || isDragging)
+        if (ball.IsGrounded || isDragging)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
         force =  direction * distance * pushForce; 
         
         Debug.DrawLine(startPoint, endPoint);
-        trajectory.UpdateDots (ball.pos, force);
+        trajectory.UpdateDots (ball.Pos, force);
     }
 
     private void OnDragEnd()

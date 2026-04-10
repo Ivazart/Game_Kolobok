@@ -618,9 +618,6 @@ MonoBehaviour:
   - {fileID: 1466770586}
   - {fileID: 1008902231}
   - {fileID: 755343395}
-  idle: 0
-  alarm: 0
-  activ: 0
   but: {fileID: 1946050624}
   al: {fileID: 630494004}
 --- !u!82 &630494004
@@ -844,9 +841,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 755343396}
-  al: {fileID: 0}
-  act: {fileID: 0}
-  alarm: 0
 --- !u!114 &755343396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1086,9 +1080,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 1008902232}
-  al: {fileID: 0}
-  act: {fileID: 0}
-  alarm: 0
 --- !u!114 &1008902232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1442,9 +1433,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c6013dc5c8dc84c99ef6d87bf3709f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  man: {fileID: 1034654079}
-  cp: {fileID: 0}
-  alarm: 0
 --- !u!1 &1466770581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1593,9 +1581,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 1466770582}
-  al: {fileID: 0}
-  act: {fileID: 0}
-  alarm: 0
 --- !u!1 &1545675346
 GameObject:
   m_ObjectHideFlags: 0
@@ -16369,6 +16354,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!1 &1861349210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1861349211}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1861349211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861349210}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1946050623
 GameObject:
   m_ObjectHideFlags: 0
@@ -16402,9 +16418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b65388e89d0fc84f89204eb78f3bb24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  col: {fileID: 1946050625}
   gm: {fileID: 630494003}
-  but: {fileID: 1946050626}
 --- !u!58 &1946050625
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16803,8 +16817,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   fl: {fileID: 2008645260}
-  alarm: 0
   process: {fileID: 2008645264}
+  alarm: 0
 --- !u!1 &2130152358
 GameObject:
   m_ObjectHideFlags: 0
@@ -16953,9 +16967,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   screen: {fileID: 2130152359}
-  al: {fileID: 11400000, guid: ccafabb27761334479ff4c687baf1b52, type: 2}
-  act: {fileID: 11400000, guid: 89bfee9999ff8b348a1111f4fec86f6d, type: 2}
-  alarm: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -16978,3 +16989,4 @@ SceneRoots:
   - {fileID: 1545675349}
   - {fileID: 1620433079}
   - {fileID: 1815883188}
+  - {fileID: 1861349211}
