@@ -12,12 +12,13 @@ public class Scrolling : MonoBehaviour
     private float viewZone = 3;
     private int rightIndex;
     private int leftIndex;
-   
-    void Start()
+
+    private void Start()
     {
-        cameraTransform = Camera.main.transform;
+        if (Camera.main != null) 
+            cameraTransform = Camera.main.transform;
         layers = new Transform[transform.childCount];
-        for (int i = 0; i < transform.childCount; i++)
+        for (var i = 0; i < transform.childCount; i++)
         {
             layers[i] = transform.GetChild(i);
         }
@@ -25,7 +26,7 @@ public class Scrolling : MonoBehaviour
         rightIndex = layers.Length - 1;
     }
 
-    void Update()
+    private void Update()
     {
         if (cameraTransform.position.x < (layers[leftIndex].position.x + viewZone))
         {
@@ -36,13 +37,10 @@ public class Scrolling : MonoBehaviour
         {
             ScrollRight();
         }
-
-
     }
 
     private void ScrollLeft()
     {
-        int lastRight = rightIndex;
         layers[rightIndex].position = Vector3.right * (layers[leftIndex].position.x - backgroundSize);
         leftIndex = rightIndex;
         rightIndex--;
@@ -51,15 +49,10 @@ public class Scrolling : MonoBehaviour
         {
             rightIndex = layers.Length - 1;
         }
-
     }
-
     
-
     private void ScrollRight()
     {
-
-        int lastRight = leftIndex;
         layers[leftIndex].position = Vector3.right * (layers[rightIndex].position.x + backgroundSize);
         rightIndex = leftIndex;
         leftIndex++;
@@ -68,10 +61,5 @@ public class Scrolling : MonoBehaviour
         {
             leftIndex = 0;
         }
-
-
     }
-
-    // Update is called once per frame
-    
 }

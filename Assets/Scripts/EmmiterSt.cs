@@ -1,32 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EmmiterSt : MonoBehaviour
 {
-    public GameObject bable;
-    public GameObject emmitor;
-    public float time;
-    public int n;
-    // Start is called before the first frame update
-    void Start()
-    {
-        InvokeRepeating("create", 2.0f, time);
+    [SerializeField] private GameObject bubblePrefab;
+    [SerializeField] private GameObject emitter;
+    [SerializeField] private float time;
 
+    private void Start()
+    {
+        InvokeRepeating(nameof(Create), 2.0f, time);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Create()
     {
-        
-    }
-
-    void create()
-    {
-        var babbleC = Instantiate(bable);
-        babbleC.transform.position = emmitor.transform.position;
+        var babbleC = Instantiate(bubblePrefab);
+        babbleC.transform.position = emitter.transform.position;
         Destroy(babbleC, 17);
-       
-
     }
 }

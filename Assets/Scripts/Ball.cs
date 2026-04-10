@@ -1,72 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
+[RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
-    [HideInInspector] public Rigidbody2D rb;
-    [HideInInspector] public CircleCollider2D col;
-
-    [HideInInspector] public Vector3 pos { get { return transform.position; }}
-
-    public bool isGrounded;
-    public GameManager gameManeager;
+    [HideInInspector] public bool isGrounded;
+    [HideInInspector] public Vector3 pos => transform.position;
+    [SerializeField] private GameManager gameManager;
     
-
+    private Rigidbody2D rb;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        col = GetComponent<CircleCollider2D>();
     }
-
-  
-
-    void OnTriggerStay2D(Collider2D trig)
+    
+    private void OnTriggerStay2D(Collider2D trig)
     {
-        if (trig.gameObject.tag == "obstacle" || trig.gameObject.tag == "stopper")
+        if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
         {
             isGrounded = true;
         }
     }
-    void OnTriggerExit2D(Collider2D trig)
+
+    private void OnTriggerExit2D(Collider2D trig)
     {
-        if (trig.gameObject.tag == "obstacle" || trig.gameObject.tag == "stopper")
+        if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
         {
             isGrounded = false;
-            gameManeager.push = false;
-
+            gameManager.isPushed = false;
         }
     }
 
     public void Push(Vector2 force)
-    { 
-       
+    {
         rb.AddForce(force, ForceMode2D.Impulse);
-
     }
 
     public void ActivateRb()
     {
-        gameManeager.push = true;
-        rb.isKinematic = false;
+        gameManager.isPushed = true;
+        rb.bodyType = RigidbodyType2D.Dynamic;
     }
 
-    public void DesactivateRb()
+    public void DeactivateRb()
     {
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = 0f;
-        rb.isKinematic = true;
-    }
-    void Start()
-    {
-        
+        rb.bodyType = RigidbodyType2D.Kinematic;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-      
-
-
-    }
 }

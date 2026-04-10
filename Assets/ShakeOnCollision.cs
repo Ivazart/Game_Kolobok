@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class ShakeOnCollision : MonoBehaviour
 {
-    public ObjectEmitter2D emitter;
-    public string targetTag = "Player"; // Тег объекта, с которым должно быть столкновение
-    public float shakeIntensity = 0.5f;  // Интенсивность тряски
-    public float shakeDuration = 1f;     // Длительность тряски
-    public float shakeFrequency = 0.05f; // Частота тряски (чем меньше, тем быстрее)
+    [SerializeField] private ObjectEmitter2D emitter;
+    [SerializeField] private string targetTag = "Player"; // РўРµРі РѕР±СЉРµРєС‚Р°, СЃ РєРѕС‚РѕСЂС‹Рј РґРѕР»Р¶РЅРѕ Р±С‹С‚СЊ СЃС‚РѕР»РєРЅРѕРІРµРЅРёРµ
+    [SerializeField] private float shakeIntensity = 0.5f;  // РРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚СЊ С‚СЂСЏСЃРєРё
+    [SerializeField] private float shakeDuration = 1f;     // Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ С‚СЂСЏСЃРєРё
+    //[SerializeField] private float shakeFrequency = 0.05f; // Р§Р°СЃС‚РѕС‚Р° С‚СЂСЏСЃРєРё (С‡РµРј РјРµРЅСЊС€Рµ, С‚РµРј Р±С‹СЃС‚СЂРµРµ)
 
-    private bool isShaking = false;      // Флаг: трясётся ли объект
-    private Vector3 originalPosition;    // Оригинальная позиция объекта
-    private float shakeTimeRemaining;    // Оставшееся время тряски
+    private bool isShaking = false;      // Р¤Р»Р°Рі: С‚СЂСЏСЃС‘С‚СЃСЏ Р»Рё РѕР±СЉРµРєС‚
+    private Vector3 originalPosition;    // РћСЂРёРіРёРЅР°Р»СЊРЅР°СЏ РїРѕР·РёС†РёСЏ РѕР±СЉРµРєС‚Р°
+    private float shakeTimeRemaining;    // РћСЃС‚Р°РІС€РµРµСЃСЏ РІСЂРµРјСЏ С‚СЂСЏСЃРєРё
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         originalPosition = transform.localPosition;
-
     }
-    void OnCollisionEnter2D(Collision2D collision)
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        // Проверяем, если объект столкнулся с определённым тегом
+        // РџСЂРѕРІРµСЂСЏРµРј, РµСЃР»Рё РѕР±СЉРµРєС‚ СЃС‚РѕР»РєРЅСѓР»СЃСЏ СЃ РѕРїСЂРµРґРµР»С‘РЅРЅС‹Рј С‚РµРіРѕРј
         if (collision.gameObject.CompareTag(targetTag) && !isShaking)
         {
             StartShake();
@@ -32,7 +32,7 @@ public class ShakeOnCollision : MonoBehaviour
 
     private void Update()
     {
-        // Если объект трясётся, выполняем тряску
+        // Р•СЃР»Рё РѕР±СЉРµРєС‚ С‚СЂСЏСЃС‘С‚СЃСЏ, РІС‹РїРѕР»РЅСЏРµРј С‚СЂСЏСЃРєСѓ
         if (isShaking)
         {
             if (shakeTimeRemaining > 0)
@@ -48,25 +48,25 @@ public class ShakeOnCollision : MonoBehaviour
     }
     private void StartShake()
     {
-        // Начинаем тряску
+        // РќР°С‡РёРЅР°РµРј С‚СЂСЏСЃРєСѓ
         isShaking = true;
         shakeTimeRemaining = shakeDuration;
     }
-    // Update is called once per frame
+  
     private void PerformShake()
     {
-        // Генерируем случайное смещение в пределах интенсивности
+        // Р“РµРЅРµСЂРёСЂСѓРµРј СЃР»СѓС‡Р°Р№РЅРѕРµ СЃРјРµС‰РµРЅРёРµ РІ РїСЂРµРґРµР»Р°С… РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚Рё
         float offsetX = Random.Range(-shakeIntensity, shakeIntensity);
         float offsetY = Random.Range(-shakeIntensity, shakeIntensity);
         float offsetZ = Random.Range(-shakeIntensity, shakeIntensity);
 
-        // Позиция во время тряски
+        // РџРѕР·РёС†РёСЏ РІРѕ РІСЂРµРјСЏ С‚СЂСЏСЃРєРё
         transform.localPosition = originalPosition + new Vector3(offsetX, offsetY, offsetZ);
     }
 
     private void StopShake()
     {
-        // Останавливаем тряску и возвращаем объект в исходное положение
+        // РћСЃС‚Р°РЅР°РІР»РёРІР°РµРј С‚СЂСЏСЃРєСѓ Рё РІРѕР·РІСЂР°С‰Р°РµРј РѕР±СЉРµРєС‚ РІ РёСЃС…РѕРґРЅРѕРµ РїРѕР»РѕР¶РµРЅРёРµ
         isShaking = false;
         transform.localPosition = originalPosition;
     }

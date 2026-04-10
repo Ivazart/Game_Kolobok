@@ -4,33 +4,28 @@ using UnityEngine;
 
 public class Trajectory : MonoBehaviour
 {
-    [SerializeField] int dotsNumber;
-    [SerializeField] GameObject dotsParent;
-    [SerializeField] GameObject dotsPrefab;
-    [SerializeField] float dotSpacing;
+    [SerializeField] private int dotsNumber;
+    [SerializeField] private GameObject dotsParent;
+    [SerializeField] private GameObject dotsPrefab;
+    [SerializeField] private float dotSpacing;
 
-    Transform[] dotsList;
+    private Transform[] dotsList;
+    private Vector2 pos;
+    private float timeStamp;
 
-    Vector2 pos;
-
-    float timeStamp;
-
-    void Start()
+    private void Start()
     {
         Hide();
-
         PrepareDots();
-
     }
 
-    void PrepareDots()
+    private void PrepareDots()
     {
         dotsList = new Transform[dotsNumber];
         for (int i= 0; i<dotsNumber; i++) 
         {
             dotsList[i] = Instantiate(dotsPrefab, null).transform;
             dotsList[i].parent = dotsParent.transform;
-
         }
     }
 
@@ -44,9 +39,7 @@ public class Trajectory : MonoBehaviour
 
             dotsList[i].position = pos;
             timeStamp += dotSpacing;
-
         }
-        
     }
 
     public void Show()
@@ -59,9 +52,4 @@ public class Trajectory : MonoBehaviour
         dotsParent.SetActive(false);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }

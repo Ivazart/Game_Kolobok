@@ -4,40 +4,30 @@ using UnityEngine;
 
 public class SinkTemp : MonoBehaviour
 {
-    public float speed;
-    bool drown = false;
-    // Start is called before the first frame update
-    void Start()
-    {
+    [SerializeField] private float speed;
+    private bool isDrown = false;
 
-    }
-
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (drown == true)
+        if (isDrown)
         {
             transform.Translate(Vector3.down * speed * Time.deltaTime);
-
         }
-
     }
+    
     private void OnCollisionStay2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
-
-            drown = true;
-
+            isDrown = true;
         }
     }
+    
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.CompareTag("Player"))
         {
-
-            drown = false;
-
+            isDrown = false;
         }
     }
 }

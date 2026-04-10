@@ -4,9 +4,5 @@ using UnityEngine;
 
 public static class DataContainer 
 {
-    public static int checkpointIndex = 0;
-
-
-
-  
+    public static int CheckpointIndex = 0;
 }

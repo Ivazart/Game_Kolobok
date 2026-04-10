@@ -3,45 +3,43 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-
-
 public class ObjectEmitter2D : MonoBehaviour
 {
     [Header("Spawn Settings")]
-    public GameObject objectToSpawn; // Префаб объекта для создания
-    public bool isSpawning = false;  // Флаг включения/выключения генерации
-    public float spawnInterval = 1f; // Интервал генерации
+    [SerializeField] private GameObject objectToSpawn; // РџСЂРµС„Р°Р± РѕР±СЉРµРєС‚Р° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ
+    public bool isSpawning = false;  // Р¤Р»Р°Рі РІРєР»СЋС‡РµРЅРёСЏ/РІС‹РєР»СЋС‡РµРЅРёСЏ РіРµРЅРµСЂР°С†РёРё
+    [SerializeField] private float spawnInterval = 1f; // РРЅС‚РµСЂРІР°Р» РіРµРЅРµСЂР°С†РёРё
 
     [Header("Force Settings")]
-    public float force = 5f;         // Сила прикладываемая к объекту
-    public Vector2 direction = Vector2.up; // Направление прикладываемой силы
+    [SerializeField] private float force = 5f;         // РЎРёР»Р° РїСЂРёРєР»Р°РґС‹РІР°РµРјР°СЏ Рє РѕР±СЉРµРєС‚Сѓ
+    [SerializeField] private Vector2 direction = Vector2.up; // РќР°РїСЂР°РІР»РµРЅРёРµ РїСЂРёРєР»Р°РґС‹РІР°РµРјРѕР№ СЃРёР»С‹
 
     [Header("Randomization Settings")]
-    public float directionSpread = 10f;  // Разброс направления
-    public float forceSpread = 2f;       // Разброс силы
-    public float minScale = 0.5f;        // Минимальный масштаб
-    public float maxScale = 1.5f;        // Максимальный масштаб
+    [SerializeField] private float directionSpread = 10f;  // Р Р°Р·Р±СЂРѕСЃ РЅР°РїСЂР°РІР»РµРЅРёСЏ
+    [SerializeField] private float forceSpread = 2f;       // Р Р°Р·Р±СЂРѕСЃ СЃРёР»С‹
+    [SerializeField] private float minScale = 0.5f;        // РњРёРЅРёРјР°Р»СЊРЅС‹Р№ РјР°СЃС€С‚Р°Р±
+    [SerializeField] private float maxScale = 1.5f;        // РњР°РєСЃРёРјР°Р»СЊРЅС‹Р№ РјР°СЃС€С‚Р°Р±
 
     [Header("Timing Settings")]
-    public float activeDuration = 5f;    // Длительность активной генерации
-    public float inactiveDuration = 5f;  // Длительность неактивного состояния
+    [SerializeField] private float activeDuration = 5f;    // Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ Р°РєС‚РёРІРЅРѕР№ РіРµРЅРµСЂР°С†РёРё
+    [SerializeField] private float inactiveDuration = 5f;  // Р”Р»РёС‚РµР»СЊРЅРѕСЃС‚СЊ РЅРµР°РєС‚РёРІРЅРѕРіРѕ СЃРѕСЃС‚РѕСЏРЅРёСЏ
 
     private void Start()
     {
-        // Запускаем корутину для генерации объектов
+        // Р—Р°РїСѓСЃРєР°РµРј РєРѕСЂСѓС‚РёРЅСѓ РґР»СЏ РіРµРЅРµСЂР°С†РёРё РѕР±СЉРµРєС‚РѕРІ
         StartCoroutine(SpawnerRoutine());
     }
 
-    IEnumerator SpawnerRoutine()
+    private IEnumerator SpawnerRoutine()
     {
         while (true)
         {
             if (isSpawning)
             {
-                // Активная фаза генерации
+                // РђРєС‚РёРІРЅР°СЏ С„Р°Р·Р° РіРµРЅРµСЂР°С†РёРё
                 yield return StartCoroutine(SpawnObjects());
 
-                // Переход в неактивное состояние
+                // РџРµСЂРµС…РѕРґ РІ РЅРµР°РєС‚РёРІРЅРѕРµ СЃРѕСЃС‚РѕСЏРЅРёРµ
                 Debug.Log("Spawning Disabled");
                 yield return new WaitForSeconds(inactiveDuration);
             }
@@ -52,32 +50,32 @@ public class ObjectEmitter2D : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnObjects()
+    private IEnumerator SpawnObjects()
     {
         float spawnEndTime = Time.time + activeDuration;
         while (Time.time < spawnEndTime)
         {
-            // Создаем объект
+            // РЎРѕР·РґР°РµРј РѕР±СЉРµРєС‚
             GameObject newObject = Instantiate(objectToSpawn, transform.position, Quaternion.identity);
 
-            // Настраиваем случайный масштаб
+            // РќР°СЃС‚СЂР°РёРІР°РµРј СЃР»СѓС‡Р°Р№РЅС‹Р№ РјР°СЃС€С‚Р°Р±
             float randomScale = Random.Range(minScale, maxScale);
             newObject.transform.localScale = new Vector3(randomScale, randomScale, 1f);
 
-            // Получаем Rigidbody2D
+            // РџРѕР»СѓС‡Р°РµРј Rigidbody2D
             Rigidbody2D rb = newObject.GetComponent<Rigidbody2D>();
             if (rb != null)
             {
-                // Генерируем и нормализуем случайное направление
+                // Р“РµРЅРµСЂРёСЂСѓРµРј Рё РЅРѕСЂРјР°Р»РёР·СѓРµРј СЃР»СѓС‡Р°Р№РЅРѕРµ РЅР°РїСЂР°РІР»РµРЅРёРµ
                 Vector2 randomizedDirection = direction + new Vector2(
                     Random.Range(-directionSpread, directionSpread),
                     Random.Range(-directionSpread, directionSpread)
                 ).normalized;
 
-                // Генерируем случайную силу в заданном диапазоне
+                // Р“РµРЅРµСЂРёСЂСѓРµРј СЃР»СѓС‡Р°Р№РЅСѓСЋ СЃРёР»Сѓ РІ Р·Р°РґР°РЅРЅРѕРј РґРёР°РїР°Р·РѕРЅРµ
                 float randomizedForce = force + Random.Range(-forceSpread, forceSpread);
 
-                // Применяем силу
+                // РџСЂРёРјРµРЅСЏРµРј СЃРёР»Сѓ
                 rb.AddForce(randomizedDirection * randomizedForce, ForceMode2D.Impulse);
             }
 

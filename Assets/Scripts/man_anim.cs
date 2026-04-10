@@ -1,24 +1,19 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Spine.Unity;
 using UnityEngine;
 
-public class man_anim : MonoBehaviour
+[RequireComponent(typeof(SkeletonAnimation))]
+public class ManAnimation : MonoBehaviour
 {
-    public SkeletonAnimation man;
-    public AnimationReferenceAsset cp;
-    public bool alarm;
-    void Start()
+    private SkeletonAnimation man;
+
+    private void Awake()
     {
-        
+        man = GetComponent<SkeletonAnimation>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-      
-            
-    }
     public void alarm_anim()
     {
         man.AnimationState.SetAnimation(0, "alarm", true);

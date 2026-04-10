@@ -6,14 +6,10 @@ using UnityEngine.SceneManagement;
 public class ScenesManager : MonoBehaviour
 {
     public string lname;
-   
-   
+    
     public void RestartGame()
     {
         Debug.Log("End Game");
         SceneManager.LoadScene(lname);
     }
-
-
-
 }

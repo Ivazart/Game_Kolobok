@@ -4,28 +4,27 @@ using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
-    [SerializeField] Transform followingTarget;
-    [SerializeField, Range(0f, 1f)] float ParallaxStrength = 0.1f;
-    Vector3 targetPreviousPosition;
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Transform followingTarget;
+    [SerializeField, Range(0f, 1f)] private float ParallaxStrength = 0.1f;
+
+    private Vector3 targetPreviousPosition;
+
+    private void Start()
     {
         if (!followingTarget)
         {
-            followingTarget = Camera.main.transform;
+            if (Camera.main != null) 
+                followingTarget = Camera.main.transform;
         }
-        targetPreviousPosition = followingTarget.position;   
-        
+        targetPreviousPosition = followingTarget.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         Vector3 delta;
-        delta = followingTarget.position - targetPreviousPosition;
-
-        targetPreviousPosition = followingTarget.position;
-        transform.position += delta * ParallaxStrength;            
-        
+        var position = followingTarget.position;
+        delta = position - targetPreviousPosition;
+        targetPreviousPosition = position;
+        transform.position += delta * ParallaxStrength;
     }
 }

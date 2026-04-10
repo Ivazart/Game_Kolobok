@@ -1,0 +1,29 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class Emitter : MonoBehaviour
+{
+    [SerializeField] private GameObject bubble;
+    [SerializeField] private GameObject emitter;
+    [SerializeField] private int n;
+
+    private void Update()
+    {
+        Create();
+    }
+
+    private void Create()
+    {
+        int random = UnityEngine.Random.Range(1, n);
+        if (random == 1)
+        {
+            var bubbleGO = Instantiate(bubble);
+            bubbleGO.transform.position = emitter.transform.position;
+            Destroy(bubbleGO, 17);
+        }
+
+    }
+}   

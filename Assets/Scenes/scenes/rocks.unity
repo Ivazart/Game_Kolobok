@@ -34737,7 +34737,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f77148500c4aafd41846c3be886126de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ball: {fileID: 0}
   damping: 0.8
   offset: {x: -5, y: 0}
   gm: {fileID: 1538047964}
@@ -57397,7 +57396,7 @@ MonoBehaviour:
   rb: {fileID: 0}
   col: {fileID: 0}
   isGrounded: 0
-  gameManeager: {fileID: 1538047964}
+  gameManager: {fileID: 1538047964}
 --- !u!114 &890280861
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -57478,7 +57477,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 890280858}
-  gameManeager: {fileID: 0}
+  gameManeager: {fileID: 1538047964}
   scenesManager: {fileID: 1538047966}
 --- !u!1 &891879833
 GameObject:
@@ -85983,7 +85982,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 890280860}
   trajectory: {fileID: 1899594994}
-  pushForse: 4
+  pushForce: 4
   isDragging: 0
   push: 0
 --- !u!4 &1538047965
