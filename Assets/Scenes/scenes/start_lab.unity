@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 298767965}
   - component: {fileID: 298767964}
   m_Layer: 0
-  m_Name: _0010_background
+  m_Name: background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -611,15 +611,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f8bb447a1a83754fbad870687fa16ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  man: {fileID: 1034654083}
-  flask: {fileID: 2008645265}
-  screens:
-  - {fileID: 2130152363}
-  - {fileID: 1466770586}
-  - {fileID: 1008902231}
-  - {fileID: 755343395}
-  but: {fileID: 1946050624}
+  startingButton: {fileID: 1946050624}
   al: {fileID: 630494004}
+  elements:
+  - {fileID: 2130152364}
+  - {fileID: 1466770587}
+  - {fileID: 1034654084}
+  - {fileID: 2008645265}
+  - {fileID: 1008902236}
+  - {fileID: 755343400}
 --- !u!82 &630494004
 AudioSource:
   m_ObjectHideFlags: 0
@@ -801,12 +801,47 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 708444741}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.1, y: 6.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 729679382}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &729679381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 729679382}
+  m_Layer: 0
+  m_Name: UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &729679382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729679381}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1029511161}
+  - {fileID: 889143821}
+  - {fileID: 1562307075}
+  - {fileID: 708444743}
+  m_Father: {fileID: 1861349211}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &755343394
 GameObject:
@@ -820,27 +855,14 @@ GameObject:
   - component: {fileID: 755343398}
   - component: {fileID: 755343397}
   - component: {fileID: 755343396}
-  - component: {fileID: 755343395}
+  - component: {fileID: 755343400}
   m_Layer: 0
-  m_Name: Spine GameObject (Sm_alarm_sm2)
+  m_Name: Spine GO (Sm_alarm_sm2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &755343395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 755343394}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c6201b06a0a87145a24de7f66c9c05d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screen: {fileID: 755343396}
 --- !u!114 &755343396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -949,12 +971,58 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 755343394}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 13.33, y: 1.31, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &755343400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 755343394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e2af81e0a6548379031e1092ea6dac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.StartingLabAnimation
+--- !u!1 &798338462
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 798338463}
+  m_Layer: 0
+  m_Name: Effects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &798338463
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798338462}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1545675349}
+  - {fileID: 1620433079}
+  - {fileID: 1815883188}
+  m_Father: {fileID: 1861349211}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &889143819
 GameObject:
@@ -1040,12 +1108,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 889143819}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.4, y: 1.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 729679382}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1008902230
 GameObject:
@@ -1059,27 +1127,14 @@ GameObject:
   - component: {fileID: 1008902234}
   - component: {fileID: 1008902233}
   - component: {fileID: 1008902232}
-  - component: {fileID: 1008902231}
+  - component: {fileID: 1008902236}
   m_Layer: 0
-  m_Name: Spine GameObject (anim_screen3)
+  m_Name: Spine GO (anim_screen3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1008902231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1008902230}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c6201b06a0a87145a24de7f66c9c05d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screen: {fileID: 1008902232}
 --- !u!114 &1008902232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1120,7 +1175,7 @@ MonoBehaviour:
   physicsMovementRelativeTo: {fileID: 0}
   updateTiming: 1
   unscaledTime: 0
-  _animationName: 
+  _animationName: idle
   loop: 1
   timeScale: 1
 --- !u!23 &1008902233
@@ -1188,13 +1243,25 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1008902230}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 15.93, y: 4.88, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1008902236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008902230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e2af81e0a6548379031e1092ea6dac6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.StartingLabAnimation
 --- !u!1 &1029511159
 GameObject:
   m_ObjectHideFlags: 0
@@ -1279,12 +1346,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1029511159}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.7, y: -3.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 729679382}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1034654078
 GameObject:
@@ -1298,9 +1365,9 @@ GameObject:
   - component: {fileID: 1034654081}
   - component: {fileID: 1034654080}
   - component: {fileID: 1034654079}
-  - component: {fileID: 1034654083}
+  - component: {fileID: 1034654084}
   m_Layer: 0
-  m_Name: Spine GameObject (man)
+  m_Name: Spine GO (man)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1414,14 +1481,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1034654078}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 11.57, y: 1.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1034654083
+--- !u!114 &1034654084
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1430,9 +1497,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1034654078}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 77c6013dc5c8dc84c99ef6d87bf3709f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e2af81e0a6548379031e1092ea6dac6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.StartingLabAnimation
 --- !u!1 &1466770581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,9 +1512,9 @@ GameObject:
   - component: {fileID: 1466770584}
   - component: {fileID: 1466770583}
   - component: {fileID: 1466770582}
-  - component: {fileID: 1466770586}
+  - component: {fileID: 1466770587}
   m_Layer: 0
-  m_Name: Spine GameObject (screen_anim_form)
+  m_Name: Spine GO (screen_anim_form)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1561,14 +1628,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1466770581}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -12.06, y: 6.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1466770586
+--- !u!114 &1466770587
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1577,10 +1644,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1466770581}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c6201b06a0a87145a24de7f66c9c05d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e2af81e0a6548379031e1092ea6dac6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  screen: {fileID: 1466770582}
+  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.StartingLabAnimation
 --- !u!1 &1545675346
 GameObject:
   m_ObjectHideFlags: 0
@@ -6473,7 +6539,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1861349211}
+  m_Father: {fileID: 798338463}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1562307073
 GameObject:
@@ -6559,12 +6625,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1562307073}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.5, y: 6.86, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 729679382}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1620433076
 GameObject:
@@ -11455,11 +11521,49 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: -11.32, y: -2.19, z: 0.61}
-  m_LocalScale: {x: 0.6818, y: 0.68179995, z: 0.68179995}
+  m_LocalScale: {x: 0.6818, y: 0.6817999, z: 0.6817999}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1861349211}
+  m_Father: {fileID: 798338463}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!1 &1775919096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1775919097}
+  m_Layer: 0
+  m_Name: SpineAnimations
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1775919097
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1775919096}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2130152362}
+  - {fileID: 1466770585}
+  - {fileID: 1034654082}
+  - {fileID: 2008645263}
+  - {fileID: 1946050629}
+  - {fileID: 1008902235}
+  - {fileID: 755343399}
+  m_Father: {fileID: 1861349211}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1815883185
 GameObject:
   m_ObjectHideFlags: 0
@@ -16352,7 +16456,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1861349211}
+  m_Father: {fileID: 798338463}
   m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!1 &1861349210
 GameObject:
@@ -16364,7 +16468,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1861349211}
   m_Layer: 0
-  m_Name: UI
+  m_Name: Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16383,9 +16487,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1545675349}
-  - {fileID: 1620433079}
-  - {fileID: 1815883188}
+  - {fileID: 1775919097}
+  - {fileID: 798338463}
+  - {fileID: 729679382}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1946050623
@@ -16403,7 +16507,7 @@ GameObject:
   - component: {fileID: 1946050625}
   - component: {fileID: 1946050624}
   m_Layer: 0
-  m_Name: Spine GameObject (button)
+  m_Name: Spine GO (button)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16421,7 +16525,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b65388e89d0fc84f89204eb78f3bb24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gm: {fileID: 630494003}
 --- !u!58 &1946050625
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16498,7 +16601,7 @@ MonoBehaviour:
   physicsMovementRelativeTo: {fileID: 0}
   updateTiming: 1
   unscaledTime: 0
-  _animationName: 
+  _animationName: n_active
   loop: 1
   timeScale: 1
 --- !u!23 &1946050627
@@ -16566,12 +16669,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1946050623}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.32, y: -3.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2008645258
 GameObject:
@@ -16588,7 +16691,7 @@ GameObject:
   - component: {fileID: 2008645265}
   - component: {fileID: 2008645264}
   m_Layer: 0
-  m_Name: Spine GameObject (flask)
+  m_Name: Spine GO (flask)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16703,12 +16806,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2008645258}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.53, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &2008645264
 AudioSource:
@@ -16819,9 +16922,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81ee8100dc773e44dabeae3aeef8b846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fl: {fileID: 2008645260}
   process: {fileID: 2008645264}
-  alarm: 0
 --- !u!1 &2130152358
 GameObject:
   m_ObjectHideFlags: 0
@@ -16834,9 +16935,9 @@ GameObject:
   - component: {fileID: 2130152361}
   - component: {fileID: 2130152360}
   - component: {fileID: 2130152359}
-  - component: {fileID: 2130152363}
+  - component: {fileID: 2130152364}
   m_Layer: 0
-  m_Name: Spine GameObject (anim_screen1)
+  m_Name: Spine GO (anim_screen1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -16950,14 +17051,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2130152358}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 12.15, y: 7.33, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2130152363
+--- !u!114 &2130152364
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -16966,27 +17067,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 2130152358}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c6201b06a0a87145a24de7f66c9c05d, type: 3}
+  m_Script: {fileID: 11500000, guid: 4e2af81e0a6548379031e1092ea6dac6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  screen: {fileID: 2130152359}
+  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.StartingLabAnimation
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 176423089}
   - {fileID: 298767965}
-  - {fileID: 1029511161}
-  - {fileID: 889143821}
-  - {fileID: 1562307075}
-  - {fileID: 708444743}
-  - {fileID: 2130152362}
-  - {fileID: 1466770585}
-  - {fileID: 1034654082}
   - {fileID: 630494002}
   - {fileID: 361760406}
-  - {fileID: 2008645263}
-  - {fileID: 1946050629}
-  - {fileID: 1008902235}
-  - {fileID: 755343399}
   - {fileID: 1861349211}
