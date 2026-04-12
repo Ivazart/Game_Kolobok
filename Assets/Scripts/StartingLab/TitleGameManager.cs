@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class TitleGameManager : MonoBehaviour
 {
     [SerializeField] private Button startingButton;
+    [SerializeField] private UIController uiController;
     [SerializeField] private AudioSource al;
     [SerializeField] private List<StartingLabAnimation> elements = new();
 
@@ -41,6 +42,7 @@ public class TitleGameManager : MonoBehaviour
             startingLabAnimation.SetState(state);
         }
         startingButton.SetLabState(state);
+        uiController.SetState(state);
         if (state == StartingLabState.Alarm)
             al.Play();
     }
