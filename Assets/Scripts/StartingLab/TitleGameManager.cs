@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Global;
 using StartingLab;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,7 +14,9 @@ public class TitleGameManager : MonoBehaviour
     [SerializeField] private UIController uiController;
     [SerializeField] private AudioSource al;
     [SerializeField] private List<StartingLabAnimation> elements = new();
-
+    
+    private SceneController sceneController => SceneController.Instance;
+    
     private void Awake()
     {
         startingButton.OnButtonClicked += () => StartingButton_OnButtonClicked().Forget();
@@ -30,12 +33,13 @@ public class TitleGameManager : MonoBehaviour
         await UniTask.WaitForSeconds(7f);
         SetState(StartingLabState.Alarm);
     }
+    
     private async UniTaskVoid StartingButton_OnButtonClicked()
     {
         await UniTask.WaitForSeconds(2f);
         SetState(StartingLabState.Active);
         await UniTask.WaitForSeconds(6f);
-        LoadScene();
+        sceneController.LoadScene(SceneName.Space);
     }
 
     private void SetState(StartingLabState state)
@@ -49,50 +53,4 @@ public class TitleGameManager : MonoBehaviour
         if (state == StartingLabState.Alarm)
             al.Play();
     }
-    
-    private void LoadScene()
-    {
-        SceneManager.LoadScene("space 1");
-    }
-    
-//start idle
-//alarm +7
-//active +2
-//space + 8
-
-    /*private void Start()
-    {
-        Invoke(nameof(Alarm), 7);
-    }
-
-    public void Active()
-    {
-        man.activ_anim();
-        foreach (var screenAnim in screens)
-        {
-            screenAnim.ActiveState();
-        }
-        flask.Activate();
-
-    }
-    public void Alarm()
-    {
-        but.Alarm();
-        man.alarm_anim();
-        foreach (var screenAnim in screens)
-        {
-            screenAnim.alarm_anim();
-        }
-        al.Play();
-
-    }
-    public void Space()
-    {
-        Invoke(nameof(LoadScene), 8);
-
-    }
-    private void LoadScene()
-    {
-        SceneManager.LoadScene("space 1");
-    }*/
 }

@@ -11,7 +11,7 @@ public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T
             if (instance != null) 
                 return instance;
             
-            instance = FindAnyObjectByType<T>();
+            instance = FindObjectOfType <T>();
             if (instance == null)
             {
                 Debug.LogError($"[Singleton] No instance of {typeof(T).Name} found in the scene.");
