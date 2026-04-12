@@ -612,6 +612,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingButton: {fileID: 1946050624}
+  uiController: {fileID: 729679383}
   al: {fileID: 630494004}
   elements:
   - {fileID: 2130152364}
@@ -817,6 +818,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 729679382}
+  - component: {fileID: 729679383}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -843,6 +845,27 @@ Transform:
   - {fileID: 708444743}
   m_Father: {fileID: 1861349211}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &729679383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 729679381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a517e9e9a92d4e5dbeae84795b7d3cc8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.UIController
+  spritesToFade:
+  - {fileID: 889143820}
+  - {fileID: 1029511160}
+  duration: 1.5
+  objectsToMove:
+  - {fileID: 1562307075}
+  - {fileID: 708444743}
+  moveDuration: 1
+  targetY: 2
 --- !u!1 &755343394
 GameObject:
   m_ObjectHideFlags: 0
@@ -16506,6 +16529,7 @@ GameObject:
   - component: {fileID: 1946050626}
   - component: {fileID: 1946050625}
   - component: {fileID: 1946050624}
+  - component: {fileID: 1946050630}
   m_Layer: 0
   m_Name: Spine GO (button)
   m_TagString: Untagged
@@ -16525,6 +16549,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0b65388e89d0fc84f89204eb78f3bb24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spineFader: {fileID: 1946050630}
 --- !u!58 &1946050625
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -16676,6 +16701,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1946050630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1946050623}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e11cc0b620b4e4ca75a258a14c9bf46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpineAnimationFader
 --- !u!1 &2008645258
 GameObject:
   m_ObjectHideFlags: 0

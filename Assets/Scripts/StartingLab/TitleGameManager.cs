@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using StartingLab;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,31 +9,33 @@ using UnityEngine.SceneManagement;
 
 public class TitleGameManager : MonoBehaviour
 {
-    [SerializeField] private Button startingButton;
+    [SerializeField] private PlayButton startingButton;
     [SerializeField] private UIController uiController;
     [SerializeField] private AudioSource al;
     [SerializeField] private List<StartingLabAnimation> elements = new();
 
     private void Awake()
     {
-        startingButton.OnButtonClicked += StartingButton_OnButtonClicked;
+        startingButton.OnButtonClicked += () => StartingButton_OnButtonClicked().Forget();
     }
     
     private void Start()
     {
+        StartAnimations().Forget();
+    }
+    
+    private async UniTaskVoid StartAnimations()
+    {
         SetState(StartingLabState.Idle);
-        SetStateWithDelay(7f, StartingLabState.Alarm);
+        await UniTask.WaitForSeconds(7f);
+        SetState(StartingLabState.Alarm);
     }
-    
-    private void StartingButton_OnButtonClicked()
+    private async UniTaskVoid StartingButton_OnButtonClicked()
     {
-        StartCoroutine(OnStartClickedCoroutine()); 
-    }
-    
-    private void SetStateWithDelay(float delay, StartingLabState state)
-    {
-        IEnumerator coroutine = WaitAndChangeState(delay, state);
-        StartCoroutine(coroutine); 
+        await UniTask.WaitForSeconds(2f);
+        SetState(StartingLabState.Active);
+        await UniTask.WaitForSeconds(6f);
+        LoadScene();
     }
 
     private void SetState(StartingLabState state)
@@ -47,22 +50,11 @@ public class TitleGameManager : MonoBehaviour
             al.Play();
     }
     
-    private IEnumerator WaitAndChangeState(float waitTime, StartingLabState state)
-    {
-        yield return new WaitForSeconds(waitTime);
-        SetState(state);
-    }
-
-    private IEnumerator OnStartClickedCoroutine()
-    {
-        yield return WaitAndChangeState(2f, StartingLabState.Active);
-        yield return new WaitForSeconds(6f);
-        LoadScene();
-    }
     private void LoadScene()
     {
         SceneManager.LoadScene("space 1");
     }
+    
 //start idle
 //alarm +7
 //active +2

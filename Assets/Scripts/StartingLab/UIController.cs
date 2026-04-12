@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using UnityEngine;
 
 namespace StartingLab
@@ -8,8 +9,7 @@ namespace StartingLab
         [Header("Fade settings")]
         [SerializeField] private SpriteRenderer[] spritesToFade; // Перетащите сюда ваши спрайты в инспекторе
         [SerializeField] private float duration = 1.5f;         // Длительность исчезновения
-        [SerializeField] private GameObject playButton;
-        
+
         [Header("Movement settings")]
         [SerializeField] private Transform[] objectsToMove; // Поместите сюда 2 объекта
         [SerializeField] private float moveDuration = 1.0f;
@@ -17,16 +17,20 @@ namespace StartingLab
         
         public void SetState(StartingLabState state)
         {
-           
             if (state == StartingLabState.Active)
             {
-                Sequence mySequence = FadeOutSprites();
-                
+                SetActiveState().Forget();
             }
-            
         }
+
+        private async UniTask SetActiveState()
+        {
+            await FadeOutSprites();
+            await MoveGameObjects();
+        }
+        
         // Вызовите этот метод, когда нужно скрыть спрайты
-        private Sequence FadeOutSprites()
+        private async UniTask FadeOutSprites()
         {
             // Создаем последовательность (Sequence)
             Sequence mySequence = DOTween.Sequence();
@@ -40,16 +44,10 @@ namespace StartingLab
                     mySequence.Join(sprite.DOFade(0f, duration));
                 }
             }
-            // 2. После исчезновения сдвигаем объекты по Y (одновременно друг с другом)
-
-        
-            // Дополнительно: можно что-то сделать по завершении
-            mySequence.OnComplete(() => Debug.Log("All sprites hided!"));
-            playButton.SetActive(false);
-            return mySequence;
+            await mySequence.ToUniTask();
         }
 
-        private Sequence MoveGameObjects()
+        private async UniTask MoveGameObjects()
         {
             Sequence mySequence = DOTween.Sequence();
             foreach (Transform obj in objectsToMove)
@@ -61,8 +59,7 @@ namespace StartingLab
                     mySequence.Join(obj.DOMoveY(targetY, moveDuration).SetEase(Ease.OutQuad));
                 }
             }
-
-            return mySequence;
+            await mySequence.ToUniTask();
         }
     }
     
