@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" addBOMForNewFiles="with BOM under Windows, with no BOM otherwise">
-    <file url="file://$PROJECT_DIR$/Assets/ObjectEmitter2D.cs" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Assets/ParticleGenerator.cs" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Assets/SelfDestroyer.cs" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Assets/ShakeOnCollision.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Rocks/ObjectEmitter2D.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Rocks/ParticleGenerator.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Rocks/SelfDestroyer.cs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Assets/Scripts/Rocks/ShakeOnCollision.cs" charset="UTF-8" />
   </component>
 </project>
