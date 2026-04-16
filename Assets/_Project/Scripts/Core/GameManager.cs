@@ -9,6 +9,7 @@ using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private LevelProgress levelProgress;
     [SerializeField] private PlayerSpawner playerSpawner;
     [SerializeField] private Trajectory trajectory;
     [SerializeField] private float pushForce = 4f;
@@ -27,9 +28,16 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         ball = playerSpawner.Player.GetComponent<Ball>();
+        ball.OnPushChanged += BallOn_PushChanged;
         playerSpawner.MoveToLastPoint();
         cam = Camera.main;
+        levelProgress.StartDistanceCalculation(playerSpawner.Player.transform);
         ball.ActivateRb();
+    }
+
+    private void BallOn_PushChanged(bool isPushed)
+    {
+        this.isPushed = isPushed;
     }
 
     private void Update()

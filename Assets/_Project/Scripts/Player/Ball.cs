@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,8 +7,7 @@ using UnityEngine.Serialization;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
-    
+    public event Action <bool> OnPushChanged ;
     public Vector3 Pos => transform.position;
     
     public bool IsGrounded { get; private set; }
@@ -31,7 +31,7 @@ public class Ball : MonoBehaviour
         if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
         {
             IsGrounded = false;
-            gameManager.isPushed = false;
+            OnPushChanged?.Invoke(false);
         }
     }
 
@@ -42,7 +42,7 @@ public class Ball : MonoBehaviour
 
     public void ActivateRb()
     {
-        gameManager.isPushed = true;
+        OnPushChanged?.Invoke(true);
         rb.bodyType = RigidbodyType2D.Dynamic;
     }
 

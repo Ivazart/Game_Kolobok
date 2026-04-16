@@ -10,20 +10,15 @@ namespace Global
     {
         public int LastCheckPointID { get; private set; } = 0;
         
-        private SaveData saveData = new SaveData();
-        private SaveHandler saveHandler = new SaveHandler();
+        private SaveData saveData = new ();
+        private SaveHandler saveHandler = new ();
         private SceneController sceneController => SceneController.Instance;
         protected override void Awake()
         {
             base.Awake();
             saveData = saveHandler.Load();
         }
-
-        private void Start()
-        {
-            LoadLastSave();
-        }
-
+        
         public void LevelCompleted()
         {
             var scene = sceneController.CurrentSceneName;
@@ -74,10 +69,10 @@ namespace Global
         public void LoadLastSave()
         {
             var scene = saveData.LastCheckpointData.LevelName;
-            if (scene == sceneController.CurrentSceneName)
-                return;
             LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
-            sceneController.LoadScene(scene);
+            Debug.Log($"Scene loaded {scene}, checkpoint {LastCheckPointID}");
+            if (scene != sceneController.CurrentSceneName) 
+                sceneController.LoadScene(scene);
         }
 
         private int GetJumpRecord()

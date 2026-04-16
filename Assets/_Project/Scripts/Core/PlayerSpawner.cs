@@ -7,7 +7,7 @@ namespace _Project.Core
     {
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private CheckpointList checkpointList;
-
+        [SerializeField] private CameraMove cameraMove;
         public GameObject Player { get; private set; }
         
         private void Awake()
@@ -19,6 +19,7 @@ namespace _Project.Core
         {
            var checkPointPosition =  checkpointList.GetLastCheckPointPosition();
            Player.transform.position = checkPointPosition;
+           cameraMove.InstantMove();
         }
     }
 }

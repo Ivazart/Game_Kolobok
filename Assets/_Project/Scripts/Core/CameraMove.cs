@@ -10,6 +10,13 @@ public class CameraMove : MonoBehaviour
     [SerializeField] private GameManager gm;
     
     private Transform player;
+
+    public void InstantMove()
+    {
+        Vector3 position = transform.position;
+        var target = new Vector3(player.position.x - offset.x, offset.y, position.z);
+        transform.position = target;
+    }
     
     private void Start()
     {
@@ -32,5 +39,6 @@ public class CameraMove : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").transform;
         transform.position = new Vector3(player.position.x - offset.x, offset.y, transform.position.z);
     }
+    
 
 }

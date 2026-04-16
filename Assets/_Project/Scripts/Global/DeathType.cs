@@ -3,6 +3,7 @@
     public enum DeathType
     {
         Poison,
-        Fire
+        Fire,
+        Swamp
     }
 }

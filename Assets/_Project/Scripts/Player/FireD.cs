@@ -1,22 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Global;
 using UnityEngine;
 using UnityEngine.Serialization;
 
 public class FireD : MonoBehaviour
 {
-    public Rigidbody2D rb;
-    public ScenesManager scenesManager;
-
+    private GameController gameController => GameController.Instance;
+    
     public void Burned()
     {
-        rb.linearVelocity = Vector3.zero;
-        Invoke(nameof(Restart), 1f);
+        gameController.PlayerDeath(DeathType.Fire);
     }
-
-    private void Restart()
-    {
-        scenesManager.RestartGame();
-    }
-
+    
 }
