@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using _Project.Core;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,27 +9,14 @@ using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
-    #region Singleton class: GameManager
-
-    public static GameManager Instance;
-
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-    }
-    #endregion
-
-
-    [SerializeField] private Ball ball;
+    [SerializeField] private PlayerSpawner playerSpawner;
     [SerializeField] private Trajectory trajectory;
     [SerializeField] private float pushForce = 4f;
-
+    
     public bool isDragging = false;
     public bool isPushed = false;
 
+    private Ball ball;
     private Camera cam;
     private Vector2 startPoint;
     private Vector2 endPoint;
@@ -35,9 +24,10 @@ public class GameManager : MonoBehaviour
     private Vector2 force;
     private float distance;
 
-
     private void Start()
     {
+        ball = playerSpawner.Player.GetComponent<Ball>();
+        playerSpawner.MoveToLastPoint();
         cam = Camera.main;
         ball.ActivateRb();
     }

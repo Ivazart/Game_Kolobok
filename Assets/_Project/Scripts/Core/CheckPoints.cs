@@ -1,12 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class CheckPoints : MonoBehaviour
 {
-    public Transform player;
+    public static event Action<CheckPoints> OnCheckpointEnter;
+   
+    //public Transform player;
     public int index;
 
+    /*
     private void Awake()
     {
        if (DataContainer.CheckpointIndex == index) 
@@ -14,12 +18,14 @@ public class CheckPoints : MonoBehaviour
           player.position = transform.position;
        }
     }
+    */
     
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
             DataContainer.CheckpointIndex= index;
+            OnCheckpointEnter?.Invoke(this);
         }
     }
 }
