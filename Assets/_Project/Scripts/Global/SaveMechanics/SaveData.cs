@@ -6,6 +6,7 @@ namespace Global
     {
         public Dictionary<SceneName, LevelData> LevelDatas;
         public LastCheckpointData LastCheckpointData;
+        public bool IsTutorFinished;
     }
 
     public class LevelData
@@ -21,14 +22,19 @@ namespace Global
         public SceneName LevelName;
         public int Checkpoint;
         public int Jumps;
+        public int Progress;
 
-        public LastCheckpointData(){}
+        public LastCheckpointData()
+        {
+            Checkpoint = -1;
+        }
 
         public LastCheckpointData(LastCheckpointData newData)
         {
             LevelName = newData.LevelName;
             Checkpoint = newData.Checkpoint;
             Jumps = newData.Jumps;
+            Progress = newData.Progress;
         }
     }
 }

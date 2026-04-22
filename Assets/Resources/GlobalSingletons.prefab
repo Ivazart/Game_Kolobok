@@ -91,6 +91,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88701e6f3aaa4cc39c395e75ea502fc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Global.SaveController
+  sceneImageDatabase: {fileID: 11400000, guid: 3c8c9403b35d9024b9521feacbc3e7ba, type: 2}
 --- !u!1 &6337720163048333276
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,6 +13,9 @@ namespace _Project.Core
 
         public Vector3 GetLastCheckPointPosition()
         {
+            if (LastCheckpoint == -1)
+                return checkpoints[0].transform.position;
+            
             if (checkpoints.Count > LastCheckpoint)
                 return checkpoints[LastCheckpoint].transform.position;
             

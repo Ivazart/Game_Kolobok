@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using _Project.Player;
 using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 public class Stopper : MonoBehaviour
 {
     private Rigidbody2D rb;
-    [SerializeField] private Ball ball;
     [SerializeField] private float scale;
-
-    private bool isPushed;
+    [SerializeField] private MovementDetector movementDetector;
+    private bool isPushed => movementDetector.IsMoving;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        ball.OnPushChanged += b => isPushed = b;
     }
 
     private void OnCollisionEnter2D(Collision2D col)

@@ -5,12 +5,13 @@ using UnityEngine.Serialization;
 
 public class Fire : MonoBehaviour
 {
-    public FireD fire;
+    private FireD fire;
 
     private void OnParticleCollision(GameObject other)
     {
         if (other.CompareTag("Player"))
         {
+            fire = other.GetComponent<FireD>();
             fire.Burned();
         }
     }

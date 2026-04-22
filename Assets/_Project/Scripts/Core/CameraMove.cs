@@ -25,9 +25,6 @@ public class CameraMove : MonoBehaviour
 
     private void Update()
     {
-        if (gm.isDragging) 
-            return;
-        
         Vector3 position = transform.position;
         var target = new Vector3(player.position.x - offset.x, offset.y, position.z);
         Vector3 currentPosition = Vector3.Lerp(position, target, damping * Time.deltaTime);

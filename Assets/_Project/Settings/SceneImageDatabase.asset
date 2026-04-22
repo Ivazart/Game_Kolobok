@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65459a29cb1c4c4fb919098d021487c2, type: 3}
+  m_Name: SceneImageDatabase
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Scriptable.SceneImageDatabase
+  sceneImagePairs:
+  - sceneType: 2
+    sceneImage: {fileID: -568455031, guid: 6b38dea36b0d32144ae4abc9b8c688d9, type: 3}
+  - sceneType: 3
+    sceneImage: {fileID: -1647712683, guid: ffa2b68138b901848bf1095ec85930f9, type: 3}
