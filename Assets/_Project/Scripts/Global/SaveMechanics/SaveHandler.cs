@@ -74,7 +74,18 @@ namespace Global
             saveData.LevelDatas = new Dictionary<SceneName, LevelData>();
             saveData.LastCheckpointData = new LastCheckpointData();
             saveData.LastCheckpointData.LevelName = SceneName.StartLab;
+            var leveldata = CreateLevel(SceneName.Rocks);
+            saveData.LevelDatas.Add(SceneName.Rocks, leveldata );
             return saveData;
+        }
+        public LevelData CreateLevel(SceneName sceneName)
+        {
+            var levelData = new LevelData();
+            levelData. LevelName = sceneName;
+            levelData.LastCheckpoint = new LastCheckpointData();
+            levelData.LastCheckpoint.LevelName = sceneName;
+            
+            return levelData;
         }
     }
 }

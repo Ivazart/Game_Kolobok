@@ -10,10 +10,17 @@ namespace _Project.Player
     public class Player: MonoBehaviour
     {
         [SerializeField] private PlayerAnimation playerAnimation;
+        [SerializeField] private MovementDetector movementDetector;
+        
+        public MovementDetector MovementDetector => movementDetector;
         
         private Rigidbody2D rb;
         private GameController gameManager => GameController.Instance;
 
+        public PlayerAnimation PlayerAnimation => playerAnimation;
+
+        private bool isDying;
+        
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
@@ -27,6 +34,10 @@ namespace _Project.Player
 
         private async UniTask PlayerDeath(DeathType death)
         {
+            if (isDying)
+                return;
+            
+            isDying = true;
             rb.bodyType = RigidbodyType2D.Kinematic;
             rb.linearVelocity = Vector2.zero;
             await playerAnimation.PlayDeath(death);
@@ -35,8 +46,13 @@ namespace _Project.Player
 
         private void OnDestroy()
         {
-            if (gameManager!=null)
+            if (gameManager)
                 gameManager.OnPlayerDeath -= GameManager_OnPlayerDeath;
+        }
+        
+        public void Push(Vector2 force)
+        {
+            rb.AddForce(force, ForceMode2D.Impulse);
         }
     }
 }

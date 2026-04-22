@@ -65,7 +65,7 @@ namespace Global
         /// <param name="trackIndex"></param>
         /// <param name="loop"></param>
         public static async UniTask PlayAnimation(SkeletonAnimation skeletonAnimation, 
-            string animationName, int trackIndex = 0, bool loop = false, CancellationToken token = new CancellationToken() )
+            string animationName, int trackIndex = 0, bool needChangeAlpha = false,float alpha = 1f, bool loop = false, CancellationToken token = new CancellationToken() )
         {
             Spine.SkeletonData skeletonData = skeletonAnimation.SkeletonDataAsset.GetSkeletonData(true);
             Spine.Animation animation = skeletonData.FindAnimation(animationName);
@@ -73,7 +73,9 @@ namespace Global
             if (animation != null)
             {
                 float duration = animation.Duration;
-                skeletonAnimation.AnimationState.SetAnimation(trackIndex, animation, loop);
+                var trackEntry = skeletonAnimation.AnimationState.SetAnimation(trackIndex, animation, loop);
+                if (needChangeAlpha)
+                    trackEntry.Alpha = alpha;
                 await UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken:token);
             }
             else

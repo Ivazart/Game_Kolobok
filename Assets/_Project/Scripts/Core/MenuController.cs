@@ -1,0 +1,75 @@
+﻿using System;
+using _Project.UI;
+using Global;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MenuController : MonoBehaviour
+{
+    [SerializeField] private GameObject menuPanel;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private Button selectStageButton;
+    [SerializeField] private Button restartLevelButton;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private Button restartCheckpointButton;
+    [SerializeField] private LoadStage loadStage;
+    
+    private SceneController sceneController => SceneController.Instance;
+    private SaveController saveController => SaveController.Instance;
+    
+    private void Awake()
+    {
+        closeButton.onClick.AddListener(CloseMenu);
+        restartLevelButton.onClick.AddListener(RestartLevel);
+        selectStageButton.onClick.AddListener(OpenSelectStage);
+        exitButton.onClick.AddListener(ExitGame);
+        restartCheckpointButton.onClick.AddListener(RestartCheckpoint);
+        loadStage.OnLoadStageFinished += LoadStageFinished;
+    }
+
+    private void LoadStageFinished()
+    {
+        loadStage.gameObject.SetActive(false);
+        CloseMenu();
+    }
+    
+    // Метод для открытия
+    private void OpenMenu()
+    {
+        loadStage.gameObject.SetActive(false);
+        menuPanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    
+    // Метод для закрытия
+    private void CloseMenu()
+    {
+        menuPanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    
+    //Открыть список уровней
+    private void OpenSelectStage()
+    {
+        menuPanel.SetActive(false);
+        loadStage.gameObject.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    
+    //Перезагрузить уровень
+    private void RestartLevel()
+    {
+        saveController.ClearLevelProgress();
+        sceneController.RestartScene();
+    }
+
+    private void RestartCheckpoint()
+    {
+        sceneController.RestartScene();
+    }
+
+    private void ExitGame()
+    {
+         Application.Quit();
+    }
+}

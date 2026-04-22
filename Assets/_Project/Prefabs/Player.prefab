@@ -9,15 +9,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7676194051255869809}
-  - component: {fileID: 7550571020611494275}
   - component: {fileID: 9129328980627409880}
   - component: {fileID: 1095080344127360409}
   - component: {fileID: 1286770124998387828}
-  - component: {fileID: 7726685042503937632}
   - component: {fileID: 929992921826994370}
   - component: {fileID: 3115632321292676735}
   - component: {fileID: 8235327928963662765}
   - component: {fileID: 7142263155056138551}
+  - component: {fileID: 4904088471463261290}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -41,65 +40,6 @@ Transform:
   - {fileID: 527540111456328587}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &7550571020611494275
-SpriteRenderer:
-  serializedVersion: 2
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712890831788300035}
-  m_Enabled: 0
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_ForceMeshLod: -1
-  m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1420214627
-  m_SortingLayer: 2
-  m_SortingOrder: 0
-  m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: 60bd2ffaf420bb240b064e31a160a709, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.96, y: 0.93}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
-  m_SpriteSortPoint: 0
 --- !u!58 &9129328980627409880
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -199,18 +139,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &7726685042503937632
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 712890831788300035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba605df81f188eb419e41d79778852fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &929992921826994370
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,8 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0992a0dcd60a2c49b0973f81b0a3b76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ball: {fileID: 7726685042503937632}
   scale: 0.4
+  movementDetector: {fileID: 4904088471463261290}
 --- !u!114 &3115632321292676735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +190,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Player.Player
   playerAnimation: {fileID: 3671779114342654495}
+  movementDetector: {fileID: 4904088471463261290}
+--- !u!114 &4904088471463261290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712890831788300035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8622317b28e24c989dbccc3b6e408773, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Player.MovementDetector
+  movementThreshold: 0.01
 --- !u!1 &4257082705144924050
 GameObject:
   m_ObjectHideFlags: 0
@@ -349,8 +291,8 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: 1326733075
-  m_SortingLayer: 4
+  m_SortingLayerID: 1420214627
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
@@ -410,5 +352,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Player.AnimationPlayer
   idle: idle
+  staticIdle: static2
+  deathEyes: eyes
   deathPoison: death_bl
   deathFire: death_smoke
+  drag: blinking2
+  eyesDown: eyes_down
+  eyesUp: eyes_up
+  blinking: blinking
