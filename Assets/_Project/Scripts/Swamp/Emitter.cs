@@ -7,7 +7,6 @@ using UnityEngine.Serialization;
 public class Emitter : MonoBehaviour
 {
     [SerializeField] private GameObject bubble;
-    [SerializeField] private GameObject emitter;
     [SerializeField] private int n;
 
     private void Update()
@@ -21,7 +20,7 @@ public class Emitter : MonoBehaviour
         if (random == 1)
         {
             var bubbleGO = Instantiate(bubble);
-            bubbleGO.transform.position = emitter.transform.position;
+            bubbleGO.transform.position = transform.position;
             Destroy(bubbleGO, 17);
         }
 

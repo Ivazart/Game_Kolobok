@@ -66036,6 +66036,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1267859363}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0.222}
+--- !u!114 &1114394420 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9208209394057237531, guid: a16e158e5613a164087cbe44e4b5caca, type: 3}
+  m_PrefabInstance: {fileID: 411986389359194368}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84474f74b05c49e5ac3c0c43423928e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::_Project.Core.CheckpointList
 --- !u!1 &1114875778
 GameObject:
   m_ObjectHideFlags: 0
@@ -120491,7 +120502,7 @@ PrefabInstance:
     - target: {fileID: 4363692980464247225, guid: 48644e54491f0a541b558a5dce98c989, type: 3}
       propertyPath: checkpointList
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 1114394420}
     - target: {fileID: 5313699403197253568, guid: 48644e54491f0a541b558a5dce98c989, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.58

@@ -6,7 +6,6 @@ using UnityEngine.Serialization;
 public class EmmiterSt : MonoBehaviour
 {
     [SerializeField] private GameObject bubblePrefab;
-    [SerializeField] private GameObject emitter;
     [SerializeField] private float time;
 
     private void Start()
@@ -17,7 +16,7 @@ public class EmmiterSt : MonoBehaviour
     private void Create()
     {
         var babbleC = Instantiate(bubblePrefab);
-        babbleC.transform.position = emitter.transform.position;
+        babbleC.transform.position = transform.position;
         Destroy(babbleC, 17);
     }
 }

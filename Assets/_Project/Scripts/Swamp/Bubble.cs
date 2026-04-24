@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ using UnityEngine;
 public class Bubble : MonoBehaviour
 {
     [SerializeField] private Vector2 direction;
+
     private Rigidbody2D rb;
     private float speed;
     private float frequency;
