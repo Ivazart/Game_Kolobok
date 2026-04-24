@@ -9,7 +9,7 @@ public class Stopper : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField] private float scale;
     [SerializeField] private MovementDetector movementDetector;
-    private bool isPushed => movementDetector.IsMoving;
+    private bool isPushed => movementDetector.CanMove;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();

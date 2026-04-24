@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     
     private bool isDragging = false;
     private bool isIdle;
-    private bool isMoving => player.MovementDetector.IsMoving;
+    private bool canMove => player.MovementDetector.CanMove;
     private Player player;
     private Camera cam;
     private Vector2 startPoint;
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
 
     private void MouseHandlerLoop()
     {
-        if (!isMoving || isDragging)
+        if (canMove || isDragging)
         {
             if (Input.GetMouseButtonDown(0))
             {
@@ -80,22 +80,22 @@ public class GameManager : MonoBehaviour
     
     private void AnimationLoop()
     {
-        if (!isMoving)
+        if (canMove)
         {
-            if (!isIdle)
-            {
-                isIdle = true;
-                player.PlayerAnimation.PlayIdle().Forget();
-            }
+            if (isIdle) 
+                return;
+            
+            isIdle = true;
+            player.PlayerAnimation.PlayIdle().Forget();
         }
         else
         {
-            if (isIdle)
-            {
-                isIdle = false;
-                player.PlayerAnimation.StopIdle();
-            }
-              
+            if (!isIdle) 
+                return;
+            
+            isIdle = false;
+            player.PlayerAnimation.StopIdle();
+
         }
     }
     

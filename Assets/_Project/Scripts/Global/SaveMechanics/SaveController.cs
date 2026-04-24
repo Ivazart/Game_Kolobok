@@ -26,6 +26,10 @@ namespace Global
         {
             base.Awake();
             saveData = saveHandler.Load();
+        }
+
+        private void Start()
+        {
             LoadLastSave();
         }
 
@@ -65,6 +69,7 @@ namespace Global
             saveData.LastCheckpointData.LevelName = nextLevel;
             saveHandler.Save(saveData);
             LastCheckPointID = -1;
+            sceneController.LoadScene(nextLevel);
             OnJumpCounterChanged?.Invoke(0);
         }
 

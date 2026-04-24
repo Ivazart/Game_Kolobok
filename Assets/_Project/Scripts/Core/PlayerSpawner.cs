@@ -19,6 +19,7 @@ namespace _Project.Core
         {
            var checkPointPosition =  checkpointList.GetLastCheckPointPosition();
            Player.transform.position = checkPointPosition;
+           cameraMove.SetPlayer(Player.transform);
            cameraMove.InstantMove();
         }
     }

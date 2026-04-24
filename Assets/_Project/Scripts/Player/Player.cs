@@ -46,8 +46,14 @@ namespace _Project.Player
 
         private void OnDestroy()
         {
-            if (gameManager)
+            try
+            {
                 gameManager.OnPlayerDeath -= GameManager_OnPlayerDeath;
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
         }
         
         public void Push(Vector2 force)

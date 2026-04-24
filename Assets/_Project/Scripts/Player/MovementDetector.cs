@@ -10,14 +10,14 @@ namespace _Project.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class MovementDetector : MonoBehaviour
     {
+        public bool CanMove => isGrounded || !isMoving;
         
-        public event Action OnMovingChanged;
-        public bool IsMoving { get; private set; }
-        
+        private bool isGrounded;
+        private bool isMoving;
         private float movementThreshold = 0.1f;
-        private bool newState;
         private Rigidbody2D rb;
         private CancellationTokenSource cts = new();
+        
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
@@ -28,13 +28,7 @@ namespace _Project.Player
         {
             while (cancellationToken.IsCancellationRequested == false)
             {
-                newState = CheckMoving();
-                if (newState != IsMoving)
-                {
-                    IsMoving = newState;
-                    Debug.Log($"Movement detector: {newState}");
-                    OnMovingChanged?.Invoke();
-                }
+                isMoving = CheckMoving();
                 await UniTask.WaitForSeconds(.1f,cancellationToken: cancellationToken);
             }
         }
@@ -43,7 +37,23 @@ namespace _Project.Player
         {
             return rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
         }
+        
+        private void OnTriggerStay2D(Collider2D trig)
+        {
+            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+            {
+                isGrounded = true;
+            }
+        }
 
+        private void OnTriggerExit2D(Collider2D trig)
+        {
+            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+            {
+                isGrounded = false;
+            }
+        }
+        
         private void OnDestroy()
         {
             cts.Cancel();

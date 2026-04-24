@@ -7,35 +7,31 @@ public class CameraMove : MonoBehaviour
 {
     [SerializeField] private float damping = 1.5f;
     [SerializeField] private Vector2 offset = new (0f, 0f);
-    [SerializeField] private GameManager gm;
+    [SerializeField] private float offsetYForGroundVision = 1f;
     
     private Transform player;
 
+    public void SetPlayer(Transform player)
+    {
+       this.player = player;
+    }
+    
     public void InstantMove()
     {
-        Vector3 position = transform.position;
-        var target = new Vector3(player.position.x - offset.x, offset.y, position.z);
-        transform.position = target;
+        MoveToPosition(instantMove:true);
     }
     
-    private void Start()
-    {
-        FindPlayer();
-    }
-
     private void Update()
     {
+        MoveToPosition();
+    }
+
+    private void MoveToPosition(bool instantMove = false)
+    {
         Vector3 position = transform.position;
-        var target = new Vector3(player.position.x - offset.x, offset.y, position.z);
-        Vector3 currentPosition = Vector3.Lerp(position, target, damping * Time.deltaTime);
+        var target = new Vector3(player.position.x - offset.x, offset.y - offsetYForGroundVision, position.z);
+        Vector3 currentPosition = instantMove ? target :
+            Vector3.Lerp(position, target, damping * Time.deltaTime);
         transform.position = currentPosition;
     }
-    
-    private void FindPlayer()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        transform.position = new Vector3(player.position.x - offset.x, offset.y, transform.position.z);
-    }
-    
-
 }
