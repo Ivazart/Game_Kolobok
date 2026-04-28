@@ -86,6 +86,8 @@ namespace Global
 
         public void NewCheckPointReached(int index)
         {
+            if (LevelOrder.IsLevel(scene) == false)
+                return;
             saveData.LastCheckpointData.LevelName = scene;
             saveData.LastCheckpointData.Checkpoint = index;
             saveData.LevelDatas[scene].LastCheckpoint = saveData.LastCheckpointData;

@@ -5,27 +5,31 @@ namespace _Project.Core.Camera
 {
     public class CameraMove : MonoBehaviour
     {
-        [Header("Dynamic Horizontal Follow")] [SerializeField]
-        private float damping = 1.5f; // базовое время сглаживания
-
+        [Header("Dynamic Horizontal Follow")] 
+        [SerializeField] private float damping = 1.5f; // базовое время сглаживания
         [SerializeField] private float speedInfluence = 0.1f; // влияние скорости игрока
         [SerializeField] private float distanceInfluence = 0.05f; // влияние расстояния до цели
         [SerializeField] private float minSmoothTime = 0.5f;
         [SerializeField] private float maxSmoothTime = 2f;
 
-        [Header("Vertical Follow (Zones)")] [SerializeField]
-        private float verticalSmoothTime = 0.5f; // время сглаживания подъёма/спуска
-
+        [Header("Vertical Follow (Zones)")] 
+        [SerializeField] private float verticalSmoothTime = 0.5f; // время сглаживания подъёма/спуска
         [SerializeField] private List<CameraLiftZone> liftZones = new List<CameraLiftZone>();
 
         [Header("Base Offset")] 
         [SerializeField] private Vector2 offset = new Vector2(0f, 0f);
         [SerializeField] private float offsetYForGroundVision = 1f;
-        private const float OffsetZ = -10;
+        
+        [Header("ScreenScale")]
+        [SerializeField] private float targetWorldWidth = 19.2f; // ширина в юнитах, которую всегда видно
+        [SerializeField] private bool adjustCameraSize = true;
+        
+        private const float OffsetZ = -10f;
         private Transform player;
         private Vector3 lastPlayerPosition;
         private float playerSpeed;
-
+        private UnityEngine.Camera followCamera;
+        
         // Раздельные скорости для осей
         private float velocityX = 0f;
         private float velocityY = 0f;
@@ -40,15 +44,34 @@ namespace _Project.Core.Camera
             if (player != null)
             {
                 lastPlayerPosition = player.position;
-                // Чтобы камера стартовала без рывка, синхронизируем текущую желаемую высоту
                 currentDesiredY = GetBaseY();
             }
         }
 
         public void InstantMove()
         {
-            if (player == null) return;
+            if (player == null) 
+                return;
+            
             MoveToPosition(instantMove: true);
+        }
+        
+        private void Awake()
+        {
+            followCamera = GetComponent<UnityEngine.Camera>();
+            UpdateCameraOrthoSize();
+        }
+        
+        private void UpdateCameraOrthoSize()
+        {
+            if (!adjustCameraSize || followCamera == null) return;
+
+            float targetSize = targetWorldWidth / (2f * followCamera.aspect);
+            // опционально ограничь, чтобы не уезжало в крайности (очень высокий/широкий экран)
+            Debug.Log("targetSize: " + targetSize);
+            targetSize = Mathf.Clamp(targetSize, 6f, 10f);
+
+            followCamera.orthographicSize = targetSize;
         }
         
         private void Update()
