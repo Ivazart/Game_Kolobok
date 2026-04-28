@@ -6,7 +6,10 @@ namespace Global
     public class GameController: SingletonBase<GameController>
     {
         public event Action<DeathType> OnPlayerDeath; 
-       // private SaveController saveController => SaveController.Instance;
+        public event Action OnLevelRestarted; 
+        public event Action OnCheckpointRestarted; 
+        public event Action OnSaveLoaded; 
+        private SaveController saveController => SaveController.Instance;
         private SceneController sceneController => SceneController.Instance;
     
 
@@ -20,6 +23,24 @@ namespace Global
         {
             sceneController.RestartScene();
         }
-        
+
+        public void RestartLevel()
+        {
+            saveController.ClearLevelProgress();
+            sceneController.RestartScene();
+            OnLevelRestarted?.Invoke();
+        }
+
+        public void RestartCheckpoint()
+        {
+            sceneController.RestartScene();
+            OnCheckpointRestarted?.Invoke();
+        }
+
+        public void LoadLevelFromSaves(SceneName levelName)
+        {
+            sceneController.LoadScene(levelName);
+            OnSaveLoaded?.Invoke();
+        }
     }
 }

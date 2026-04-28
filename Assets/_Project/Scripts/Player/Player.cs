@@ -50,7 +50,7 @@ namespace _Project.Player
             {
                 gameManager.OnPlayerDeath -= GameManager_OnPlayerDeath;
             }
-            catch (Exception ex)
+            catch 
             {
                 // ignored
             }

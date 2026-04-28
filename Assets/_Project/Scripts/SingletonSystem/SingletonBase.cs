@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T>
 {
@@ -14,7 +15,7 @@ public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T
             instance = FindObjectOfType <T>();
             if (instance == null)
             {
-                Debug.LogError($"[Singleton] No instance of {typeof(T).Name} found in the scene.");
+                throw new Exception($"[Singleton] No instance of {typeof(T).Name} found in the scene.");
             }
             return instance;
         }

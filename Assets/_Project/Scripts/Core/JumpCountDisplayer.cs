@@ -9,18 +9,18 @@ namespace _Project.Core
     [RequireComponent(typeof(TextMeshProUGUI) )]
     public class JumpCountDisplayer : MonoBehaviour
     {
-        private SaveController saveController => SaveController.Instance;
+        private JumpsCounterController jumpController => JumpsCounterController.Instance;
         private TextMeshProUGUI tmp;
         private void Awake()
         {
             tmp = GetComponent<TextMeshProUGUI>();
-            saveController.OnJumpCounterChanged += SaveController_OnJumpCounterChanged;
-            DisplayJumps(saveController.JumpCounter);
+            jumpController.OnJumpsChanged += SaveController_OnJumpCounterChanged;
+            DisplayJumps(jumpController.Jumps);
         }
 
-        private void SaveController_OnJumpCounterChanged(int obj)
+        private void SaveController_OnJumpCounterChanged()
         {
-            DisplayJumps(saveController.JumpCounter);
+            DisplayJumps(jumpController.Jumps);
         }
 
         private void DisplayJumps(int count)
@@ -30,8 +30,14 @@ namespace _Project.Core
         
         private void OnDestroy()
         {
-            if (saveController)
-                saveController.OnJumpCounterChanged -= SaveController_OnJumpCounterChanged;
+            try
+            {
+                jumpController.OnJumpsChanged -= SaveController_OnJumpCounterChanged;
+            }
+            catch
+            {
+                // ignored
+            }
         }
     }
 }

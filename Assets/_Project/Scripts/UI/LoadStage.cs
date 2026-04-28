@@ -13,7 +13,7 @@ namespace _Project.UI
         [SerializeField] private LevelInfo levelInfo;
         [SerializeField] private Button buttonStart;
         
-        private SceneController sceneController => SceneController.Instance;
+        private GameController gameController => GameController.Instance;
         private void Awake()
         {
             buttonStart.onClick.AddListener(LoadLevel);
@@ -30,7 +30,7 @@ namespace _Project.UI
         private void LoadLevel()
         {
             var scene = levelList.SelectedLevel.LevelData.LevelName;
-            sceneController.LoadScene(scene);
+            gameController.LoadLevelFromSaves(scene);
         }
     }
 }

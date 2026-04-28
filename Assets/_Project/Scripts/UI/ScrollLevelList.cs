@@ -26,8 +26,6 @@ namespace _Project.UI
 
         private void OnEnable()
         {
-            createdLevels.Clear();
-            SelectedLevel = null;
             foreach ((SceneName key, LevelData value) in SaveData.LevelDatas)
             {
                 if (LevelOrder.IsLevel(key) == false)
@@ -51,6 +49,17 @@ namespace _Project.UI
 
             SelectedLevel = level;
             OnNewLevelSelected?.Invoke();
+        }
+
+        private void OnDisable()
+        {
+            foreach (LevelPrefab createdLevel in createdLevels)
+            {
+                Destroy(createdLevel.gameObject);
+            }
+            createdLevels.Clear();
+            SelectedLevel = null;
+            LevelPrefab.OnClick -= LevelPrefab_OnClick;
         }
     }
 }

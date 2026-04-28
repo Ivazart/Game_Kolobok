@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float heightStartAnimation = 8.5f;
   
     private SaveController saveController => SaveController.Instance;
+    private JumpsCounterController jumpController => JumpsCounterController.Instance;
     
     private bool isDragging = false;
     private bool isIdle;
@@ -134,7 +135,7 @@ public class GameManager : MonoBehaviour
             player.PlayerAnimation.PlayEyesDown().Forget();
         player.Push(force);
         trajectory.Hide();
-        saveController.IncreaseJumpCounter();
+        jumpController.IncreaseJumpCounter();
     }
     
 }

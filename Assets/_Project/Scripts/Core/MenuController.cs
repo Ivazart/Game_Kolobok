@@ -16,7 +16,7 @@ public class MenuController : MonoBehaviour
     
     private SceneController sceneController => SceneController.Instance;
     private SaveController saveController => SaveController.Instance;
-    
+    private GameController gameController => GameController.Instance;
     private void Awake()
     {
         closeButton.onClick.AddListener(CloseMenu);
@@ -59,13 +59,13 @@ public class MenuController : MonoBehaviour
     //Перезагрузить уровень
     private void RestartLevel()
     {
-        saveController.ClearLevelProgress();
-        sceneController.RestartScene();
+        gameController.RestartLevel();
+       
     }
 
     private void RestartCheckpoint()
     {
-        sceneController.RestartScene();
+        gameController.RestartCheckpoint();
     }
 
     private void ExitGame()

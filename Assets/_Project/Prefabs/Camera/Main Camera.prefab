@@ -106,5 +106,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damping: 0.8
+  speedInfluence: 0.1
+  distanceInfluence: 0.05
+  minSmoothTime: 0.5
+  maxSmoothTime: 2
+  verticalSmoothTime: 0.5
+  liftZones: []
   offset: {x: -5, y: 0}
   offsetYForGroundVision: 1

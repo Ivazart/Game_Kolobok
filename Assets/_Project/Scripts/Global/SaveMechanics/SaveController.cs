@@ -9,13 +9,17 @@ namespace Global
 {
     public class SaveController : SingletonBase<SaveController>
     {
+        [SerializeField] private SceneImageDatabase sceneImageDatabase;
+        
         public int LastCheckPointID { get; private set; } = -1;
         public event Action<int> OnJumpCounterChanged;
+        public event Action<int> OnSavedJumpsChanged;
+        public event Action OnNewCheckpointReached;
+        public event Action OnLevelFinished;
         public event Action OnTutorFinished;
         public SaveData SaveData => saveData;
         public int JumpCounter => GetJumps();
 
-        [SerializeField] private SceneImageDatabase sceneImageDatabase;
         
         private SaveData saveData = new();
         private SaveHandler saveHandler = new();
@@ -35,9 +39,7 @@ namespace Global
 
         private int GetJumps()
         {
-            if (saveData == null || saveData.LastCheckpointData == null)
-                return 0;
-            return saveData.LastCheckpointData.Jumps;
+            return saveData?.LastCheckpointData?.Jumps ?? 0;
         }
         
         public Sprite GetSpriteByScene(SceneName sceneType)
@@ -70,17 +72,17 @@ namespace Global
             saveHandler.Save(saveData);
             LastCheckPointID = -1;
             sceneController.LoadScene(nextLevel);
-            OnJumpCounterChanged?.Invoke(0);
+            OnLevelFinished?.Invoke();
         }
 
-        public void IncreaseJumpCounter()
+        public void SaveJumpCounter(int value)
         {
-            int jumps = saveData.LastCheckpointData.Jumps + 1;
-            saveData.LastCheckpointData.Jumps = jumps;
-            saveData.LevelDatas[scene].LastCheckpoint.Jumps = jumps;
+            saveData.LastCheckpointData.Jumps = value;
+            saveData.LevelDatas[scene].LastCheckpoint.Jumps = value;
             saveHandler.Save(saveData);
-            OnJumpCounterChanged?.Invoke(jumps);
+            OnSavedJumpsChanged?.Invoke(value);
         }
+
 
         public void NewCheckPointReached(int index)
         {
@@ -89,6 +91,7 @@ namespace Global
             saveData.LevelDatas[scene].LastCheckpoint = saveData.LastCheckpointData;
             saveHandler.Save(saveData);
             LastCheckPointID = index;
+            OnNewCheckpointReached?.Invoke();
         }
 
         public void ClearLevelProgress()
@@ -99,6 +102,7 @@ namespace Global
             saveData.LevelDatas[scene].LastCheckpoint = saveData.LastCheckpointData;
             LastCheckPointID = -1;
             saveHandler.Save(saveData);
+            OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
         }
 
         public void TutorFinished()
@@ -117,7 +121,7 @@ namespace Global
             Debug.Log($"Scene loaded {scene}, checkpoint {LastCheckPointID}");
             if (scene != sceneController.CurrentSceneName)
                 sceneController.LoadScene(scene);
-            OnJumpCounterChanged?.Invoke(saveData.LastCheckpointData.Jumps);
+            OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
         }
         
         private int GetJumpRecord()

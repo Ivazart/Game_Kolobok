@@ -1,4 +1,5 @@
 ﻿using System;
+using _Project.Core.Camera;
 using UnityEngine;
 
 namespace _Project.Core
