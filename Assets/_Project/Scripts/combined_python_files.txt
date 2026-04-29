@@ -1,0 +1,3825 @@
+Player.cs
+***
+// using System.Collections;
+// using System.Collections.Generic;
+// using UnityEngine;
+//
+// public class Player : MonoBehaviour
+// {
+//     public Rigidbody2D rb;
+//     public float speed;
+//
+//     private void Update()
+//     {
+//         var screenPosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+//         
+//         if (Camera.main != null)
+//         {
+//             Vector2 m = Camera.main.ScreenToWorldPoint(screenPosition);
+//             Vector2 rbp = rb.position;
+//
+//             if (Input.GetMouseButtonDown(0))
+//                 rb.AddForce((m - rbp) * speed);
+//         }
+//     }
+// }
+
+
+ScenesManager.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class ScenesManager : MonoBehaviour
+{
+    public string lname;
+    
+    public void RestartGame()
+    {
+        Debug.Log("End Game");
+        SceneManager.LoadScene(lname);
+    }
+}
+
+
+Sink.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Sink : MonoBehaviour
+{
+    [SerializeField] private float speed;
+    private bool isDrown = false;
+
+    private void FixedUpdate() 
+    { 
+        if (isDrown)
+        {
+            transform.Translate(Vector3.down * speed);
+        }
+        
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("sink");
+            isDrown= true;
+        }
+    }
+}
+
+
+Core\CheckpointList.cs
+***
+﻿using System;
+using System.Collections.Generic;
+using Global;
+using UnityEngine;
+
+namespace _Project.Core
+{
+    public class CheckpointList : MonoBehaviour
+    {
+        private List<CheckPoints> checkpoints = new ();
+        private SaveController saveController => SaveController.Instance;
+        private int LastCheckpoint => saveController.LastCheckPointID;
+
+        public Vector3 GetLastCheckPointPosition()
+        {
+            if (LastCheckpoint == -1)
+                return checkpoints[0].transform.position;
+            
+            if (checkpoints.Count > LastCheckpoint)
+                return checkpoints[LastCheckpoint].transform.position;
+            
+            Debug.LogError("Last checkpoint index error");
+            return checkpoints[0].transform.position;
+        }
+        
+        private void Awake()
+        {
+            checkpoints.AddRange(GetComponentsInChildren<CheckPoints>(true));
+            CheckPoints.OnCheckpointEnter += CheckPoints_OnCheckpointEnter;
+        }
+
+        private void CheckPoints_OnCheckpointEnter(CheckPoints obj)
+        {
+            int index = checkpoints.IndexOf(obj);
+            if (index == -1)
+                Debug.LogError("Checkpoint is not in list");
+            else
+            {
+                if (index > LastCheckpoint)
+                    saveController.NewCheckPointReached(index);
+            }
+        }
+
+        private void OnDestroy()
+        {
+            CheckPoints.OnCheckpointEnter -= CheckPoints_OnCheckpointEnter;
+        }
+    }
+}
+
+Core\CheckPoints.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CheckPoints : MonoBehaviour
+{
+    public static event Action<CheckPoints> OnCheckpointEnter;
+    public int index;
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            OnCheckpointEnter?.Invoke(this);
+        }
+    }
+}
+
+
+Core\EndGame.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class EndGame : MonoBehaviour
+{
+    
+}
+
+
+Core\GameManager.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using _Project.Core;
+using _Project.Player;
+using Cysharp.Threading.Tasks;
+using Global;
+using TMPro;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
+using Random = System.Random;
+
+public class GameManager : MonoBehaviour
+{
+    [SerializeField] private LevelProgress levelProgress;
+    [SerializeField] private PlayerSpawner playerSpawner;
+    [SerializeField] private Trajectory trajectory;
+    [SerializeField] private float pushForce = 4f;
+    [SerializeField] private float heightStartAnimation = 8.5f;
+  
+    private SaveController saveController => SaveController.Instance;
+    private JumpsCounterController jumpController => JumpsCounterController.Instance;
+    
+    private bool isDragging = false;
+    private bool isIdle;
+    private bool canMove => player.MovementDetector.CanMove;
+    private Player player;
+    private Camera cam;
+    private Vector2 startPoint;
+    private Vector2 endPoint;
+    private Vector2 direction;
+    private Vector2 force;
+    private float distance;
+    private float time;
+
+    
+
+    private void Start()
+    {
+        player = playerSpawner.Player.GetComponent<Player>();
+        playerSpawner.MoveToLastPoint();
+        cam = Camera.main;
+        levelProgress.StartDistanceCalculation(playerSpawner.Player.transform);
+        Time.timeScale = 1f;
+        Debug.Log ("Timescale: " + Time.timeScale);
+    }
+    
+    private void Update()
+    {
+        MouseHandlerLoop();
+        AnimationLoop();
+    }
+
+    private void MouseHandlerLoop()
+    {
+        if (canMove || isDragging)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (IsPointerOverUI())
+                    return;
+                isDragging = true;
+                OnDragStart();
+            }
+
+            if (Input.GetMouseButtonUp(0) && isDragging)
+            {
+                OnDragEnd();
+                isDragging = false;
+            }
+
+            if (isDragging)
+            {
+                OnDrag();
+            }
+        }
+    }
+    
+    private void AnimationLoop()
+    {
+        if (canMove)
+        {
+            if (isIdle) 
+                return;
+            
+            isIdle = true;
+            player.PlayerAnimation.PlayIdle().Forget();
+        }
+        else
+        {
+            if (!isIdle) 
+                return;
+            
+            isIdle = false;
+            player.PlayerAnimation.StopIdle();
+
+        }
+    }
+    
+    private static bool IsPointerOverUI()
+    {
+        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+    }
+    
+    //-Drag----
+    private void OnDragStart()
+    {
+        saveController.TutorFinished();
+        startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+        trajectory.Show();
+        player.PlayerAnimation.PlayDrag().Forget();
+    }
+
+    private void OnDrag()
+    {
+        endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+        distance = Vector2.Distance(startPoint, endPoint);
+        direction = (startPoint - endPoint).normalized;
+        distance = Mathf.Clamp(distance, 0.0f, 3.5f);
+        force =  direction * distance * pushForce;
+        float angle = Vector2.Angle(Vector2.up, direction);
+        if (angle < 20f) 
+            player.PlayerAnimation.PlayEyesUp().Forget();
+        Debug.DrawLine(startPoint, endPoint);
+        var pos = player.transform.position;
+        trajectory.UpdateDots (pos, force);
+    }
+
+    private void OnDragEnd()
+    {
+        if (force.y > heightStartAnimation)
+            player.PlayerAnimation.PlayEyesDown().Forget();
+        player.Push(force);
+        trajectory.Hide();
+        jumpController.IncreaseJumpCounter();
+    }
+    
+}
+
+
+Core\JumpCountDisplayer.cs
+***
+﻿using System;
+using Global;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace _Project.Core
+{
+    [RequireComponent(typeof(TextMeshProUGUI) )]
+    public class JumpCountDisplayer : MonoBehaviour
+    {
+        private JumpsCounterController jumpController => JumpsCounterController.Instance;
+        private TextMeshProUGUI tmp;
+        private void Awake()
+        {
+            tmp = GetComponent<TextMeshProUGUI>();
+            jumpController.OnJumpsChanged += SaveController_OnJumpCounterChanged;
+            DisplayJumps(jumpController.Jumps);
+        }
+
+        private void SaveController_OnJumpCounterChanged()
+        {
+            DisplayJumps(jumpController.Jumps);
+        }
+
+        private void DisplayJumps(int count)
+        {
+            tmp.text = "Jumps: " + count;
+        }
+        
+        private void OnDestroy()
+        {
+            try
+            {
+                jumpController.OnJumpsChanged -= SaveController_OnJumpCounterChanged;
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+    }
+}
+
+Core\LevelProgress.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Global;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class LevelProgress : MonoBehaviour
+{
+    //[SerializeField] private Transform playerTransform;
+    [SerializeField] private Transform endLineTransform;
+    [SerializeField] private Transform startLineTransform;
+    [SerializeField] private Slider slider;
+
+    private Vector3 endLinePosition;
+    private float fullDistance;
+    private Transform playerTransform;
+    private CancellationTokenSource cts = new ();
+    
+    public void StartDistanceCalculation(Transform playerTransf)
+    {
+        playerTransform = playerTransf;
+        endLinePosition = endLineTransform.position;
+        fullDistance = Vector3.Distance(startLineTransform.position, endLinePosition);
+        UniTaskUtils.RunWithCancellationAsync(DisplayDistance,cts.Token).Forget();
+    }
+    
+    private async UniTask DisplayDistance(CancellationToken token)
+    {
+        while (token.IsCancellationRequested == false)
+        {
+            float newDistance = GetDistance();
+            slider.value = Mathf.InverseLerp( fullDistance, 0f, newDistance);
+            await UniTask.WaitForSeconds(.5f, cancellationToken: token);
+        }
+    }
+
+    private float GetDistance ()
+    {
+        return Vector3.Distance(playerTransform.position, endLinePosition);
+    }
+
+    private void OnDestroy()
+    {
+        cts?.Cancel();
+        cts?.Dispose();
+    }
+}
+
+
+Core\MenuController.cs
+***
+﻿using System;
+using _Project.UI;
+using Global;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MenuController : MonoBehaviour
+{
+    [SerializeField] private GameObject menuPanel;
+    [SerializeField] private Button closeButton;
+    [SerializeField] private Button selectStageButton;
+    [SerializeField] private Button restartLevelButton;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private Button restartCheckpointButton;
+    [SerializeField] private LoadStage loadStage;
+    
+    private SceneController sceneController => SceneController.Instance;
+    private SaveController saveController => SaveController.Instance;
+    private GameController gameController => GameController.Instance;
+    private void Awake()
+    {
+        closeButton.onClick.AddListener(CloseMenu);
+        restartLevelButton.onClick.AddListener(RestartLevel);
+        selectStageButton.onClick.AddListener(OpenSelectStage);
+        exitButton.onClick.AddListener(ExitGame);
+        restartCheckpointButton.onClick.AddListener(RestartCheckpoint);
+        loadStage.OnLoadStageFinished += LoadStageFinished;
+    }
+
+    private void LoadStageFinished()
+    {
+        loadStage.gameObject.SetActive(false);
+        CloseMenu();
+    }
+    
+    // Метод для открытия
+    private void OpenMenu()
+    {
+        loadStage.gameObject.SetActive(false);
+        menuPanel.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    
+    // Метод для закрытия
+    private void CloseMenu()
+    {
+        menuPanel.SetActive(false);
+        Time.timeScale = 1f;
+    }
+    
+    //Открыть список уровней
+    private void OpenSelectStage()
+    {
+        menuPanel.SetActive(false);
+        loadStage.gameObject.SetActive(true);
+        Time.timeScale = 0f;
+    }
+    
+    //Перезагрузить уровень
+    private void RestartLevel()
+    {
+        gameController.RestartLevel();
+       
+    }
+
+    private void RestartCheckpoint()
+    {
+        gameController.RestartCheckpoint();
+    }
+
+    private void ExitGame()
+    {
+         Application.Quit();
+    }
+}
+
+Core\Parallax.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Parallax : MonoBehaviour
+{
+    [SerializeField] private Transform followingTarget;
+    [SerializeField, Range(0f, 1f)] private float ParallaxStrength = 0.1f;
+
+    private Vector3 targetPreviousPosition;
+
+    private void Start()
+    {
+        if (!followingTarget)
+        {
+            if (Camera.main != null) 
+                followingTarget = Camera.main.transform;
+        }
+        targetPreviousPosition = followingTarget.position;
+    }
+
+    private void Update()
+    {
+        Vector3 delta;
+        var position = followingTarget.position;
+        delta = position - targetPreviousPosition;
+        targetPreviousPosition = position;
+        transform.position += delta * ParallaxStrength;
+    }
+}
+
+
+Core\PlayerSpawner.cs
+***
+﻿using System;
+using _Project.Core.Camera;
+using UnityEngine;
+
+namespace _Project.Core
+{
+    public class PlayerSpawner:MonoBehaviour
+    {
+        [SerializeField] private GameObject playerPrefab;
+        [SerializeField] private CheckpointList checkpointList;
+        [SerializeField] private CameraMove cameraMove;
+        public GameObject Player { get; private set; }
+        
+        private void Awake()
+        {
+            Player = Instantiate(playerPrefab);
+        }
+
+        public void MoveToLastPoint()
+        {
+           var checkPointPosition =  checkpointList.GetLastCheckPointPosition();
+           Player.transform.position = checkPointPosition;
+           cameraMove.SetPlayer(Player.transform);
+           cameraMove.InstantMove();
+        }
+    }
+}
+
+Core\Scrolling.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using UnityEngine;
+
+public class Scrolling : MonoBehaviour
+{
+    public float backgroundSize;
+     
+    private Transform cameraTransform;
+    private Transform[] layers;
+    private float viewZone = 3;
+    private int rightIndex;
+    private int leftIndex;
+
+    private void Start()
+    {
+        if (Camera.main != null) 
+            cameraTransform = Camera.main.transform;
+        layers = new Transform[transform.childCount];
+        for (var i = 0; i < transform.childCount; i++)
+        {
+            layers[i] = transform.GetChild(i);
+        }
+        leftIndex = 0;
+        rightIndex = layers.Length - 1;
+    }
+
+    private void Update()
+    {
+        if (cameraTransform.position.x < (layers[leftIndex].position.x + viewZone))
+        {
+            ScrollLeft();
+        }
+
+        if (cameraTransform.position.x > (layers[rightIndex].position.x - viewZone))
+        {
+            ScrollRight();
+        }
+    }
+
+    private void ScrollLeft()
+    {
+        layers[rightIndex].position = Vector3.right * (layers[leftIndex].position.x - backgroundSize);
+        leftIndex = rightIndex;
+        rightIndex--;
+
+        if (rightIndex < 0) 
+        {
+            rightIndex = layers.Length - 1;
+        }
+    }
+    
+    private void ScrollRight()
+    {
+        layers[leftIndex].position = Vector3.right * (layers[rightIndex].position.x + backgroundSize);
+        rightIndex = leftIndex;
+        leftIndex++;
+
+        if (leftIndex == layers.Length)
+        {
+            leftIndex = 0;
+        }
+    }
+}
+
+
+Core\Trajectory.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Trajectory : MonoBehaviour
+{
+    [SerializeField] private int dotsNumber;
+    [SerializeField] private GameObject dotsParent;
+    [SerializeField] private GameObject dotsPrefab;
+    [SerializeField] private float dotSpacing;
+
+    private Transform[] dotsList;
+    private Vector2 pos;
+    private float timeStamp;
+
+    private void Start()
+    {
+        Hide();
+        PrepareDots();
+    }
+
+    private void PrepareDots()
+    {
+        dotsList = new Transform[dotsNumber];
+        for (int i= 0; i<dotsNumber; i++) 
+        {
+            dotsList[i] = Instantiate(dotsPrefab, null).transform;
+            dotsList[i].parent = dotsParent.transform;
+        }
+    }
+
+    public void UpdateDots(Vector3 ballPos, Vector2 forceApplied)
+    {
+        timeStamp = dotSpacing;
+        for (int i = 0; i < dotsNumber; i++)
+        {
+            pos.x = (ballPos.x + forceApplied.x * timeStamp);
+            pos.y = (ballPos.y + forceApplied.y * timeStamp) - (Physics2D.gravity.magnitude * timeStamp * timeStamp) / 2f;
+
+            dotsList[i].position = pos;
+            timeStamp += dotSpacing;
+        }
+    }
+
+    public void Show()
+    {
+        dotsParent.SetActive(true);
+    }
+
+    public void Hide()
+    {
+        dotsParent.SetActive(false);
+    }
+
+}
+
+
+Core\Camera\CameraLiftZone.cs
+***
+﻿using UnityEngine;
+
+namespace _Project.Core.Camera
+{
+    using UnityEngine;
+
+    public class CameraLiftZone : MonoBehaviour
+    {
+        [SerializeField] private Transform startMarker;
+        [SerializeField] private Transform endMarker;
+
+        /// <summary>
+        /// Возвращает высоту камеры для заданной координаты X (по прямой между маркерами).
+        /// Если X за пределами зоны, возвращает конечную точку (clamp).
+        /// </summary>
+        public float GetYForX(float x)
+        {
+            if (startMarker == null || endMarker == null)
+                return 0f;
+
+            float startX = startMarker.position.x;
+            float endX = endMarker.position.x;
+
+            // На случай, если маркеры расставлены в обратном порядке
+            if (Mathf.Approximately(startX, endX))
+                return startMarker.position.y;
+
+            float t = Mathf.InverseLerp(startX, endX, x);
+            return Mathf.Lerp(startMarker.position.y, endMarker.position.y, t);
+        }
+
+        /// <summary>
+        /// Показывает, попадает ли координата X внутрь зоны.
+        /// </summary>
+        public bool ContainsX(float x)
+        {
+            if (startMarker == null || endMarker == null)
+                return false;
+            float minX = Mathf.Min(startMarker.position.x, endMarker.position.x);
+            float maxX = Mathf.Max(startMarker.position.x, endMarker.position.x);
+            return x >= minX && x <= maxX;
+        }
+
+        // Для наглядности в редакторе рисуем линию
+        private void OnDrawGizmosSelected()
+        {
+            if (startMarker != null && endMarker != null)
+            {
+                Gizmos.color = Color.yellow;
+                Gizmos.DrawLine(startMarker.position, endMarker.position);
+                Gizmos.DrawSphere(startMarker.position, 0.2f);
+                Gizmos.DrawSphere(endMarker.position, 0.2f);
+            }
+        }
+    }
+}
+
+Core\Camera\CameraMove.cs
+***
+using System.Collections.Generic;
+using UnityEngine;
+
+namespace _Project.Core.Camera
+{
+    public class CameraMove : MonoBehaviour
+    {
+        [Header("Dynamic Horizontal Follow")] 
+        [SerializeField] private float damping = 1.5f; // базовое время сглаживания
+        [SerializeField] private float speedInfluence = 0.1f; // влияние скорости игрока
+        [SerializeField] private float distanceInfluence = 0.05f; // влияние расстояния до цели
+        [SerializeField] private float minSmoothTime = 0.5f;
+        [SerializeField] private float maxSmoothTime = 2f;
+
+        [Header("Vertical Follow (Zones)")] 
+        [SerializeField] private float verticalSmoothTime = 0.5f; // время сглаживания подъёма/спуска
+        [SerializeField] private List<CameraLiftZone> liftZones = new List<CameraLiftZone>();
+
+        [Header("Base Offset")] 
+        [SerializeField] private Vector2 offset = new Vector2(0f, 0f);
+        [SerializeField] private float offsetYForGroundVision = 1f;
+        
+        [Header("ScreenScale")]
+        [SerializeField] private float targetWorldWidth = 19.2f; // ширина в юнитах, которую всегда видно
+        [SerializeField] private bool adjustCameraSize = true;
+        
+        private const float OffsetZ = -10f;
+        private Transform player;
+        private Vector3 lastPlayerPosition;
+        private float playerSpeed;
+        private UnityEngine.Camera followCamera;
+        
+        // Раздельные скорости для осей
+        private float velocityX = 0f;
+        private float velocityY = 0f;
+
+        // Текущая плавная высота, которую отрабатывает камера
+        private float currentDesiredY; // значение, к которому стремится камера по Y (обновляется редко)
+        private float targetDesiredY; // что мы вычисляем из зон
+
+        public void SetPlayer(Transform player)
+        {
+            this.player = player;
+            if (player != null)
+            {
+                lastPlayerPosition = player.position;
+                currentDesiredY = GetBaseY();
+            }
+        }
+
+        public void InstantMove()
+        {
+            if (player == null) 
+                return;
+            
+            MoveToPosition(instantMove: true);
+        }
+        
+        private void Awake()
+        {
+            followCamera = GetComponent<UnityEngine.Camera>();
+            UpdateCameraOrthoSize();
+        }
+        
+        private void UpdateCameraOrthoSize()
+        {
+            if (!adjustCameraSize || followCamera == null) return;
+
+            float targetSize = targetWorldWidth / (2f * followCamera.aspect);
+            // опционально ограничь, чтобы не уезжало в крайности (очень высокий/широкий экран)
+            Debug.Log("targetSize: " + targetSize);
+            targetSize = Mathf.Clamp(targetSize, 6f, 10f);
+
+            followCamera.orthographicSize = targetSize;
+        }
+        
+        private void Update()
+        {
+            // Если игра на паузе — не двигаем камеру и сбрасываем скорость
+            if (Time.timeScale <= 0.0001f || Time.deltaTime <= 0.0001f)
+            {
+                playerSpeed = 0f;
+                return;
+            }
+            
+            Vector3 playerPos = player.position;
+            if (float.IsNaN(playerPos.x) || float.IsNaN(playerPos.y))
+                return;
+
+            // Расчёт скорости игрока для динамического демпфирования
+            Vector3 playerDelta = playerPos - lastPlayerPosition;
+            if (float.IsNaN(playerDelta.x) || float.IsNaN(playerDelta.y))
+                playerDelta = Vector3.zero;
+
+            playerSpeed = playerDelta.magnitude / Time.deltaTime;
+            lastPlayerPosition = playerPos;
+
+            MoveToPosition();
+        }
+
+        private void MoveToPosition(bool instantMove = false)
+        {
+            Vector3 pos = transform.position;
+
+            // Цель по X (относительно игрока)
+            float targetX = player.position.x - offset.x;
+
+            // Определяем желаемую высоту камеры в зависимости от зон
+            targetDesiredY = GetDesiredYForX(targetX);
+
+            if (instantMove)
+            {
+                // Мгновенное перемещение и сброс скоростей
+                transform.position = new Vector3(targetX, targetDesiredY, OffsetZ);
+                velocityX = 0f;
+                velocityY = 0f;
+                currentDesiredY = targetDesiredY;
+                return;
+            }
+
+            // --- Горизонтальное движение с динамическим сглаживанием ---
+            float distance = Mathf.Abs(targetX - pos.x);
+            float dynamicSmoothTime = damping - (playerSpeed * speedInfluence) - (distance * distanceInfluence);
+            dynamicSmoothTime = Mathf.Clamp(dynamicSmoothTime, minSmoothTime, maxSmoothTime);
+
+            float newX = Mathf.SmoothDamp(pos.x, targetX, ref velocityX, dynamicSmoothTime);
+
+            // --- Вертикальное движение (независимое сглаживание) ---
+            currentDesiredY = Mathf.SmoothDamp(currentDesiredY, targetDesiredY, ref velocityY, verticalSmoothTime);
+            // currentDesiredY — та высота, к которой камера подтягивается плавно
+
+            transform.position = new Vector3(newX, currentDesiredY, OffsetZ);
+        }
+
+        /// <summary>
+        /// Базовая высота камеры вне зон подъёма.
+        /// </summary>
+        private float GetBaseY()
+        {
+            return offset.y - offsetYForGroundVision;
+        }
+
+        /// <summary>
+        /// Вычисляет желаемую высоту камеры для заданной мировой X (точки, куда движется камера).
+        /// Если X внутри одной из зон, возвращает интерполированное значение;
+        /// иначе — базовую высоту.
+        /// </summary>
+        private float GetDesiredYForX(float worldX)
+        {
+            foreach (var zone in liftZones)
+            {
+                if (zone != null && zone.ContainsX(worldX))
+                {
+                    return zone.GetYForX(worldX);
+                }
+            }
+
+            return GetBaseY();
+        }
+
+        // Визуализация базовой высоты
+        private void OnDrawGizmosSelected()
+        {
+            Gizmos.color = Color.green;
+            Vector3 basePos = new Vector3(transform.position.x, GetBaseY(), transform.position.z);
+            Gizmos.DrawWireSphere(basePos, 0.2f);
+        }
+    }
+}
+
+Global\DeathType.cs
+***
+﻿namespace Global
+{
+    public enum DeathType
+    {
+        Poison,
+        Fire,
+        Swamp
+    }
+}
+
+Global\GameController.cs
+***
+﻿using System;
+using UnityEngine;
+
+namespace Global
+{
+    public class GameController: SingletonBase<GameController>
+    {
+        public event Action<DeathType> OnPlayerDeath; 
+        public event Action OnLevelRestarted; 
+        public event Action OnCheckpointRestarted; 
+        public event Action OnSaveLoaded; 
+        private SaveController saveController => SaveController.Instance;
+        private SceneController sceneController => SceneController.Instance;
+    
+
+        public void PlayerDeath(DeathType deathType)
+        {
+            Debug.Log($"Player death {deathType}");
+            OnPlayerDeath?.Invoke(deathType);
+        }
+
+        public void PlayerDeathAnimationFinished()
+        {
+            sceneController.RestartScene();
+        }
+
+        public void RestartLevel()
+        {
+            saveController.ClearLevelProgress();
+            sceneController.RestartScene();
+            OnLevelRestarted?.Invoke();
+        }
+
+        public void RestartCheckpoint()
+        {
+            sceneController.RestartScene();
+            OnCheckpointRestarted?.Invoke();
+        }
+
+        public void LoadLevelFromSaves(SceneName levelName)
+        {
+            sceneController.LoadScene(levelName);
+            OnSaveLoaded?.Invoke();
+        }
+    }
+}
+
+Global\JumpsCounterController.cs
+***
+﻿using System;
+using UnityEngine;
+
+namespace Global
+{
+    public class JumpsCounterController : SingletonBase<JumpsCounterController>
+    {
+        public int Jumps => savedJumps + localJumps;
+
+        public event Action OnJumpsChanged;
+        private SaveController saveController => SaveController.Instance;
+        private GameController gameController => GameController.Instance;
+        
+        private int localJumps;
+        private int savedJumps;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            gameController.OnPlayerDeath += OnPlayerDeath;
+            gameController.OnLevelRestarted += ClearLocalJumps;
+            gameController.OnCheckpointRestarted  += ClearLocalJumps;
+            gameController.OnSaveLoaded += ClearLocalJumps;
+            saveController.OnSavedJumpsChanged += SaveControllerOnSavedJumpsChanged;
+            saveController.OnNewCheckpointReached += SaveController_OnNewCheckpointReached;
+        }
+        
+        public void IncreaseJumpCounter()
+        {
+            localJumps++;
+            OnJumpsChanged?.Invoke();
+        }
+
+        private void SaveController_OnNewCheckpointReached()
+        {
+            saveController.SaveJumpCounter(Jumps);
+        }
+
+        private void SaveControllerOnSavedJumpsChanged(int newSavedJumps)
+        {
+            savedJumps = newSavedJumps;
+            localJumps = 0;
+            OnJumpsChanged?.Invoke();
+        }
+
+        private void OnPlayerDeath(DeathType type)
+        {
+            ClearLocalJumps();
+        }
+
+        private void ClearLocalJumps()
+        {
+            localJumps = 0;
+            OnJumpsChanged?.Invoke(); 
+        }
+    }
+}
+
+Global\LevelOrder.cs
+***
+﻿namespace Global
+{
+    public static class LevelOrder
+    {
+        /// <summary>
+        /// Список сцен, которые считаются уровнями (в порядке прохождения).
+        /// </summary>
+        public static readonly SceneName[] Levels = new SceneName[]
+        {
+            SceneName.Rocks,
+            SceneName.Swamp
+        };
+
+        /// <summary>
+        /// Количество уровней.
+        /// </summary>
+        public static int Count => Levels.Length;
+
+        /// <summary>
+        /// Получить уровень по индексу.
+        /// </summary>
+        public static SceneName GetByIndex(int index) => Levels[index];
+
+        /// <summary>
+        /// Получить индекс уровня (или -1, если это не уровень).
+        /// </summary>
+        public static int GetIndex(SceneName level) => System.Array.IndexOf(Levels, level);
+
+        /// <summary>
+        /// Проверить, является ли сцена уровнем.
+        /// </summary>
+        public static bool IsLevel(SceneName scene) => GetIndex(scene) >= 0;
+
+        /// <summary>
+        /// Получить следующий уровень (или текущий, если последний).
+        /// </summary>
+        public static SceneName GetNextLevel(SceneName current)
+        {
+            int idx = GetIndex(current);
+            if (idx < 0 || idx >= Count - 1)
+                return current;
+            return Levels[idx + 1];
+        }
+    }
+}
+
+Global\SceneController.cs
+***
+﻿using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+namespace Global
+{
+    public class SceneController : SingletonBase<SceneController>
+    {
+        public SceneName CurrentSceneName { get; private set; }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            string scene = SceneManager.GetActiveScene().name;
+            if (Enum.TryParse(scene, out SceneName sceneEnum) == false)
+            {
+                Debug.LogError($"scene {scene} is not in SceneName enum. Please add scene in enum");
+                return;
+            }
+
+            CurrentSceneName = sceneEnum;
+            Debug.Log("Start scene: " + CurrentSceneName);
+        }
+
+        public void LoadScene(SceneName sceneName)
+        {
+            Debug.Log("Load scene: " + CurrentSceneName);
+            CurrentSceneName = sceneName;
+            SceneManager.LoadScene(sceneName.ToString());
+        }
+
+        public void RestartScene()
+        {
+            Debug.Log("Reload scene: " + CurrentSceneName);
+            LoadScene(CurrentSceneName);
+        }
+    }
+}
+
+Global\SceneName.cs
+***
+﻿namespace Global
+{
+    public enum SceneName
+    {
+        StartLab,
+        Space,
+        Rocks,
+        Swamp
+    }
+}
+
+Global\UniTaskUtils.cs
+***
+﻿using System;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Spine.Unity;
+using UnityEngine;
+
+namespace Global
+{
+    public static class UniTaskUtils
+    {
+        /// <summary>
+        /// Запускает асинхронный метод с CancellationToken и обрабатывает отмену.
+        /// </summary>
+        /// <param name="asyncMethod">Делегат, принимающий CancellationToken и возвращающий UniTask.</param>
+        /// <param name="token">Токен отмены.</param>
+        /// <param name="callerName">Имя вызывающего метода (автоматически).</param>
+        public static async UniTask RunWithCancellationAsync(
+            Func<CancellationToken, UniTask> asyncMethod,
+            CancellationToken token,
+            [CallerMemberName] string callerName = "")
+        {
+            try
+            {
+                await asyncMethod(token);
+            }
+            catch (OperationCanceledException)
+            {
+                //Debug.LogWarning($"[UniTaskUtils] Async method '{callerName}' was cancelled.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[UniTaskUtils] Unexpected error in '{callerName}': {ex}");
+            }
+        }
+
+        /// <summary>
+        /// Версия с возвращаемым значением.
+        /// </summary>
+        public static async UniTask<T> RunWithCancellationAsync<T>(
+            Func<CancellationToken, UniTask<T>> asyncMethod,
+            CancellationToken token,
+            [CallerMemberName] string callerName = "")
+        {
+            try
+            {
+                return await asyncMethod(token);
+            }
+            catch (OperationCanceledException)
+            {
+                Debug.LogWarning($"[UniTaskUtils] Async method '{callerName}' was cancelled.");
+                return default;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[UniTaskUtils] Unexpected error in '{callerName}': {ex}");
+                return default;
+            }
+        }
+        /// <summary>
+        /// spine animation player
+        /// </summary>
+        /// <param name="skeletonAnimation"></param>
+        /// <param name="animationName"></param>
+        /// <param name="trackIndex"></param>
+        /// <param name="loop"></param>
+        public static async UniTask PlayAnimation(SkeletonAnimation skeletonAnimation, 
+            string animationName, int trackIndex = 0, bool needChangeAlpha = false,float alpha = 1f, bool loop = false, CancellationToken token = new CancellationToken() )
+        {
+            Spine.SkeletonData skeletonData = skeletonAnimation.SkeletonDataAsset.GetSkeletonData(true);
+            Spine.Animation animation = skeletonData.FindAnimation(animationName);
+        
+            if (animation != null)
+            {
+                float duration = animation.Duration;
+                var trackEntry = skeletonAnimation.AnimationState.SetAnimation(trackIndex, animation, loop);
+                if (needChangeAlpha)
+                    trackEntry.Alpha = alpha;
+                await UniTask.Delay(TimeSpan.FromSeconds(duration), cancellationToken:token);
+            }
+            else
+            {
+                Debug.LogError($"Animation '{animationName}' not found!");
+            }
+        }
+    }
+}
+
+Global\SaveMechanics\SaveController.cs
+***
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using _Project.Scriptable;
+using StartingLab;
+using UnityEngine;
+
+namespace Global
+{
+    public class SaveController : SingletonBase<SaveController>
+    {
+        [SerializeField] private SceneImageDatabase sceneImageDatabase;
+        
+        public int LastCheckPointID { get; private set; } = -1;
+        public event Action<int> OnJumpCounterChanged;
+        public event Action<int> OnSavedJumpsChanged;
+        public event Action OnNewCheckpointReached;
+        public event Action OnLevelFinished;
+        public event Action OnTutorFinished;
+        public SaveData SaveData => saveData;
+        public int JumpCounter => GetJumps();
+
+        
+        private SaveData saveData = new();
+        private SaveHandler saveHandler = new();
+        private SceneController sceneController => SceneController.Instance;
+        private SceneName scene => sceneController.CurrentSceneName;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            saveData = saveHandler.Load();
+        }
+
+        private void Start()
+        {
+            LoadLastSave();
+        }
+
+        private int GetJumps()
+        {
+            return saveData?.LastCheckpointData?.Jumps ?? 0;
+        }
+        
+        public Sprite GetSpriteByScene(SceneName sceneType)
+        {
+            return sceneImageDatabase.GetSpriteByScene(sceneType);
+        }
+
+        public void LevelCompleted()
+        {
+            if (saveData.LevelDatas.ContainsKey(scene) == false)
+            {
+                Debug.LogError("Level completed without any level data");
+                return;
+            }
+
+            var nextLevel = LevelOrder.GetNextLevel(scene);
+            if (nextLevel != scene)
+            { 
+                var nextLevelData = saveHandler.CreateLevel(nextLevel);
+                if (saveData.LevelDatas.ContainsKey(nextLevel) == false)
+                    saveData.LevelDatas.Add(nextLevel, nextLevelData); 
+            }
+           
+            saveData.LevelDatas[scene].IsFinished = true;
+            saveData.LevelDatas[scene].JumpRecord = GetJumpRecord();
+            saveData.LevelDatas[scene].LastCheckpoint.Checkpoint = 0;
+            saveData.LevelDatas[scene].LastCheckpoint.Jumps = 0;
+            saveData.LastCheckpointData = saveData.LevelDatas[scene].LastCheckpoint;
+            saveData.LastCheckpointData.LevelName = nextLevel;
+            saveHandler.Save(saveData);
+            LastCheckPointID = -1;
+            sceneController.LoadScene(nextLevel);
+            OnLevelFinished?.Invoke();
+        }
+
+        public void SaveJumpCounter(int value)
+        {
+            saveData.LastCheckpointData.Jumps = value;
+            saveData.LevelDatas[scene].LastCheckpoint.Jumps = value;
+            saveHandler.Save(saveData);
+            OnSavedJumpsChanged?.Invoke(value);
+        }
+
+
+        public void NewCheckPointReached(int index)
+        {
+            if (LevelOrder.IsLevel(scene) == false)
+                return;
+            saveData.LastCheckpointData.LevelName = scene;
+            saveData.LastCheckpointData.Checkpoint = index;
+            saveData.LevelDatas[scene].LastCheckpoint = saveData.LastCheckpointData;
+            saveHandler.Save(saveData);
+            LastCheckPointID = index;
+            OnNewCheckpointReached?.Invoke();
+        }
+
+        public void ClearLevelProgress()
+        {
+            saveData.LastCheckpointData.Checkpoint = 0;
+            saveData.LastCheckpointData.Jumps = 0;
+            saveData.LastCheckpointData.Progress = 0;
+            saveData.LevelDatas[scene].LastCheckpoint = saveData.LastCheckpointData;
+            LastCheckPointID = -1;
+            saveHandler.Save(saveData);
+            OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
+        }
+
+        public void TutorFinished()
+        {
+            if ( saveData.IsTutorFinished )
+                return;
+            saveData.IsTutorFinished = true;
+            saveHandler.Save(saveData);
+            OnTutorFinished?.Invoke();
+        }
+
+        private void LoadLastSave()
+        {
+            var scene = saveData.LastCheckpointData.LevelName;
+            LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
+            Debug.Log($"Scene loaded {scene}, checkpoint {LastCheckPointID}");
+            if (scene != sceneController.CurrentSceneName)
+                sceneController.LoadScene(scene);
+            OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
+        }
+        
+        private int GetJumpRecord()
+        {
+            return 0;
+        }
+    }
+}
+
+Global\SaveMechanics\SaveData.cs
+***
+﻿using System.Collections.Generic;
+
+namespace Global
+{
+    public class SaveData
+    {
+        public Dictionary<SceneName, LevelData> LevelDatas;
+        public LastCheckpointData LastCheckpointData;
+        public bool IsTutorFinished;
+    }
+
+    public class LevelData
+    {
+        public SceneName LevelName;
+        public int JumpRecord;
+        public bool IsFinished;
+        public LastCheckpointData LastCheckpoint;
+    }
+
+    public class LastCheckpointData
+    { 
+        public SceneName LevelName;
+        public int Checkpoint;
+        public int Jumps;
+        public int Progress;
+
+        public LastCheckpointData()
+        {
+            Checkpoint = -1;
+        }
+
+        public LastCheckpointData(LastCheckpointData newData)
+        {
+            LevelName = newData.LevelName;
+            Checkpoint = newData.Checkpoint;
+            Jumps = newData.Jumps;
+            Progress = newData.Progress;
+        }
+    }
+}
+
+Global\SaveMechanics\SaveHandler.cs
+***
+﻿using System.Collections.Generic;
+using UnityEngine;
+using Newtonsoft.Json;
+using Global;
+
+namespace Global
+{
+    public class SaveHandler
+    {
+        private const string SaveKey = "GameSaveData";
+
+        /// <summary>
+        /// Сохраняет объект SaveData в PlayerPrefs.
+        /// </summary>
+        public void Save(SaveData data)
+        {
+            if (data == null)
+            {
+                Debug.LogError("SaveData is null. Save aborted.");
+                return;
+            }
+
+            try
+            {
+                string json = JsonConvert.SerializeObject(data, Formatting.None);
+                PlayerPrefs.SetString(SaveKey, json);
+                PlayerPrefs.Save();
+                Debug.Log("Game saved successfully.");
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to save game: {e.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Загружает SaveData из PlayerPrefs. Если сохранения нет, возвращает новый объект.
+        /// </summary>
+        public SaveData Load()
+        {
+            if (!PlayerPrefs.HasKey(SaveKey))
+            {
+                Debug.Log("No save data found. Returning new SaveData.");
+                return SaveDataDefault();
+            }
+
+            try
+            {
+                string json = PlayerPrefs.GetString(SaveKey);
+                SaveData data = JsonConvert.DeserializeObject<SaveData>(json);
+                Debug.Log("Game loaded successfully.");
+                return data;
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogError($"Failed to load game: {e.Message}");
+                return SaveDataDefault();
+            }
+        }
+
+        /// <summary>
+        /// Удаляет сохранение из PlayerPrefs.
+        /// </summary>
+        public void DeleteSave()
+        {
+            PlayerPrefs.DeleteKey(SaveKey);
+            PlayerPrefs.Save();
+            Debug.Log("Save data deleted.");
+        }
+        
+        private SaveData SaveDataDefault()
+        {
+            SaveData saveData = new();
+            saveData.LevelDatas = new Dictionary<SceneName, LevelData>();
+            saveData.LastCheckpointData = new LastCheckpointData();
+            saveData.LastCheckpointData.LevelName = SceneName.StartLab;
+            var leveldata = CreateLevel(SceneName.Rocks);
+            saveData.LevelDatas.Add(SceneName.Rocks, leveldata );
+            return saveData;
+        }
+        public LevelData CreateLevel(SceneName sceneName)
+        {
+            var levelData = new LevelData();
+            levelData. LevelName = sceneName;
+            levelData.LastCheckpoint = new LastCheckpointData();
+            levelData.LastCheckpoint.LevelName = sceneName;
+            
+            return levelData;
+        }
+    }
+}
+
+Player\Ball.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class Ball : MonoBehaviour
+{
+    public bool IsGrounded { get; private set; }
+
+    private Rigidbody2D rb;
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+    
+    private void OnTriggerStay2D(Collider2D trig)
+    {
+        if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+        {
+            IsGrounded = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D trig)
+    {
+        if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+        {
+            IsGrounded = false;
+        }
+    }
+
+}
+
+
+Player\DeathChecker.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Global;
+using UnityEngine;
+
+public class DeathChecker : MonoBehaviour
+{
+    private GameController gameController => GameController.Instance;
+    
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("poison"))
+            gameController.PlayerDeath(deathType: DeathType.Poison);
+        if (collision.gameObject.CompareTag("fire"))
+            gameController.PlayerDeath(deathType: DeathType.Fire);
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("swamp")) 
+            gameController.PlayerDeath(deathType: DeathType.Swamp);
+        
+    }
+}
+
+
+Player\FireD.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Global;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class FireD : MonoBehaviour
+{
+    private GameController gameController => GameController.Instance;
+    private bool isBurning;
+    
+    public void Burned()
+    {
+        if (isBurning)
+            return;
+        
+        gameController.PlayerDeath(DeathType.Fire);
+        isBurning = true;
+    }
+    
+}
+
+
+Player\MovementDetector.cs
+***
+﻿using System;
+using System.Threading;
+using UnityEngine;
+using Cysharp.Threading.Tasks;
+using Global;
+using UnityEngine;
+
+namespace _Project.Player
+{
+    [RequireComponent(typeof(Rigidbody2D))]
+    public class MovementDetector : MonoBehaviour
+    {
+        public bool CanMove => isGrounded || !isMoving;
+        public event Action OnCanBeStopped; 
+
+        private bool isGrounded;
+        private bool isMoving;
+        private float movementThreshold = 0.1f;
+        private Rigidbody2D rb;
+        private CancellationTokenSource cts = new();
+        
+        private void Awake()
+        {
+            rb = GetComponent<Rigidbody2D>();
+            UniTaskUtils.RunWithCancellationAsync(CheckMovement, cts.Token).Forget();
+        }
+
+        private async UniTask CheckMovement(CancellationToken cancellationToken)
+        {
+            while (cancellationToken.IsCancellationRequested == false)
+            {
+                isMoving = CheckMoving();
+                await UniTask.WaitForSeconds(.1f,cancellationToken: cancellationToken);
+            }
+        }
+        
+        private bool IsMovingX()
+        {
+            return Mathf.Abs(rb.linearVelocity.x) > movementThreshold;
+        }
+        
+        private bool CheckMoving()
+        {
+            return rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
+        }
+
+        private void OnTriggerEnter2D(Collider2D trig)
+        {
+            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+            {
+                isGrounded = true;
+                if (!IsMovingX())
+                    OnCanBeStopped?.Invoke();
+            }
+        }
+
+        /*private void OnTriggerStay2D(Collider2D trig)
+        {
+            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+            {
+                isGrounded = true;
+            }
+        }*/
+
+        private void OnTriggerExit2D(Collider2D trig)
+        {
+            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+            {
+                isGrounded = false;
+            }
+        }
+        
+        private void OnDestroy()
+        {
+            cts.Cancel();
+            cts.Dispose();
+        }
+    }
+}
+
+Player\Player.cs
+***
+﻿using System;
+using Cysharp.Threading.Tasks;
+using Global;
+using Spine.Unity;
+using UnityEngine;
+
+namespace _Project.Player
+{
+    [RequireComponent(typeof(Rigidbody2D) )]
+    public class Player: MonoBehaviour
+    {
+        [SerializeField] private PlayerAnimation playerAnimation;
+        [SerializeField] private MovementDetector movementDetector;
+        
+        public MovementDetector MovementDetector => movementDetector;
+        
+        private Rigidbody2D rb;
+        private GameController gameManager => GameController.Instance;
+
+        public PlayerAnimation PlayerAnimation => playerAnimation;
+
+        private bool isDying;
+        
+        private void Awake()
+        {
+            rb = GetComponent<Rigidbody2D>();
+            gameManager.OnPlayerDeath += GameManager_OnPlayerDeath;
+        }
+
+        private void GameManager_OnPlayerDeath(DeathType death)
+        {
+            PlayerDeath(death).Forget();
+        }
+
+        private async UniTask PlayerDeath(DeathType death)
+        {
+            if (isDying)
+                return;
+            
+            isDying = true;
+            rb.bodyType = RigidbodyType2D.Kinematic;
+            rb.linearVelocity = Vector2.zero;
+            await playerAnimation.PlayDeath(death);
+            gameManager.PlayerDeathAnimationFinished();
+        }
+
+        private void OnDestroy()
+        {
+            try
+            {
+                gameManager.OnPlayerDeath -= GameManager_OnPlayerDeath;
+            }
+            catch 
+            {
+                // ignored
+            }
+        }
+        
+        public void Push(Vector2 force)
+        {
+            rb.AddForce(force, ForceMode2D.Impulse);
+        }
+    }
+}
+
+Player\PlayerAnimation.cs
+***
+﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Global;
+using Spine.Unity;
+using UnityEngine;
+
+namespace _Project.Player
+{
+    public class PlayerAnimation: MonoBehaviour
+    {
+        
+        private SkeletonAnimation skeletonAnimation;
+        
+        [SerializeField] private string idle;
+        [SerializeField] private string staticIdle;
+        [SerializeField] private string deathEyes;
+        [SerializeField] private string deathPoison;
+        [SerializeField] private string deathFire;
+        [SerializeField] private string drag;
+        [SerializeField] private string eyesDown;
+        [SerializeField] private string eyesUp;
+        [SerializeField] private string blinking;
+        
+        private bool idleStart = false;
+        private string[] idleAnimations = { "idle", "static2" };
+        private CancellationTokenSource cts = new();
+        private void Awake()
+        {
+            skeletonAnimation = GetComponent<SkeletonAnimation>();
+            UniTaskUtils.RunWithCancellationAsync(Blinking, cts.Token).Forget();
+        }
+
+        private async UniTask Blinking (CancellationToken token)
+        {
+            while (token.IsCancellationRequested == false)
+            {
+                await UniTaskUtils.PlayAnimation(skeletonAnimation, blinking, 4, loop: false, token: token);
+                await UniTask.WaitForSeconds(2f, cancellationToken: token);
+            }
+        }
+        
+        public async UniTask PlayDeath(DeathType deathType)
+        {
+            cts.Cancel();
+            string death = deathType switch
+            {
+                DeathType.Poison => deathPoison,
+                DeathType.Fire => deathFire,
+                DeathType.Swamp => deathPoison,
+                _ => deathPoison
+            };
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, deathEyes, 1, true, 0.7f);
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, death);
+        }
+        
+        public async UniTask PlayEyesDown()
+        {
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, eyesDown);
+        }
+        
+        public async UniTask PlayEyesUp()
+        {
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, eyesUp, 3);
+        }
+
+        public async UniTask PlayIdle()
+        {
+            if (!idleStart)
+            {
+                idleStart = true;
+                await UniTaskUtils.PlayAnimation(skeletonAnimation, staticIdle, 1, loop:true);
+            }
+        }
+        
+        public async UniTask PlayStaticIdle()
+        {
+            var time = UnityEngine.Random.Range(1000, 2000);
+            
+            idleStart = true;
+            string animName = idleAnimations[UnityEngine.Random.Range(0, idleAnimations.Length)];
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, animName, 1, loop:true);
+            await UniTask.Delay(time);
+            StopIdle();
+        }
+
+        public void StopIdle()
+        {
+            if (idleStart)
+            {
+                idleStart = false;
+                skeletonAnimation.AnimationState.SetEmptyAnimation(1, 0.5f);
+            }
+        }
+        
+        public async UniTask PlayDrag()
+        {
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, drag);
+        }
+
+        private void OnDestroy()
+        {
+            cts.Cancel();
+            cts.Dispose();
+        }
+    }
+}
+
+Player\Stopper.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using _Project.Player;
+using Unity.Burst.Intrinsics;
+using UnityEngine;
+
+public class Stopper : MonoBehaviour
+{
+    [SerializeField] private float scale;
+    [SerializeField] private MovementDetector movementDetector;
+    
+    private Rigidbody2D rb;
+    private bool isPushed => movementDetector.CanMove;
+    
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        movementDetector.OnCanBeStopped += BallStop;
+    }
+
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        if (col.gameObject.CompareTag("stopper") && isPushed == false)
+        {
+            BallStop();
+        }
+
+    }
+
+    private void BallStop()
+    {
+        Debug.Log("Ball stop");
+        Vector2 speed = rb.linearVelocity;
+        rb.linearVelocity = speed * scale;
+    }
+}
+
+Rocks\ActivationRb.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class ActivationRb : MonoBehaviour
+{
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Static;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            rb.bodyType = RigidbodyType2D.Dynamic;
+        }
+    }
+}
+
+
+Rocks\Fall.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class Fall : MonoBehaviour
+{
+    private Rigidbody2D rb;
+    
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Static;
+    }
+    
+    public void Drop()
+    {
+        rb.bodyType = RigidbodyType2D.Dynamic;
+    }
+}
+
+
+Rocks\FallControl.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class FallControl : MonoBehaviour
+{
+    public Fall[] Fall;
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            foreach (var fall in Fall) 
+            {
+                fall.Drop();
+            }
+        }
+    }
+}
+
+
+Rocks\Finish.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Global;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class Finish : MonoBehaviour
+{
+    private SaveController saveController => SaveController.Instance;
+    
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            saveController.LevelCompleted();
+        }
+    }
+}
+
+
+Rocks\Fire.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class Fire : MonoBehaviour
+{
+    private FireD fire;
+
+    private void OnParticleCollision(GameObject other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            fire = other.GetComponent<FireD>();
+            fire.Burned();
+        }
+    }
+}
+
+Rocks\FlashStart.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Spine.Unity;
+using UnityEngine;
+
+[RequireComponent(typeof(SkeletonAnimation) )]
+public class FlashStart : MonoBehaviour
+{
+    private SkeletonAnimation flash;
+
+    private void Awake()
+    {
+        flash = GetComponent<SkeletonAnimation>();
+    }
+
+    private void Flash()
+    {
+        flash.AnimationState.SetAnimation(0, "animation", false);
+    }
+}
+
+
+Rocks\ObjectEmitter2D.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class ObjectEmitter2D : MonoBehaviour
+{
+    [Header("Spawn Settings")]
+    [SerializeField] private GameObject objectToSpawn; // Префаб объекта для создания
+    public bool isSpawning = false;  // Флаг включения/выключения генерации
+    [SerializeField] private float spawnInterval = 1f; // Интервал генерации
+
+    [Header("Force Settings")]
+    [SerializeField] private float force = 5f;         // Сила прикладываемая к объекту
+    [SerializeField] private Vector2 direction = Vector2.up; // Направление прикладываемой силы
+
+    [Header("Randomization Settings")]
+    [SerializeField] private float directionSpread = 10f;  // Разброс направления
+    [SerializeField] private float forceSpread = 2f;       // Разброс силы
+    [SerializeField] private float minScale = 0.5f;        // Минимальный масштаб
+    [SerializeField] private float maxScale = 1.5f;        // Максимальный масштаб
+
+    [Header("Timing Settings")]
+    [SerializeField] private float activeDuration = 5f;    // Длительность активной генерации
+    [SerializeField] private float inactiveDuration = 5f;  // Длительность неактивного состояния
+
+    private void Start()
+    {
+        // Запускаем корутину для генерации объектов
+        StartCoroutine(SpawnerRoutine());
+    }
+
+    private IEnumerator SpawnerRoutine()
+    {
+        while (true)
+        {
+            if (isSpawning)
+            {
+                // Активная фаза генерации
+                yield return StartCoroutine(SpawnObjects());
+
+                // Переход в неактивное состояние
+                Debug.Log("Spawning Disabled");
+                yield return new WaitForSeconds(inactiveDuration);
+            }
+            else
+            {
+                yield return null;
+            }
+        }
+    }
+
+    private IEnumerator SpawnObjects()
+    {
+        float spawnEndTime = Time.time + activeDuration;
+        while (Time.time < spawnEndTime)
+        {
+            // Создаем объект
+            GameObject newObject = Instantiate(objectToSpawn, transform.position, Quaternion.identity);
+
+            // Настраиваем случайный масштаб
+            float randomScale = Random.Range(minScale, maxScale);
+            newObject.transform.localScale = new Vector3(randomScale, randomScale, 1f);
+
+            // Получаем Rigidbody2D
+            Rigidbody2D rb = newObject.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                // Генерируем и нормализуем случайное направление
+                Vector2 randomizedDirection = direction + new Vector2(
+                    Random.Range(-directionSpread, directionSpread),
+                    Random.Range(-directionSpread, directionSpread)
+                ).normalized;
+
+                // Генерируем случайную силу в заданном диапазоне
+                float randomizedForce = force + Random.Range(-forceSpread, forceSpread);
+
+                // Применяем силу
+                rb.AddForce(randomizedDirection * randomizedForce, ForceMode2D.Impulse);
+            }
+
+            yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+}
+
+Rocks\ParticleGenerator.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(ParticleSystem))]
+public class ParticleGenerator : MonoBehaviour
+{
+    // Интервалы времени для включения/выключения
+    [SerializeField] private float activateTime = 2f; // Время активности частиц
+    [SerializeField] private float deactivateTime = 2f; // Время неактивности частиц
+
+    private ParticleSystem particleSystemComponent; // Ссылка на компонент Particle System
+    private bool isActive = false; // Переключатель состояния (включено/выключено)
+
+    private void Start()
+    {
+        // Получаем компонент ParticleSystem на объекте
+        particleSystemComponent = GetComponent<ParticleSystem>();
+
+        if (particleSystemComponent == null)
+        {
+            Debug.LogError("На объекте не найден ParticleSystem!");
+            return;
+        }
+        // Запускаем переключение
+        StartCoroutine(ToggleParticles());
+    }
+
+    private IEnumerator ToggleParticles()
+    {
+        while (true)
+        {
+            // Переключаем состояние
+            if (isActive)
+            {
+                particleSystemComponent.Stop(); // Останавливаем генерацию частиц
+                isActive = false;
+                yield return new WaitForSeconds(deactivateTime); // Ждем время неактивности
+            }
+            else
+            {
+                particleSystemComponent.Play(); // Включаем генерацию частиц
+                isActive = true;
+                yield return new WaitForSeconds(activateTime); // Ждем время активности
+            }
+        }
+    }
+}
+
+
+Rocks\SelfDestroyer.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SelfDestroyer : MonoBehaviour
+{
+    [Header("Destruction Settings")]
+    [SerializeField] private float targetYPosition = -10f; // Целевая позиция по оси Y для удаления объекта
+
+    private void Update()
+    {
+        // Проверяем текущую позицию объекта по оси Y
+        if (transform.position.y <= targetYPosition)
+        {
+            // Удаляем объект
+            Destroy(gameObject);
+        }
+    }
+}
+
+
+Rocks\ShakeOnCollision.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class ShakeOnCollision : MonoBehaviour
+{
+    [SerializeField] private ObjectEmitter2D emitter;
+    [SerializeField] private string targetTag = "Player"; // Тег объекта, с которым должно быть столкновение
+    [SerializeField] private float shakeIntensity = 0.5f;  // Интенсивность тряски
+    [SerializeField] private float shakeDuration = 1f;     // Длительность тряски
+    //[SerializeField] private float shakeFrequency = 0.05f; // Частота тряски (чем меньше, тем быстрее)
+
+    private bool isShaking = false;      // Флаг: трясётся ли объект
+    private Vector3 originalPosition;    // Оригинальная позиция объекта
+    private float shakeTimeRemaining;    // Оставшееся время тряски
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        originalPosition = transform.localPosition;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        // Проверяем, если объект столкнулся с определённым тегом
+        if (collision.gameObject.CompareTag(targetTag) && !isShaking)
+        {
+            StartShake();
+            emitter.isSpawning = true;
+        }
+    }
+
+    private void Update()
+    {
+        // Если объект трясётся, выполняем тряску
+        if (isShaking)
+        {
+            if (shakeTimeRemaining > 0)
+            {
+                PerformShake();
+                shakeTimeRemaining -= Time.deltaTime;
+            }
+            else
+            {
+                StopShake();
+            }
+        }
+    }
+    private void StartShake()
+    {
+        // Начинаем тряску
+        isShaking = true;
+        shakeTimeRemaining = shakeDuration;
+    }
+  
+    private void PerformShake()
+    {
+        // Генерируем случайное смещение в пределах интенсивности
+        float offsetX = Random.Range(-shakeIntensity, shakeIntensity);
+        float offsetY = Random.Range(-shakeIntensity, shakeIntensity);
+        float offsetZ = Random.Range(-shakeIntensity, shakeIntensity);
+
+        // Позиция во время тряски
+        transform.localPosition = originalPosition + new Vector3(offsetX, offsetY, offsetZ);
+    }
+
+    private void StopShake()
+    {
+        // Останавливаем тряску и возвращаем объект в исходное положение
+        isShaking = false;
+        transform.localPosition = originalPosition;
+    }
+}
+
+
+Scriptable\Sceneimage.cs
+***
+﻿using UnityEngine;
+using UnityEngine;
+using System.Collections.Generic;
+using Global;
+
+namespace _Project.Scriptable
+{
+    [CreateAssetMenu(fileName = "SceneImageDatabase", menuName = "Scriptable/Scene Image Database")]
+    public class SceneImageDatabase : ScriptableObject
+    {
+        public List<SceneImagePair> sceneImagePairs = new List<SceneImagePair>();
+
+        // Метод для получения спрайта по типу сцены (необязательно, но удобно)
+        public Sprite GetSpriteByScene(SceneName sceneType)
+        {
+            foreach (var pair in sceneImagePairs)
+            {
+                if (pair.sceneType == sceneType)
+                    return pair.sceneImage;
+            }
+            Debug.LogWarning($"Sprite {sceneType} not found!");
+            return null;
+        }
+    }
+    
+    [System.Serializable]
+    public class SceneImagePair
+    {
+        public SceneName sceneType;
+        public Sprite sceneImage; // Sprite используется для Image в UI
+    }
+}
+
+SingletonSystem\GlobalBootstrapManager.cs
+***
+﻿using UnityEngine;
+using System.Collections.Generic;
+
+public class GlobalBootstrapManager : MonoBehaviour
+{
+    private static bool isInitialized = false;
+
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void InitializeOnLoad()
+    {
+        if (isInitialized) return;
+        isInitialized = true;
+
+        var globalPrefab = Resources.Load<GameObject>("GlobalSingletons");
+        if (globalPrefab == null)
+        {
+            Debug.LogError("GlobalBootstrapPrefab not found in Resources!");
+            return;
+        }
+
+        var globalInstance = Instantiate(globalPrefab);
+        DontDestroyOnLoad(globalInstance);
+    }
+}
+
+SingletonSystem\SingletonBase.cs
+***
+﻿using System;
+using UnityEngine;
+
+public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T>
+{
+    private static T instance;
+
+    public static T Instance
+    {
+        get
+        {
+            if (instance != null) 
+                return instance;
+            
+            instance = FindObjectOfType <T>();
+            if (instance == null)
+            {
+                throw new Exception($"[Singleton] No instance of {typeof(T).Name} found in the scene.");
+            }
+            return instance;
+        }
+    }
+
+    protected virtual void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Debug.LogWarning($"[Singleton] Another instance of {typeof(T).Name} already exists. Destroying this duplicate.");
+            Destroy(gameObject);
+            return;
+        }
+        instance = (T)this;
+    }
+
+    protected virtual void OnDestroy()
+    {
+        if (instance == this)
+        {
+            instance = null;
+        }
+    }
+}
+
+Space\Asteroid.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
+
+public class Asteroid : MonoBehaviour
+{
+    [SerializeField] private float speedX = -0.001f;
+    [SerializeField] private float speedY = -0.001f;
+    
+    private void Update()
+    {
+        transform.Translate(speedY, speedX, 0f);
+    }
+}
+
+
+Space\Rocket.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Global;
+using Spine.Unity;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+[RequireComponent(typeof(SkeletonAnimation))]
+public class Rocket : MonoBehaviour
+{
+    private SkeletonAnimation line;
+    private SceneController sceneController => SceneController.Instance;
+    
+    private void Awake()
+    {
+        line = GetComponent<SkeletonAnimation>();
+    }
+
+    private void Start()
+    {
+        Play().Forget();
+    }
+
+    private async UniTask Play()
+    {
+        await UniTask.WaitForSeconds(2f);
+        line.AnimationState.SetAnimation(0, "animation", false);
+        await UniTask.WaitForSeconds(2.6f);
+        sceneController.LoadScene(SceneName.Rocks);
+    }
+
+}
+
+StartingLab\Flask.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Spine.Unity;
+using StartingLab;
+using UnityEngine;
+
+public class Flask : StartingLabAnimation
+{
+    public AudioSource process;
+    
+    public override void SetState(StartingLabState state)
+    {
+        base.SetState(state);
+        if (state == StartingLabState.Active)
+            process.Play();
+    }
+}
+
+
+StartingLab\PlayButton.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Spine.Unity;
+using StartingLab;
+using Unity.VisualScripting;
+using UnityEngine;
+using UnityEngine.Device;
+using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
+
+[RequireComponent(typeof(SkeletonAnimation))]
+[RequireComponent(typeof(SpineAnimationFader))]
+public class PlayButton : MonoBehaviour 
+{
+    public event Action OnButtonClicked;
+    
+    private SpineAnimationFader spineFader;
+    private SkeletonAnimation buttonSpineAnimation;
+    private bool isPressed;
+    private StartingLabState currentState = StartingLabState.Idle;
+    private enum AnimationNames
+    {
+        n_active,
+        alarme,
+        press
+    }
+    
+    private void Awake()
+    {
+        buttonSpineAnimation = GetComponent<SkeletonAnimation>();
+        spineFader = GetComponent<SpineAnimationFader>();
+    }
+    
+    public void SetLabState(StartingLabState state)
+    {
+        currentState = state;
+        AnimationNames animationName = state switch
+        {
+            StartingLabState.Alarm => AnimationNames.alarme,
+            StartingLabState.Active => AnimationNames.n_active,
+            StartingLabState.Idle => AnimationNames.n_active,
+            _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+        };
+
+        TryPlayAnimation(animationName);
+    }
+    
+    private void OnMouseDown()
+    {
+        if (isPressed == false && currentState == StartingLabState.Alarm)
+        {
+            MouseDownHandler().Forget();
+        }
+    }
+
+    private async UniTask MouseDownHandler()
+    {
+        TryPlayAnimation(AnimationNames.press);
+        isPressed = true;
+        UniTask.Post(() => OnButtonClicked?.Invoke());
+        await UniTask.WaitForSeconds(2f);
+        await spineFader.FadeOutSpine(2f);
+    }
+    
+    private void TryPlayAnimation(AnimationNames animationName)
+    {
+        Spine.Animation anim = buttonSpineAnimation.Skeleton.Data.FindAnimation(animationName.ToString());
+
+        if (anim == null)
+        {
+            Debug.LogError($"Animation '{animationName}' not found in {gameObject.name}!");
+        }
+        else
+        {
+            Debug.Log($" {gameObject.name} is playing animation {animationName}");
+            buttonSpineAnimation.AnimationState.SetAnimation(0, anim, true);
+        }
+    }
+
+ 
+
+
+
+
+
+
+
+
+
+
+}
+
+
+StartingLab\SpineAnimationFader.cs
+***
+﻿using System;
+using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using Spine.Unity;
+using UnityEngine;
+
+
+public class SpineAnimationFader : MonoBehaviour
+{
+    private SkeletonAnimation spineAnim;
+    private void Awake()
+    {
+        spineAnim = GetComponent<SkeletonAnimation>();
+    }
+
+    public async UniTask FadeOutSpine(float duration)
+    {
+        await DOTween.To(() => spineAnim.skeleton.A, x => spineAnim.skeleton.A = x, 0f, duration).ToUniTask();
+    }
+}
+
+StartingLab\StartingLabAnimation.cs
+***
+﻿using System;
+using Spine.Unity;
+using UnityEngine;
+
+namespace StartingLab
+{
+    [RequireComponent(typeof(SkeletonAnimation))]
+    public class StartingLabAnimation : MonoBehaviour
+    {
+        private const string IdleAnimationName = "idle";
+        private const string AlarmAnimationName = "alarm";
+        private const string ActiveAnimationName = "activate";
+
+        private SkeletonAnimation skeletonAnimation;
+
+        private void Awake()
+        {
+            skeletonAnimation = GetComponent<SkeletonAnimation>();
+        }
+
+        public virtual void SetState(StartingLabState state)
+        {
+            string animationName = state switch
+            {
+                StartingLabState.Idle => IdleAnimationName,
+                StartingLabState.Alarm => AlarmAnimationName,
+                StartingLabState.Active => ActiveAnimationName,
+                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+            };
+            TryPlayAnimation(animationName);
+        }
+
+        private void TryPlayAnimation(string animationName)
+        {
+            Spine.Animation anim = skeletonAnimation.Skeleton.Data.FindAnimation(animationName);
+
+            if (anim == null)
+            {
+                Debug.LogError($"Animation '{animationName}' not found in {gameObject.name}!");
+            }
+            else
+            {
+                Debug.Log($" {gameObject.name} is playing animation {animationName}");
+                skeletonAnimation.AnimationState.SetAnimation(0, anim, true);
+            }
+        }
+    }
+}
+
+StartingLab\States.cs
+***
+﻿namespace StartingLab
+{
+    public enum StartingLabState
+    {
+        Idle,
+        Alarm,
+        Active
+    }
+}
+
+StartingLab\TitleGameManager.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Global;
+using StartingLab;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+
+public class TitleGameManager : MonoBehaviour
+{
+    [SerializeField] private PlayButton startingButton;
+    [SerializeField] private UIController uiController;
+    [SerializeField] private AudioSource al;
+    [SerializeField] private List<StartingLabAnimation> elements = new();
+
+    private SceneController sceneController => SceneController.Instance;
+    private CancellationTokenSource cts = new();
+
+    private void Awake()
+    {
+        Debug.Log($"TitleGameManager instance: {GetInstanceID()}", this);
+        startingButton.OnButtonClicked += () =>
+            UniTaskUtils.RunWithCancellationAsync(StartingButton_OnButtonClicked, cts.Token).Forget();
+    }
+
+    private void Start()
+    {
+        UniTaskUtils.RunWithCancellationAsync(StartAnimations, cts.Token).Forget();
+    }
+
+    private async UniTask StartAnimations(CancellationToken token)
+    {
+        SetState(StartingLabState.Idle);
+        await UniTask.WaitForSeconds(7f, cancellationToken: token); 
+        SetState(StartingLabState.Alarm);
+    }
+
+    private async UniTask StartingButton_OnButtonClicked(CancellationToken token)
+    {
+        await UniTask.WaitForSeconds(2f, cancellationToken: token);
+        SetState(StartingLabState.Active);
+        await UniTask.WaitForSeconds(6f, cancellationToken: token);
+        sceneController.LoadScene(SceneName.Space);
+    }
+
+    private void SetState(StartingLabState state)
+    {
+        Debug.Log("SetState: " + state);
+        foreach (StartingLabAnimation startingLabAnimation in elements)
+        {
+            if (startingLabAnimation == null)
+            {
+                Debug.LogError("startingLabAnimation is null");
+                continue;
+            }
+
+            startingLabAnimation.SetState(state);
+        }
+
+        startingButton.SetLabState(state);
+        uiController.SetState(state);
+        if (state == StartingLabState.Alarm)
+            al.Play();
+    }
+    
+    private void OnDestroy()
+    {
+        cts?.Cancel();
+        cts?.Dispose();
+    }
+}
+
+StartingLab\UIController.cs
+***
+﻿using Cysharp.Threading.Tasks;
+using DG.Tweening;
+using UnityEngine;
+
+namespace StartingLab
+{
+    public class UIController : MonoBehaviour
+    {
+        [Header("Fade settings")]
+        [SerializeField] private SpriteRenderer[] spritesToFade; // Перетащите сюда ваши спрайты в инспекторе
+        [SerializeField] private float duration = 1.5f;         // Длительность исчезновения
+
+        [Header("Movement settings")]
+        [SerializeField] private Transform[] objectsToMove; // Поместите сюда 2 объекта
+        [SerializeField] private float moveDuration = 1.0f;
+        [SerializeField] private float targetY = 2.0f;
+        
+        public void SetState(StartingLabState state)
+        {
+            if (state == StartingLabState.Active)
+            {
+                SetActiveState().Forget();
+            }
+        }
+
+        private async UniTask SetActiveState()
+        {
+            await FadeOutSprites();
+            await MoveGameObjects();
+        }
+        
+        // Вызовите этот метод, когда нужно скрыть спрайты
+        private async UniTask FadeOutSprites()
+        {
+            // Создаем последовательность (Sequence)
+            Sequence mySequence = DOTween.Sequence();
+
+            foreach (SpriteRenderer sprite in spritesToFade)
+            {
+                if (sprite != null)
+                {
+                    // Добавляем анимацию прозрачности (альфы) до 0
+                    // Join заставляет все анимации запускаться одновременно
+                    mySequence.Join(sprite.DOFade(0f, duration));
+                }
+            }
+            await mySequence.ToUniTask();
+        }
+
+        private async UniTask MoveGameObjects()
+        {
+            Sequence mySequence = DOTween.Sequence();
+            foreach (Transform obj in objectsToMove)
+            {
+                if (obj != null)
+                {
+                    // Используем DOMoveY для изменения только одной оси
+                    // Append гарантирует, что это начнется ПОСЛЕ завершения Fade
+                    mySequence.Join(obj.DOMoveY(targetY, moveDuration).SetEase(Ease.OutQuad));
+                }
+            }
+            await mySequence.ToUniTask();
+        }
+    }
+    
+}
+
+Swamp\BigBubbleCreator.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class BigBubbleCreator : MonoBehaviour
+{
+    [SerializeField] private GameObject bubblePrefab;
+    
+    public void CreateBubble()
+    {
+        var bubbleGO = Instantiate(bubblePrefab);
+        bubbleGO.transform.position = transform.position;
+    }
+    
+}
+
+
+Swamp\Bubble.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Unity.VisualScripting;
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class Bubble : MonoBehaviour
+{
+    [SerializeField] private Vector2 direction;
+
+    private Rigidbody2D rb;
+    private float speed;
+    private float frequency;
+    private float magnitude;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        speed = Random.Range(0f, 1f);
+        frequency = Random.Range(2f, 4f);
+        magnitude = Random.Range(3f, 5f);
+        float n = Random.Range(0.05f, 0.3f);
+        rb.transform.localScale = new Vector3(n, n, n);
+    }
+
+    private void FixedUpdate()
+    {
+        direction.x = Mathf.Sin(Time.fixedTime * frequency) * magnitude;
+        rb.AddForce(direction * speed);
+    }
+    
+}
+
+
+Swamp\BubbleMove.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody2D))]
+public class BubbleMove : MonoBehaviour
+{
+    [SerializeField] private float speed;
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        rb.MovePosition(rb.position + Vector2.down * speed);
+    }
+}
+
+
+Swamp\BubbleMovement2.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[RequireComponent (typeof(Rigidbody2D))]
+public class BubbleMovement2 : MonoBehaviour
+{
+    [SerializeField] private float speed;
+    [SerializeField] private float frequency;
+    [SerializeField] private float magnitude;
+    [SerializeField] private Vector2 direction;
+    
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+
+        direction.x = Mathf.Sin(Time.fixedTime * frequency) * magnitude;
+
+        rb.AddForce(direction * speed);
+
+    }
+}
+
+
+Swamp\DeleteFlower.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
+using UnityEditor;
+using UnityEngine;
+
+public class DeleteFlower : MonoBehaviour
+{
+    [SerializeField] private GameObject flower;
+    [SerializeField] private  float y;
+
+    private void Update()
+    {
+        y = transform.position.y;
+        if (y <= -16f)
+        {
+            Destroy(flower);
+        }
+        
+    }
+}
+
+
+Swamp\Emitter.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class Emitter : MonoBehaviour
+{
+    [SerializeField] private GameObject bubble;
+    [SerializeField] private int n;
+
+    private void Update()
+    {
+        Create();
+    }
+
+    private void Create()
+    {
+        int random = UnityEngine.Random.Range(1, n);
+        if (random == 1)
+        {
+            var bubbleGO = Instantiate(bubble);
+            bubbleGO.transform.position = transform.position;
+            Destroy(bubbleGO, 17);
+        }
+
+    }
+}   
+
+
+Swamp\EmmiterSt.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class EmmiterSt : MonoBehaviour
+{
+    [SerializeField] private GameObject bubblePrefab;
+    [SerializeField] private float time;
+
+    private void Start()
+    {
+        InvokeRepeating(nameof(Create), 2.0f, time);
+    }
+
+    private void Create()
+    {
+        var babbleC = Instantiate(bubblePrefab);
+        babbleC.transform.position = transform.position;
+        Destroy(babbleC, 17);
+    }
+}
+
+
+Swamp\FinalFog.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using Spine.Unity;
+using UnityEngine;
+
+[RequireComponent(typeof(SkeletonAnimation))]
+public class FinalFog : MonoBehaviour
+{
+    private SkeletonAnimation skAnim;
+
+    private void Awake()
+    {
+        skAnim = GetComponent<SkeletonAnimation>();
+    }
+
+    public void OnTriggerEnter2D(Collider2D collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            skAnim.AnimationState.SetAnimation(0, "animation", false);
+        }
+    }
+}
+
+
+Swamp\FlowerFog.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.Tracing;
+using Spine.Unity;
+using UnityEngine;
+
+[RequireComponent(typeof(SkeletonAnimation))]
+public class FlowerFog : MonoBehaviour
+{
+    private SkeletonAnimation skAnim;
+    
+    private void Awake()
+    {
+        skAnim = GetComponent<SkeletonAnimation>();
+        skAnim.AnimationState.SetAnimation(0, "cycle", true);
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Fade();
+        }
+    }
+
+    private void Fade()
+    {
+        StartCoroutine(FadeFog());
+    }
+
+    private IEnumerator FadeFog()
+    {
+        var track = skAnim.state.SetAnimation(0, "disappearance", false);
+        yield return new WaitForSpineAnimationComplete(track);
+    }
+    
+}
+
+Swamp\FlowerFog3.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using Spine.Unity;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+[RequireComponent(typeof(SkeletonAnimation))]
+public class FlowerFog3 : MonoBehaviour
+{
+    private SkeletonAnimation skAnim;
+    [SerializeField] private bool isActive;
+    
+    private void Awake()
+    {
+        skAnim = GetComponent<SkeletonAnimation>();
+        skAnim.AnimationState.SetAnimation(0, "cycle", true);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player") && isActive)
+        {
+            skAnim.state.SetAnimation(0, "disappearance", false);
+            isActive = false;
+        }
+    }
+}
+
+
+Swamp\LeftJaw.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+using UnityEngine.UIElements;
+
+public class LeftJaw : MonoBehaviour
+{
+    [SerializeField] private float speed;
+    [SerializeField] private float degrees = 90f;
+    [FormerlySerializedAs("rot")] public bool isRotating;
+   
+    private void Start()
+    {
+        isRotating = false;
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            isRotating = true;
+        }
+
+        if (isRotating)
+        {
+            Rotate();
+        }
+    }
+
+    private void Rotate()
+    {
+        Vector3 to = new Vector3(0, 0, degrees);
+        transform.eulerAngles = Vector3.Lerp(transform.rotation.eulerAngles, to, Time.deltaTime * speed);
+    }
+}
+
+
+Swamp\PlayerAttackAnimation.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerAttackAnimation : MonoBehaviour
+{
+    public Animator animator;
+    private static readonly int Attack = Animator.StringToHash("attack");
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            animator.SetTrigger(Attack);
+        }
+    }
+}
+
+
+Swamp\PlayerSwampAnimation.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Spine.Unity;
+using UnityEngine.Serialization;
+
+[RequireComponent(typeof(SkeletonAnimation))]
+public class PlayerSwampAnimation : MonoBehaviour
+{
+    public bool isSwamp = false;
+    private bool isAlive = true;
+    private SkeletonAnimation skAnim;
+
+    private void Awake()
+    {
+        skAnim = GetComponent<SkeletonAnimation>();
+    }
+
+    private void Update()
+    {
+        if (isSwamp && isAlive)
+        {
+            GetComponent<MeshRenderer>().enabled = true;
+            isAlive = false;
+            skAnim.AnimationState.SetAnimation(0, "pl_swamp", false);
+        }
+    }
+}
+
+Swamp\SinkForce.cs
+***
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class SinkForce : MonoBehaviour
+{
+    public float speed;
+    public bool isDrown = false;
+    private Rigidbody2D rb;
+
+    private void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    private void FixedUpdate()
+    {
+        if (!isDrown) 
+            return;
+        
+        rb.constraints = RigidbodyConstraints2D.None;
+        rb.freezeRotation = true;
+        rb.MovePosition(rb.position + Vector2.down * speed);
+
+    }
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isDrown = true;
+        }
+    }
+}
+
+
+Swamp\SinkTemp.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SinkTemp : MonoBehaviour
+{
+    [SerializeField] private float speed;
+    private bool isDrown = false;
+
+    private void FixedUpdate()
+    {
+        if (isDrown)
+        {
+            transform.Translate(Vector3.down * speed * Time.deltaTime);
+        }
+    }
+    
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isDrown = true;
+        }
+    }
+    
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            isDrown = false;
+        }
+    }
+}
+
+
+Swamp\SmBubbleEmitter.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class SmBubbleEmitter : MonoBehaviour
+{
+    [SerializeField] private GameObject bubblePrefab;
+    [SerializeField] private float time;
+    [SerializeField] private int n;
+    [SerializeField] private float scale;
+    
+    private float randomXp;
+    private float randomSc;
+    private float x;
+    private float y;
+
+    private void Start()
+    {
+        InvokeRepeating(nameof(Create), 2.0f, time);
+    }
+
+    private void Update()
+    {
+        int random = Random.Range(1, n);
+        if (random == 1)
+        {
+            Create();
+        }
+    }
+
+    private void Create()
+    {
+        randomSc = Random.Range(0.3f, 1f);
+        randomXp = Random.Range(-10f, 10f); 
+        var babbleC = Instantiate(bubblePrefab);
+
+        babbleC.transform.localScale = new Vector2(scale * randomSc, scale * randomSc);
+        var position = transform.position;
+        y = position.y;
+        x = position.x + randomXp;
+        babbleC.transform.position = new Vector2(x, y);
+        Destroy(babbleC, 5f);
+    }
+}
+
+
+Swamp\Swamp.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Swamp : MonoBehaviour
+{
+    public ScenesManager gm;
+
+    private void Restart()
+    {
+        gm.RestartGame();
+    }
+    
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Invoke(nameof(Restart), 3f);
+        }
+    }
+}
+
+
+Swamp\Trigger.cs
+***
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Serialization;
+
+public class Trigger : MonoBehaviour
+{
+    [SerializeField] private SinkForce sinkForce;
+
+    public void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            sinkForce.isDrown = true;
+        }
+    }
+}
+
+
+UI\CustomScrollbar.cs
+***
+﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+
+namespace _Project.UI
+{
+    public class CustomScrollbar : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
+    {
+        [Header("Components")] 
+        [SerializeField] private ScrollRect targetScrollRect;
+        [SerializeField] private RectTransform handleRect;
+        [SerializeField] private RectTransform backgroundRect;
+
+        [Header("Settings")] 
+        [SerializeField] private Direction direction = Direction.Vertical; // Вертикальный или горизонтальный
+        [SerializeField] private bool invertDirection;
+
+        private float scrollLength; // Длина доступного хода ручки (высота/ширина фона минус размер ручки)
+        private float handleSize; // Размер ручки (высота для вертикального, ширина для горизонтального)
+
+        private bool isDragging;
+
+        private enum Direction
+        {
+            Vertical,
+            Horizontal
+        }
+        
+        private void Start()
+        {
+            if (targetScrollRect == null)
+            {
+                Debug.LogError("Target ScrollRect is not assigned!", this);
+                enabled = false;
+                return;
+            }
+
+            if (handleRect == null || backgroundRect == null)
+            {
+                Debug.LogError("Handle or Background RectTransform is not assigned!", this);
+                enabled = false;
+                return;
+            }
+
+            // Подписываемся на изменение скролла
+            targetScrollRect.onValueChanged.AddListener(OnScrollRectValueChanged);
+
+            // Вычисляем начальные размеры
+            CalculateSizes();
+
+            // Устанавливаем начальную позицию ручки
+            UpdateHandlePositionFromScrollRect();
+        }
+
+        private void OnDestroy()
+        {
+            if (targetScrollRect != null)
+                targetScrollRect.onValueChanged.RemoveListener(OnScrollRectValueChanged);
+        }
+
+        // Вызывается при изменении размеров UI (например, при повороте экрана)
+        private void OnRectTransformDimensionsChange()
+        {
+            CalculateSizes();
+            UpdateHandlePositionFromScrollRect();
+        }
+
+        private void CalculateSizes()
+        {
+            if (direction == Direction.Vertical)
+            {
+                handleSize = handleRect.rect.height;
+                scrollLength = backgroundRect.rect.height - handleSize;
+            }
+            else
+            {
+                handleSize = handleRect.rect.width;
+                scrollLength = backgroundRect.rect.width - handleSize;
+            }
+        }
+
+        // Вызывается, когда двигается сам ScrollRect
+        private void OnScrollRectValueChanged(Vector2 normalizedPosition)
+        {
+            if (isDragging) return; // Не обновляем позицию ручки, пока пользователь её тащит
+
+            UpdateHandlePositionFromScrollRect();
+        }
+
+        private void UpdateHandlePositionFromScrollRect()
+        {
+            float normalized;
+            if (direction == Direction.Vertical)
+                normalized = targetScrollRect.verticalNormalizedPosition;
+            else
+                normalized = targetScrollRect.horizontalNormalizedPosition;
+
+            // Принудительно ограничиваем диапазон [0, 1]
+            normalized = Mathf.Clamp01(normalized);
+
+            if (invertDirection)
+                normalized = 1f - normalized;
+
+            SetHandleNormalizedPosition(normalized);
+        }
+
+        private void SetHandleNormalizedPosition(float normalized)
+        {
+            // Дополнительная страховка от некорректных значений
+            normalized = Mathf.Clamp01(normalized);
+
+            if (scrollLength <= 0) return;
+
+            float pos = normalized * scrollLength;
+
+            if (direction == Direction.Vertical)
+                handleRect.anchoredPosition = new Vector2(0, pos);
+            else
+                handleRect.anchoredPosition = new Vector2(pos, 0);
+        }
+
+        private float GetHandleNormalizedPosition()
+        {
+            if (scrollLength <= 0) return 0;
+
+            float currentPos = direction == Direction.Vertical ? 
+                handleRect.anchoredPosition.y : 
+                handleRect.anchoredPosition.x;
+
+            return Mathf.Clamp01(currentPos / scrollLength);
+        }
+
+        // Обработка перетаскивания ручки
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            isDragging = true;
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            // Переводим позицию курсора в локальные координаты backgroundRect
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                backgroundRect,
+                eventData.position,
+                eventData.pressEventCamera,
+                out Vector2 localPoint
+            );
+
+            float normalized;
+            if (direction == Direction.Vertical)
+            {
+                // От 0 (низ) до 1 (верх)
+                float y = Mathf.Clamp(localPoint.y - handleSize / 2f, 0, scrollLength);
+                normalized = y / scrollLength;
+            }
+            else
+            {
+                float x = Mathf.Clamp(localPoint.x - handleSize / 2f, 0, scrollLength);
+                normalized = x / scrollLength;
+            }
+
+            normalized = Mathf.Clamp01(normalized);
+            if (invertDirection)
+                normalized = 1f - normalized;
+
+            // Применяем к ScrollRect
+            if (direction == Direction.Vertical)
+                targetScrollRect.verticalNormalizedPosition = normalized;
+            else
+                targetScrollRect.horizontalNormalizedPosition = normalized;
+
+            // Обновляем позицию ручки (она и так обновится через событие onValueChanged,
+            // но так избегаем задержек)
+            SetHandleNormalizedPosition(invertDirection ? 1f - normalized : normalized);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            isDragging = false;
+        }
+
+        // Для клика по фону (быстрый переход)
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            // Вызываем OnDrag, чтобы сразу переместить ручку
+            OnDrag(eventData);
+        }
+
+       
+    }
+}
+
+UI\LevelInfo.cs
+***
+﻿using System;
+using Global;
+using TMPro;
+using UnityEngine;
+
+namespace _Project.UI
+{
+    public class LevelInfo : MonoBehaviour
+    {
+        [SerializeField] private TextMeshProUGUI levelName;
+        [SerializeField] private TextMeshProUGUI currentProgress;
+        [SerializeField] private TextMeshProUGUI currentJumps;
+        [SerializeField] private TextMeshProUGUI bestScore;
+
+        private void OnEnable()
+        {
+            DisplayEmpty();
+        }
+
+        public void ShowLevelInfo(LevelData levelData)
+        {
+            if (levelData == null)
+            {
+                DisplayEmpty();
+                return;
+            }
+
+            string complete = levelData.IsFinished ? "Complete" : "In Progress";
+            levelName.text = $"{levelData.LevelName} ({complete})";
+            currentProgress.text = "Last CheckPoint: " + levelData.LastCheckpoint.Checkpoint;
+            currentJumps.text = "Jumps: " + levelData.LastCheckpoint.Jumps;
+            bestScore.text = "Best Score: " + levelData.JumpRecord;
+        }
+
+        private void DisplayEmpty()
+        {
+            levelName.SetText("");
+            currentProgress.SetText("");
+            currentJumps.SetText("");
+            bestScore.SetText("");
+        }
+    }
+}
+
+UI\LevelPrefab.cs
+***
+﻿using System;
+using _Project.Scriptable;
+using Global;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace _Project.UI
+{
+    [RequireComponent(typeof(Button))]
+    public class LevelPrefab : MonoBehaviour
+    {
+        public static event Action<LevelPrefab> OnClick;
+        public LevelData LevelData { get; private set; }
+        
+        [SerializeField] private TextMeshProUGUI text;
+        [SerializeField] private Image image;
+        [SerializeField] private Image selection;
+        
+        private SaveController saveController => SaveController.Instance;
+        private Button button;
+
+        private void Awake()
+        {
+            button = GetComponent<Button>();
+            button.onClick.AddListener(() => OnClick?.Invoke(this));
+        }
+
+        public void Init(LevelData levelData)
+        {
+            LevelData = levelData;
+            image.sprite = saveController.GetSpriteByScene(levelData.LevelName);
+            text.SetText(levelData.LevelName.ToString());
+        }
+
+        public void SetSelected(bool isSelected)
+        {
+            selection.gameObject.SetActive(isSelected);
+        }
+    }
+}
+
+UI\LoadStage.cs
+***
+﻿using System;
+using Global;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace _Project.UI
+{
+    public class LoadStage : MonoBehaviour
+    {
+        public event Action OnLoadStageFinished;
+        
+        [SerializeField] private ScrollLevelList levelList;
+        [SerializeField] private LevelInfo levelInfo;
+        [SerializeField] private Button buttonStart;
+        
+        private GameController gameController => GameController.Instance;
+        private void Awake()
+        {
+            buttonStart.onClick.AddListener(LoadLevel);
+            levelList.OnNewLevelSelected += LevelList_OnNewLevelSelected;
+            buttonStart.enabled = false;
+        }
+
+        private void LevelList_OnNewLevelSelected()
+        {
+            buttonStart.enabled = levelList.SelectedLevel != null;
+            levelInfo.ShowLevelInfo(levelList.SelectedLevel.LevelData);
+        }
+
+        private void LoadLevel()
+        {
+            var scene = levelList.SelectedLevel.LevelData.LevelName;
+            gameController.LoadLevelFromSaves(scene);
+        }
+    }
+}
+
+UI\SafeAreaFitter.cs
+***
+﻿using UnityEngine;
+
+namespace _Project.UI
+{
+    [RequireComponent(typeof(RectTransform))]
+    public class SafeAreaFitter : MonoBehaviour
+    {
+        private RectTransform rectTransform;
+
+        void Awake()
+        {
+            rectTransform = GetComponent<RectTransform>();
+        }
+
+        void Start()
+        {
+            ApplySafeArea();
+        }
+        
+        void ApplySafeArea()
+        {
+            Rect safeArea = Screen.safeArea;
+
+            // Переводим пиксельные координаты safe area в нормализованные (0..1) для Canvas
+            Vector2 anchorMin = safeArea.position;
+            Vector2 anchorMax = safeArea.position + safeArea.size;
+
+            anchorMin.x /= Screen.width;
+            anchorMin.y /= Screen.height;
+            anchorMax.x /= Screen.width;
+            anchorMax.y /= Screen.height;
+
+            // Применяем к RectTransform
+            rectTransform.anchorMin = anchorMin;
+            rectTransform.anchorMax = anchorMax;
+
+            // Сбрасываем смещения, потому что теперь вся работа через якоря
+            rectTransform.offsetMin = Vector2.zero;
+            rectTransform.offsetMax = Vector2.zero;
+        }
+    }
+}
+
+UI\ScrollLevelList.cs
+***
+﻿using System;
+using System.Collections.Generic;
+using Global;
+using UnityEngine;
+
+namespace _Project.UI
+{
+    public class ScrollLevelList : MonoBehaviour
+    {
+        [SerializeField] private GameObject levelPrefab;
+        [SerializeField] private Transform scrollRectContent;
+        
+        public LevelPrefab SelectedLevel { get; private set; }
+
+        public event Action OnNewLevelSelected;
+        
+        private List<LevelPrefab> createdLevels = new();
+        //private SaveController saveController => SaveController.Instance;
+        private SaveData SaveData => SaveController.Instance.SaveData;
+
+        
+        private void Awake()
+        {
+            LevelPrefab.OnClick += LevelPrefab_OnClick;
+        }
+
+        private void OnEnable()
+        {
+            foreach ((SceneName key, LevelData value) in SaveData.LevelDatas)
+            {
+                if (LevelOrder.IsLevel(key) == false)
+                    continue;
+                
+                var levelPref = Instantiate(levelPrefab, scrollRectContent).GetComponent<LevelPrefab>();
+                levelPref.Init(value);
+                createdLevels.Add(levelPref);
+            }
+        }
+
+        private void LevelPrefab_OnClick(LevelPrefab level)
+        {
+            if (level == SelectedLevel)
+                return;
+            
+            foreach (LevelPrefab createdLevel in createdLevels)
+            {
+                createdLevel.SetSelected(createdLevel == level);
+            }
+
+            SelectedLevel = level;
+            OnNewLevelSelected?.Invoke();
+        }
+
+        private void OnDisable()
+        {
+            foreach (LevelPrefab createdLevel in createdLevels)
+            {
+                Destroy(createdLevel.gameObject);
+            }
+            createdLevels.Clear();
+            SelectedLevel = null;
+            LevelPrefab.OnClick -= LevelPrefab_OnClick;
+        }
+    }
+}
+
+UI\UITutor.cs
+***
+﻿using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Global;
+using UnityEngine;
+
+namespace _Project.UI
+{
+    public class UITutor : MonoBehaviour
+    {
+        [SerializeField] private GameObject tutor;
+        private SaveController saveController => SaveController.Instance;
+
+        private CancellationTokenSource cts = new ();
+        private void Awake()
+        {
+            UniTaskUtils.RunWithCancellationAsync(StartTutor, cts.Token).Forget();
+            tutor.SetActive(false);
+        }
+
+        private async UniTask StartTutor(CancellationToken token)
+        {
+            await UniTask.WaitForSeconds(4f, cancellationToken: token);
+            if (saveController.SaveData.IsTutorFinished == false)
+            {
+                tutor.gameObject.SetActive(true);
+                saveController.OnTutorFinished += SaveController_OnTutorFinished;
+            }
+        }
+
+        private void SaveController_OnTutorFinished()
+        {
+            tutor.gameObject.SetActive(false);
+            saveController.OnTutorFinished -= SaveController_OnTutorFinished;
+        }
+
+        private void OnDestroy()
+        {
+            cts.Cancel();
+            cts.Dispose();
+        }
+    }
+}
+

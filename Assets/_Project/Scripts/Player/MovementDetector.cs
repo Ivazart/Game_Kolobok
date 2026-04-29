@@ -11,7 +11,8 @@ namespace _Project.Player
     public class MovementDetector : MonoBehaviour
     {
         public bool CanMove => isGrounded || !isMoving;
-        
+        public event Action OnCanBeStopped; 
+
         private bool isGrounded;
         private bool isMoving;
         private float movementThreshold = 0.1f;
@@ -33,18 +34,33 @@ namespace _Project.Player
             }
         }
         
+        private bool IsMovingX()
+        {
+            return Mathf.Abs(rb.linearVelocity.x) > movementThreshold;
+        }
+        
         private bool CheckMoving()
         {
             return rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
         }
-        
-        private void OnTriggerStay2D(Collider2D trig)
+
+        private void OnTriggerEnter2D(Collider2D trig)
+        {
+            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
+            {
+                isGrounded = true;
+                if (!IsMovingX())
+                    OnCanBeStopped?.Invoke();
+            }
+        }
+
+        /*private void OnTriggerStay2D(Collider2D trig)
         {
             if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
             {
                 isGrounded = true;
             }
-        }
+        }*/
 
         private void OnTriggerExit2D(Collider2D trig)
         {
