@@ -120365,6 +120365,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 4203529611610199021, guid: 811ee88f26e73a54e813a4be7aed646a, type: 3}
+      propertyPath: liftZones.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4203529611610199021, guid: 811ee88f26e73a54e813a4be7aed646a, type: 3}
       propertyPath: 'liftZones.Array.data[0]'
       value: 
       objectReference: {fileID: 799299199095762511}
