@@ -1,5 +1,6 @@
 ﻿using System;
 using _Project.Core.Camera;
+using Global;
 using UnityEngine;
 
 namespace _Project.Core
@@ -10,7 +11,7 @@ namespace _Project.Core
         [SerializeField] private CheckpointList checkpointList;
         [SerializeField] private CameraMove cameraMove;
         public GameObject Player { get; private set; }
-        
+
         private void Awake()
         {
             Player = Instantiate(playerPrefab);

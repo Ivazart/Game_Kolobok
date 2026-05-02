@@ -11,14 +11,15 @@ namespace _Project.Player
     {
         [SerializeField] private PlayerAnimation playerAnimation;
         [SerializeField] private MovementDetector movementDetector;
+        [SerializeField] private Stopper stopper;
         
         public MovementDetector MovementDetector => movementDetector;
+        public Stopper Stopper => stopper;
         
-        private Rigidbody2D rb;
         private GameController gameManager => GameController.Instance;
-
         public PlayerAnimation PlayerAnimation => playerAnimation;
 
+        private Rigidbody2D rb;
         private bool isDying;
         
         private void Awake()
@@ -26,7 +27,7 @@ namespace _Project.Player
             rb = GetComponent<Rigidbody2D>();
             gameManager.OnPlayerDeath += GameManager_OnPlayerDeath;
         }
-
+        
         private void GameManager_OnPlayerDeath(DeathType death)
         {
             PlayerDeath(death).Forget();

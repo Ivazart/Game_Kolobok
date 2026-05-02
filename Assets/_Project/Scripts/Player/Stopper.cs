@@ -7,20 +7,19 @@ using UnityEngine;
 public class Stopper : MonoBehaviour
 {
     [SerializeField] private float scale;
-    [SerializeField] private MovementDetector movementDetector;
+   
+    public bool IsPushed { get; set; }
     
     private Rigidbody2D rb;
-    private bool isPushed => movementDetector.CanMove;
-    
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        movementDetector.OnCanBeStopped += BallStop;
     }
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("stopper") && isPushed == false)
+        if (col.gameObject.CompareTag("stopper") && IsPushed == false )
         {
             BallStop();
         }

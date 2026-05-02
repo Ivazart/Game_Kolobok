@@ -3,15 +3,16 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Global;
 using Spine.Unity;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace _Project.Player
 {
+    [RequireComponent(typeof(MeshRenderer))]
+    [RequireComponent(typeof(SkeletonAnimation))]
     public class PlayerAnimation: MonoBehaviour
     {
-        
-        private SkeletonAnimation skeletonAnimation;
-        
+        [SerializeField] private PlayerSwampDeathAnimation swampDeathAnimation;
         [SerializeField] private string idle;
         [SerializeField] private string staticIdle;
         [SerializeField] private string deathEyes;
@@ -25,10 +26,21 @@ namespace _Project.Player
         private bool idleStart = false;
         private string[] idleAnimations = { "idle", "static2" };
         private CancellationTokenSource cts = new();
+        
+        private SkeletonAnimation skeletonAnimation;
+        private MeshRenderer meshRenderer;
+       
         private void Awake()
         {
             skeletonAnimation = GetComponent<SkeletonAnimation>();
+            meshRenderer = GetComponent<MeshRenderer>();
             UniTaskUtils.RunWithCancellationAsync(Blinking, cts.Token).Forget();
+            
+        }
+
+        private void Start()
+        {
+            swampDeathAnimation.gameObject.SetActive(false);
         }
 
         private async UniTask Blinking (CancellationToken token)
@@ -50,6 +62,14 @@ namespace _Project.Player
                 DeathType.Swamp => deathPoison,
                 _ => deathPoison
             };
+            if (deathType == DeathType.Swamp)
+            {
+                swampDeathAnimation.gameObject.SetActive(true);
+                meshRenderer.enabled = false;
+                await swampDeathAnimation.PlaySwampDeath();
+                return;
+            }
+                
             await UniTaskUtils.PlayAnimation(skeletonAnimation, deathEyes, 1, true, 0.7f);
             await UniTaskUtils.PlayAnimation(skeletonAnimation, death);
         }

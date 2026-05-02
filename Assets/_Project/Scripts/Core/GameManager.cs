@@ -112,6 +112,7 @@ public class GameManager : MonoBehaviour
         startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
         trajectory.Show();
         player.PlayerAnimation.PlayDrag().Forget();
+        player.Stopper.IsPushed = true;
     }
 
     private void OnDrag()
@@ -136,6 +137,7 @@ public class GameManager : MonoBehaviour
         player.Push(force);
         trajectory.Hide();
         jumpController.IncreaseJumpCounter();
+        player.Stopper.IsPushed = false;
     }
     
 }
