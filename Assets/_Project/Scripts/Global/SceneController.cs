@@ -27,6 +27,7 @@ namespace Global
             Debug.Log("Load scene: " + CurrentSceneName);
             CurrentSceneName = sceneName;
             SceneManager.LoadScene(sceneName.ToString());
+            Time.timeScale = 1f;
         }
 
         public void RestartScene()

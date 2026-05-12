@@ -20,7 +20,7 @@ namespace _Project.Player
         public PlayerAnimation PlayerAnimation => playerAnimation;
 
         private Rigidbody2D rb;
-        private bool isDying;
+        public bool isDying;
         
         private void Awake()
         {

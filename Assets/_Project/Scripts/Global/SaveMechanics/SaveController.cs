@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using _Project.Scriptable;
-using StartingLab;
 using UnityEngine;
 
 namespace Global
@@ -44,7 +41,7 @@ namespace Global
         
         public Sprite GetSpriteByScene(SceneName sceneType)
         {
-            return sceneImageDatabase.GetSpriteByScene(sceneType);
+            return !saveData.LevelDatas[sceneType].IsOpen && LevelOrder.IsLevel(sceneType) ? sceneImageDatabase.GetCloseSceneImage() : sceneImageDatabase.GetSpriteByScene(sceneType);
         }
 
         public void LevelCompleted()
@@ -59,6 +56,7 @@ namespace Global
             if (nextLevel != scene)
             { 
                 var nextLevelData = saveHandler.CreateLevel(nextLevel);
+                nextLevelData.IsOpen = true;
                 if (saveData.LevelDatas.ContainsKey(nextLevel) == false)
                     saveData.LevelDatas.Add(nextLevel, nextLevelData); 
             }
@@ -67,7 +65,7 @@ namespace Global
             saveData.LevelDatas[scene].JumpRecord = GetJumpRecord();
             saveData.LevelDatas[scene].LastCheckpoint.Checkpoint = 0;
             saveData.LevelDatas[scene].LastCheckpoint.Jumps = 0;
-            saveData.LastCheckpointData = saveData.LevelDatas[scene].LastCheckpoint;
+            saveData.LastCheckpointData = saveData.LevelDatas[nextLevel].LastCheckpoint;
             saveData.LastCheckpointData.LevelName = nextLevel;
             saveHandler.Save(saveData);
             LastCheckPointID = -1;
@@ -115,6 +113,12 @@ namespace Global
             saveHandler.Save(saveData);
             OnTutorFinished?.Invoke();
         }
+        
+        public void DeleteSave()
+        {
+            saveHandler.DeleteSave();
+            saveData = saveHandler.Load();
+        }
 
         private void LoadLastSave()
         {
@@ -128,7 +132,7 @@ namespace Global
         
         private int GetJumpRecord()
         {
-            return 0;
+            return Math.Min(GetJumps(), saveData.LevelDatas[scene].JumpRecord);
         }
     }
 }

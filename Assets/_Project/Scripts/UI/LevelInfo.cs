@@ -19,15 +19,17 @@ namespace _Project.UI
 
         public void ShowLevelInfo(LevelData levelData)
         {
-            if (levelData == null)
+            if (levelData == null || LevelOrder.IsLevel(levelData.LevelName) == false)
             {
                 DisplayEmpty();
                 return;
             }
 
-            string complete = levelData.IsFinished ? "Complete" : "In Progress";
+            string complete = "Closed";
+            if (levelData.IsOpen)
+                complete = levelData.IsFinished ? "Complete" : "In Progress";
             levelName.text = $"{levelData.LevelName} ({complete})";
-            currentProgress.text = "Last CheckPoint: " + levelData.LastCheckpoint.Checkpoint;
+            currentProgress.text = "Last CheckPoint: " + Math.Max(levelData.LastCheckpoint.Checkpoint, 0);
             currentJumps.text = "Jumps: " + levelData.LastCheckpoint.Jumps;
             bestScore.text = "Best Score: " + levelData.JumpRecord;
         }

@@ -7,11 +7,15 @@ using UnityEngine.UI;
 public class MenuController : MonoBehaviour
 {
     [SerializeField] private GameObject menuPanel;
+    [SerializeField] private GameObject restartGamePopup;
     [SerializeField] private Button closeButton;
     [SerializeField] private Button selectStageButton;
     [SerializeField] private Button restartLevelButton;
     [SerializeField] private Button exitButton;
     [SerializeField] private Button restartCheckpointButton;
+    [SerializeField] private Button restartGameButton;
+    [SerializeField] private Button restartGameCancelButton;
+    [SerializeField] private Button restartGameOKButton;
     [SerializeField] private LoadStage loadStage;
     
     private SceneController sceneController => SceneController.Instance;
@@ -24,7 +28,11 @@ public class MenuController : MonoBehaviour
         selectStageButton.onClick.AddListener(OpenSelectStage);
         exitButton.onClick.AddListener(ExitGame);
         restartCheckpointButton.onClick.AddListener(RestartCheckpoint);
+        restartGameButton.onClick.AddListener(OpenPopupRestartGame);
+        restartGameCancelButton.onClick.AddListener(ClosePopupRestartGame);
+        restartGameOKButton.onClick.AddListener(RestartGame);
         loadStage.OnLoadStageFinished += LoadStageFinished;
+        loadStage.OnLoadSelectLevel += LoadSelectLevel;
     }
 
     private void LoadStageFinished()
@@ -67,9 +75,30 @@ public class MenuController : MonoBehaviour
     {
         gameController.RestartCheckpoint();
     }
+    
+    private void OpenPopupRestartGame()
+    {
+        restartGamePopup.SetActive(true);
+    }
+    
+    private void ClosePopupRestartGame()
+    {
+        restartGamePopup.SetActive(false);
+    }
+    
+    //Удалить все сохранения, начать игру сначала
+    private void RestartGame()
+    {
+        gameController.RestartGame();
+    }
 
     private void ExitGame()
     {
          Application.Quit();
+    }
+
+    private void LoadSelectLevel()
+    {
+        gameController.LoadSelectLevel();
     }
 }

@@ -21,8 +21,10 @@ namespace Global
             gameController.OnLevelRestarted += ClearLocalJumps;
             gameController.OnCheckpointRestarted  += ClearLocalJumps;
             gameController.OnSaveLoaded += ClearLocalJumps;
+            gameController.OnGameRestarted += ClearLocalJumps;
             saveController.OnSavedJumpsChanged += SaveControllerOnSavedJumpsChanged;
             saveController.OnNewCheckpointReached += SaveController_OnNewCheckpointReached;
+            saveController.OnLevelFinished += ClearLocalJumps;
         }
         
         public void IncreaseJumpCounter()

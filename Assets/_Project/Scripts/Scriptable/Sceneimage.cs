@@ -9,6 +9,7 @@ namespace _Project.Scriptable
     public class SceneImageDatabase : ScriptableObject
     {
         public List<SceneImagePair> sceneImagePairs = new List<SceneImagePair>();
+        public Sprite CloseSceneImage;
 
         // Метод для получения спрайта по типу сцены (необязательно, но удобно)
         public Sprite GetSpriteByScene(SceneName sceneType)
@@ -20,6 +21,11 @@ namespace _Project.Scriptable
             }
             Debug.LogWarning($"Sprite {sceneType} not found!");
             return null;
+        }
+
+        public Sprite GetCloseSceneImage()
+        {
+            return CloseSceneImage;
         }
     }
     

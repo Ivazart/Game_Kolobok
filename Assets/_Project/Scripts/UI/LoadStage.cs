@@ -8,6 +8,7 @@ namespace _Project.UI
     public class LoadStage : MonoBehaviour
     {
         public event Action OnLoadStageFinished;
+        public event Action OnLoadSelectLevel;
         
         [SerializeField] private ScrollLevelList levelList;
         [SerializeField] private LevelInfo levelInfo;
@@ -30,6 +31,7 @@ namespace _Project.UI
         private void LoadLevel()
         {
             var scene = levelList.SelectedLevel.LevelData.LevelName;
+            OnLoadSelectLevel?.Invoke();
             gameController.LoadLevelFromSaves(scene);
         }
     }

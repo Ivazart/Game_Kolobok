@@ -8,6 +8,8 @@ namespace Global
         public event Action<DeathType> OnPlayerDeath; 
         public event Action OnLevelRestarted; 
         public event Action OnCheckpointRestarted; 
+        
+        public event Action  OnGameRestarted;
         public event Action OnSaveLoaded; 
         private SaveController saveController => SaveController.Instance;
         private SceneController sceneController => SceneController.Instance;
@@ -36,10 +38,22 @@ namespace Global
             sceneController.RestartScene();
             OnCheckpointRestarted?.Invoke();
         }
+        
+        public void RestartGame()
+        {
+            saveController.DeleteSave();
+            OnGameRestarted?.Invoke();
+            sceneController.LoadScene(SceneName.StartLab);
+        }
 
         public void LoadLevelFromSaves(SceneName levelName)
         {
             sceneController.LoadScene(levelName);
+            OnSaveLoaded?.Invoke();
+        }
+        
+        public void LoadSelectLevel()
+        {
             OnSaveLoaded?.Invoke();
         }
     }

@@ -69,7 +69,8 @@ namespace _Project.Player
                 await swampDeathAnimation.PlaySwampDeath();
                 return;
             }
-                
+
+            StopAllAnimation();
             await UniTaskUtils.PlayAnimation(skeletonAnimation, deathEyes, 1, true, 0.7f);
             await UniTaskUtils.PlayAnimation(skeletonAnimation, death);
         }
@@ -111,6 +112,11 @@ namespace _Project.Player
                 idleStart = false;
                 skeletonAnimation.AnimationState.SetEmptyAnimation(1, 0.5f);
             }
+        }
+
+        public void StopAllAnimation()
+        {
+            skeletonAnimation.AnimationState.ClearTracks();
         }
         
         public async UniTask PlayDrag()

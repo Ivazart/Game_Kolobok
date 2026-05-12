@@ -15,7 +15,6 @@ namespace _Project.UI
         public event Action OnNewLevelSelected;
         
         private List<LevelPrefab> createdLevels = new();
-        //private SaveController saveController => SaveController.Instance;
         private SaveData SaveData => SaveController.Instance.SaveData;
 
         
@@ -26,13 +25,13 @@ namespace _Project.UI
 
         private void OnEnable()
         {
-            foreach ((SceneName key, LevelData value) in SaveData.LevelDatas)
+            foreach (SceneName name in System.Enum.GetValues(typeof(SceneName)))
             {
-                if (LevelOrder.IsLevel(key) == false)
+                if (name == SceneName.Space)
                     continue;
-                
                 var levelPref = Instantiate(levelPrefab, scrollRectContent).GetComponent<LevelPrefab>();
-                levelPref.Init(value);
+                if (SaveData.LevelDatas.ContainsKey(name))
+                    levelPref.Init(SaveData.LevelDatas[name]);
                 createdLevels.Add(levelPref);
             }
         }

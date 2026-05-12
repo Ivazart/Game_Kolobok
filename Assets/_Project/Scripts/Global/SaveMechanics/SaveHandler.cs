@@ -49,6 +49,16 @@ namespace Global
                 string json = PlayerPrefs.GetString(SaveKey);
                 SaveData data = JsonConvert.DeserializeObject<SaveData>(json);
                 Debug.Log("Game loaded successfully.");
+                foreach (SceneName name in System.Enum.GetValues(typeof(SceneName)))
+                {
+                    if (!LevelOrder.IsLevel(name))
+                        continue;
+                    if (data.LevelDatas.ContainsKey(name) == false)
+                    {
+                        var levelData = CreateLevel(name);
+                        data.LevelDatas.Add(name, levelData);
+                    }
+                }
                 return data;
             }
             catch (System.Exception e)
@@ -74,8 +84,12 @@ namespace Global
             saveData.LevelDatas = new Dictionary<SceneName, LevelData>();
             saveData.LastCheckpointData = new LastCheckpointData();
             saveData.LastCheckpointData.LevelName = SceneName.StartLab;
-            var leveldata = CreateLevel(SceneName.Rocks);
-            saveData.LevelDatas.Add(SceneName.Rocks, leveldata );
+            foreach (SceneName name in System.Enum.GetValues(typeof(SceneName)))
+            {
+                var levelData = CreateLevel(name);
+                saveData.LevelDatas.Add(name, levelData);
+            }
+            saveData.LevelDatas[SceneName.Rocks].IsOpen = true;
             return saveData;
         }
         public LevelData CreateLevel(SceneName sceneName)

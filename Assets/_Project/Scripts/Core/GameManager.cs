@@ -68,6 +68,8 @@ public class GameManager : MonoBehaviour
 
             if (Input.GetMouseButtonUp(0) && isDragging)
             {
+                if (IsPointerOverUI())
+                    return;
                 OnDragEnd();
                 isDragging = false;
             }
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
     {
         if (canMove)
         {
-            if (isIdle) 
+            if (isIdle || player.isDying) 
                 return;
             
             isIdle = true;

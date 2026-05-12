@@ -14,6 +14,7 @@ namespace Global
         public SceneName LevelName;
         public int JumpRecord;
         public bool IsFinished;
+        public bool IsOpen;
         public LastCheckpointData LastCheckpoint;
     }
 
