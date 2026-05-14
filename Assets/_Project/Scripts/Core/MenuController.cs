@@ -31,7 +31,7 @@ public class MenuController : MonoBehaviour
         restartGameButton.onClick.AddListener(OpenPopupRestartGame);
         restartGameCancelButton.onClick.AddListener(ClosePopupRestartGame);
         restartGameOKButton.onClick.AddListener(RestartGame);
-        loadStage.OnLoadStageFinished += LoadStageFinished;
+       // loadStage.OnLoadStageFinished += LoadStageFinished;
         loadStage.OnLoadSelectLevel += LoadSelectLevel;
     }
 

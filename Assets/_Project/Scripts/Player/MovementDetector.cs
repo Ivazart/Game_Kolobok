@@ -3,7 +3,6 @@ using System.Threading;
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Global;
-using UnityEngine;
 
 namespace _Project.Player
 {

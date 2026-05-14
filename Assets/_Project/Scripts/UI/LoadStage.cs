@@ -7,7 +7,6 @@ namespace _Project.UI
 {
     public class LoadStage : MonoBehaviour
     {
-        public event Action OnLoadStageFinished;
         public event Action OnLoadSelectLevel;
         
         [SerializeField] private ScrollLevelList levelList;

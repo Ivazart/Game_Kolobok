@@ -9,15 +9,13 @@ namespace Global
         [SerializeField] private SceneImageDatabase sceneImageDatabase;
         
         public int LastCheckPointID { get; private set; } = -1;
-        public event Action<int> OnJumpCounterChanged;
         public event Action<int> OnSavedJumpsChanged;
         public event Action OnNewCheckpointReached;
         public event Action OnLevelFinished;
         public event Action OnTutorFinished;
         public SaveData SaveData => saveData;
-        public int JumpCounter => GetJumps();
 
-        
+
         private SaveData saveData = new();
         private SaveHandler saveHandler = new();
         private SceneController sceneController => SceneController.Instance;

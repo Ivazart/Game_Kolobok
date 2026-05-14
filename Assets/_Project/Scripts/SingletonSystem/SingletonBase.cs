@@ -12,7 +12,7 @@ public abstract class SingletonBase<T> : MonoBehaviour where T : SingletonBase<T
             if (instance != null) 
                 return instance;
             
-            instance = FindObjectOfType <T>();
+            instance = FindAnyObjectByType<T>(FindObjectsInactive.Exclude); 
             if (instance == null)
             {
                 throw new Exception($"[Singleton] No instance of {typeof(T).Name} found in the scene.");

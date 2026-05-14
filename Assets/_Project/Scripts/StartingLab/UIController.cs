@@ -41,7 +41,7 @@ namespace StartingLab
                 {
                     // Добавляем анимацию прозрачности (альфы) до 0
                     // Join заставляет все анимации запускаться одновременно
-                    mySequence.Join(sprite.DOFade(0f, duration));
+                    _= mySequence.Join(sprite.DOFade(0f, duration));
                 }
             }
             await mySequence.ToUniTask();
@@ -56,7 +56,7 @@ namespace StartingLab
                 {
                     // Используем DOMoveY для изменения только одной оси
                     // Append гарантирует, что это начнется ПОСЛЕ завершения Fade
-                    mySequence.Join(obj.DOMoveY(targetY, moveDuration).SetEase(Ease.OutQuad));
+                    _= mySequence.Join(obj.DOMoveY(targetY, moveDuration).SetEase(Ease.OutQuad));
                 }
             }
             await mySequence.ToUniTask();

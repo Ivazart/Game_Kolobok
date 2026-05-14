@@ -12,7 +12,7 @@ using UnityEngine.Serialization;
 
 [RequireComponent(typeof(SkeletonAnimation))]
 [RequireComponent(typeof(SpineAnimationFader))]
-public class PlayButton : MonoBehaviour 
+public class PlayButton : MonoBehaviour , IPointerClickHandler
 {
     public event Action OnButtonClicked;
     
@@ -47,7 +47,7 @@ public class PlayButton : MonoBehaviour
         TryPlayAnimation(animationName);
     }
     
-    private void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
         if (isPressed == false && currentState == StartingLabState.Alarm)
         {
@@ -78,16 +78,4 @@ public class PlayButton : MonoBehaviour
             buttonSpineAnimation.AnimationState.SetAnimation(0, anim, true);
         }
     }
-
- 
-
-
-
-
-
-
-
-
-
-
 }

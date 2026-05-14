@@ -9,6 +9,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Random = System.Random;
@@ -35,9 +36,7 @@ public class GameManager : MonoBehaviour
     private Vector2 force;
     private float distance;
     private float time;
-
     
-
     private void Start()
     {
         player = playerSpawner.Player.GetComponent<Player>();
@@ -53,20 +52,20 @@ public class GameManager : MonoBehaviour
         MouseHandlerLoop();
         AnimationLoop();
     }
-
+    
     private void MouseHandlerLoop()
     {
         if (canMove || isDragging)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Mouse.current.leftButton.wasPressedThisFrame)
             {
                 if (IsPointerOverUI())
                     return;
                 isDragging = true;
                 OnDragStart();
             }
-
-            if (Input.GetMouseButtonUp(0) && isDragging)
+            
+            if (Mouse.current.leftButton.wasReleasedThisFrame && isDragging)
             {
                 if (IsPointerOverUI())
                     return;
@@ -80,7 +79,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-    
+
     private void AnimationLoop()
     {
         if (canMove)
@@ -111,7 +110,7 @@ public class GameManager : MonoBehaviour
     private void OnDragStart()
     {
         saveController.TutorFinished();
-        startPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+        startPoint = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         trajectory.Show();
         player.PlayerAnimation.PlayDrag().Forget();
         player.Stopper.IsPushed = true;
@@ -119,7 +118,7 @@ public class GameManager : MonoBehaviour
 
     private void OnDrag()
     {
-        endPoint = cam.ScreenToWorldPoint(Input.mousePosition);
+        endPoint = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         distance = Vector2.Distance(startPoint, endPoint);
         direction = (startPoint - endPoint).normalized;
         distance = Mathf.Clamp(distance, 0.0f, 3.5f);
