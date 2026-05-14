@@ -1,144 +1,82 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using _Project.Core;
 using _Project.Player;
+using UnityEngine;
 using Cysharp.Threading.Tasks;
 using Global;
-using TMPro;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
-using Random = System.Random;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private LevelProgress levelProgress;
     [SerializeField] private PlayerSpawner playerSpawner;
-    [SerializeField] private Trajectory trajectory;
-    [SerializeField] private float pushForce = 4f;
-    [SerializeField] private float heightStartAnimation = 8.5f;
-  
+    [SerializeField] private DragHandler dragHandler;   // ссылка на новый компонент
+
     private SaveController saveController => SaveController.Instance;
     private JumpsCounterController jumpController => JumpsCounterController.Instance;
-    
-    private bool isDragging = false;
-    private bool isIdle;
-    private bool canMove => player.MovementDetector.CanMove;
+
     private Player player;
-    private Camera cam;
-    private Vector2 startPoint;
-    private Vector2 endPoint;
-    private Vector2 direction;
-    private Vector2 force;
-    private float distance;
-    private float time;
-    
+    private bool isIdle;
+
     private void Start()
     {
         player = playerSpawner.Player.GetComponent<Player>();
+        dragHandler.Init(player);
         playerSpawner.MoveToLastPoint();
-        cam = Camera.main;
-        levelProgress.StartDistanceCalculation(playerSpawner.Player.transform);
+        levelProgress.StartDistanceCalculation(player.transform);
+        
         Time.timeScale = 1f;
-        Debug.Log ("Timescale: " + Time.timeScale);
+        Debug.Log("Timescale: " + Time.timeScale);
+        // Подписываемся на события DragHandler
+        if (dragHandler != null)
+        {
+            dragHandler.OnDragStarted += HandleDragStarted;
+            dragHandler.OnDragEnded += HandleDragEnded;
+        }
     }
-    
+
+    private void OnDestroy()
+    {
+        if (dragHandler != null)
+        {
+            dragHandler.OnDragStarted -= HandleDragStarted;
+            dragHandler.OnDragEnded -= HandleDragEnded;
+        }
+    }
+
     private void Update()
     {
-        MouseHandlerLoop();
-        AnimationLoop();
+        AnimationLoop(); // только анимационная логика
     }
-    
-    private void MouseHandlerLoop()
-    {
-        if (canMove || isDragging)
-        {
-            if (Mouse.current.leftButton.wasPressedThisFrame)
-            {
-                if (IsPointerOverUI())
-                    return;
-                isDragging = true;
-                OnDragStart();
-            }
-            
-            if (Mouse.current.leftButton.wasReleasedThisFrame && isDragging)
-            {
-                if (IsPointerOverUI())
-                    return;
-                OnDragEnd();
-                isDragging = false;
-            }
 
-            if (isDragging)
-            {
-                OnDrag();
-            }
-        }
+    private void HandleDragStarted()
+    {
+        saveController.TutorFinished();
+        // здесь можно сбросить isIdle, если нужно
+    }
+
+    private void HandleDragEnded()
+    {
+        jumpController.IncreaseJumpCounter();
     }
 
     private void AnimationLoop()
     {
+        bool canMove = player.MovementDetector.CanMove;
+
         if (canMove)
         {
-            if (isIdle || player.isDying) 
+            if (isIdle || player.isDying)
                 return;
-            
+
             isIdle = true;
             player.PlayerAnimation.PlayIdle().Forget();
         }
         else
         {
-            if (!isIdle) 
+            if (!isIdle)
                 return;
-            
+
             isIdle = false;
             player.PlayerAnimation.StopIdle();
-
         }
     }
-    
-    private static bool IsPointerOverUI()
-    {
-        return EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
-    }
-    
-    //-Drag----
-    private void OnDragStart()
-    {
-        saveController.TutorFinished();
-        startPoint = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        trajectory.Show();
-        player.PlayerAnimation.PlayDrag().Forget();
-        player.Stopper.IsPushed = true;
-    }
-
-    private void OnDrag()
-    {
-        endPoint = cam.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-        distance = Vector2.Distance(startPoint, endPoint);
-        direction = (startPoint - endPoint).normalized;
-        distance = Mathf.Clamp(distance, 0.0f, 3.5f);
-        force =  direction * distance * pushForce;
-        float angle = Vector2.Angle(Vector2.up, direction);
-        if (angle < 20f) 
-            player.PlayerAnimation.PlayEyesUp().Forget();
-        Debug.DrawLine(startPoint, endPoint);
-        var pos = player.transform.position;
-        trajectory.UpdateDots (pos, force);
-    }
-
-    private void OnDragEnd()
-    {
-        if (force.y > heightStartAnimation)
-            player.PlayerAnimation.PlayEyesDown().Forget();
-        player.Push(force);
-        trajectory.Hide();
-        jumpController.IncreaseJumpCounter();
-        player.Stopper.IsPushed = false;
-    }
-    
 }

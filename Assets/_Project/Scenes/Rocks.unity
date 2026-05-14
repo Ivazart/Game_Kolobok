@@ -120457,7 +120457,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2513809075356325271, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
       propertyPath: m_fontSize
-      value: 61.95
+      value: 61.35
       objectReference: {fileID: 0}
     - target: {fileID: 4600079104398265977, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
       propertyPath: m_AnchorMax.y
@@ -120713,6 +120713,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8789516427355212639, guid: f8f31d9bd83c4df4aaf815f903636538, type: 3}
+      propertyPath: trajectory
+      value: 
+      objectReference: {fileID: 1899594994}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

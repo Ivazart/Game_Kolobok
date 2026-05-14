@@ -1,4 +1,5 @@
-﻿using _Project.Player;
+﻿using System;
+using _Project.Player;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
@@ -11,18 +12,23 @@ public class DragHandler : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private Trajectory trajectory;
-    [SerializeField] private Player player; 
 
+    public event Action OnDragEnded;
+    public event Action OnDragStarted;
+    
     private Camera cam;
 
     private bool isDragging = false;
     private Vector2 startPoint, endPoint, direction, force;
     private float distance;
-
-    // Для связи с GameManager (можно через события или прямой вызов)
-    public System.Action OnDragEnded;
-    public System.Action OnDragStarted;
-
+    
+    private Player player;
+    
+    public void Init(Player playerRef)
+    {
+        player = playerRef;
+    }
+    
     private void Start()
     {
         cam = Camera.main;
