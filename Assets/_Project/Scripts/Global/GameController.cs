@@ -43,7 +43,7 @@ namespace Global
         {
             saveController.DeleteSave();
             OnGameRestarted?.Invoke();
-            sceneController.LoadScene(SceneName.StartLab);
+            //sceneController.LoadScene(SceneName.StartLab);
         }
 
         public void LoadLevelFromSaves(SceneName levelName)

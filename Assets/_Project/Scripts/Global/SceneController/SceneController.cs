@@ -4,9 +4,9 @@ using UnityEngine.SceneManagement;
 
 namespace Global
 {
-    public class SceneController : SingletonBase<SceneController>
+    public class SceneController : SingletonBase<SceneController>, ISceneContext
     {
-        public SceneName CurrentSceneName { get; private set; }
+        public SceneName CurrentScene { get; private set; }
 
         protected override void Awake()
         {
@@ -18,22 +18,24 @@ namespace Global
                 return;
             }
 
-            CurrentSceneName = sceneEnum;
-            Debug.Log("Start scene: " + CurrentSceneName);
+            CurrentScene = sceneEnum;
+            Debug.Log("Start scene: " + CurrentScene);
         }
 
         public void LoadScene(SceneName sceneName)
         {
-            Debug.Log("Load scene: " + CurrentSceneName);
-            CurrentSceneName = sceneName;
+            Debug.Log("Load scene: " + CurrentScene);
+            CurrentScene = sceneName;
             SceneManager.LoadScene(sceneName.ToString());
             Time.timeScale = 1f;
         }
 
         public void RestartScene()
         {
-            Debug.Log("Reload scene: " + CurrentSceneName);
-            LoadScene(CurrentSceneName);
+            Debug.Log("Reload scene: " + CurrentScene);
+            LoadScene(CurrentScene);
         }
+
+      
     }
 }

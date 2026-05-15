@@ -1,0 +1,398 @@
+CheckpointService.cs
+***
+﻿using System;
+
+namespace Global
+{
+    public class CheckpointService
+    {
+        public int LastCheckPointID { get; internal set; } = -1;
+        public event Action<int> OnSavedJumpsChanged;
+        public event Action OnNewCheckpointReached;
+
+        private SaveData saveData;
+        private SaveHandler saveHandler;
+        private ILevelOrderService levelOrderService;
+        private ISceneContext sceneContext;
+
+        public CheckpointService(SaveData saveData, SaveHandler saveHandler,
+            ISceneContext sceneContext, ILevelOrderService levelOrderService)
+        {
+            this.saveData = saveData;
+            this.saveHandler = saveHandler;
+            this.sceneContext = sceneContext;
+            this.levelOrderService = levelOrderService;
+        }
+
+        public void NewCheckPointReached(int index)
+        {
+            if (!levelOrderService.IsLevel(sceneContext.CurrentScene))
+                return;
+
+            saveData.LastCheckpointData.LevelName = sceneContext.CurrentScene;
+            saveData.LastCheckpointData.Checkpoint = index;
+            saveData.LevelDatas[sceneContext.CurrentScene].LastCheckpoint = saveData.LastCheckpointData;
+            saveHandler.Save(saveData);
+            LastCheckPointID = index;
+            OnNewCheckpointReached?.Invoke();
+        }
+
+        public void SaveJumpCounter(int value)
+        {
+            saveData.LastCheckpointData.Jumps = value;
+            saveData.LevelDatas[sceneContext.CurrentScene].LastCheckpoint.Jumps = value;
+            saveHandler.Save(saveData);
+            OnSavedJumpsChanged?.Invoke(value);
+        }
+
+        public void ClearLevelProgress()
+        {
+            saveData.LastCheckpointData.Checkpoint = 0;
+            saveData.LastCheckpointData.Jumps = 0;
+            saveData.LastCheckpointData.Progress = 0;
+            saveData.LevelDatas[sceneContext.CurrentScene].LastCheckpoint = saveData.LastCheckpointData;
+            LastCheckPointID = -1;
+            saveHandler.Save(saveData);
+            OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
+        }
+    }
+}
+
+LevelCompletionService.cs
+***
+﻿using System;
+using UnityEngine;
+
+namespace Global
+{
+    public class LevelCompletionService
+    {
+        public event Action OnLevelFinished;
+
+        private readonly SaveData saveData;
+        private readonly SaveHandler saveHandler;
+        private readonly ISceneContext sceneContext;
+        private readonly ILevelOrderService levelOrderService;
+        private readonly CheckpointService checkpointService;
+
+        public LevelCompletionService(SaveData saveData, SaveHandler saveHandler,
+            ISceneContext sceneContext, ILevelOrderService levelOrderService,
+            CheckpointService checkpointService)
+        {
+            this.saveData = saveData;
+            this.saveHandler = saveHandler;
+            this.sceneContext = sceneContext;
+            this.levelOrderService = levelOrderService;
+            this.checkpointService = checkpointService;
+        }
+
+        public void LevelCompleted()
+        {
+            var scene = sceneContext.CurrentScene;
+            if (!saveData.LevelDatas.ContainsKey(scene))
+            {
+                Debug.LogError("Level completed without any level data");
+                return;
+            }
+
+            var nextLevel = levelOrderService.GetNextLevel(scene);
+            if (nextLevel != scene)
+            {
+                var nextLevelData = saveData.LevelDatas[nextLevel];
+                nextLevelData.IsOpen = true;
+            }
+            
+            saveData.LevelDatas[scene].IsFinished = true;
+            saveData.LevelDatas[scene].JumpRecord = GetJumpRecord(scene);
+            saveData.LevelDatas[scene].LastCheckpoint.Checkpoint = 0;
+            saveData.LevelDatas[scene].LastCheckpoint.Jumps = 0;
+            saveData.LastCheckpointData = saveData.LevelDatas[nextLevel].LastCheckpoint;
+            saveData.LastCheckpointData.LevelName = nextLevel;
+            saveHandler.Save(saveData);
+
+            checkpointService.LastCheckPointID = -1;
+            sceneContext.LoadScene(nextLevel);
+            OnLevelFinished?.Invoke();
+        }
+
+        private int GetJumpRecord(SceneName scene)
+        {
+            int jumps = saveData.LastCheckpointData?.Jumps ?? 0;
+            return Math.Min(jumps, saveData.LevelDatas[scene].JumpRecord);
+        }
+    }
+}
+
+SaveController.cs
+***
+﻿using System;
+using _Project.Scriptable;
+using UnityEngine;
+
+namespace Global
+{
+    public class SaveController : SingletonBase<SaveController>
+    {
+        [SerializeField] private SceneImageDatabase sceneImageDatabase;
+
+        public SaveData SaveData => saveData;
+        public int LastCheckPointID => checkpointService.LastCheckPointID;
+
+        public event Action<int> OnSavedJumpsChanged;
+        public event Action OnNewCheckpointReached;
+        public event Action OnLevelFinished;
+        public event Action OnTutorFinished;
+
+        internal void SetSceneContext(ISceneContext ctx) => sceneContext = ctx;
+        internal void SetLevelOrderService(ILevelOrderService svc) => levelOrderService = svc;
+
+        private SaveData saveData;
+        private SaveHandler saveHandler;
+        private ISceneContext sceneContext;
+        private ILevelOrderService levelOrderService;
+        private bool isInitialized = false;
+
+        private CheckpointService checkpointService;
+        private LevelCompletionService levelCompletionService;
+
+        private void Start()
+        {
+            if (isInitialized)
+                return;
+
+            sceneContext ??= GetComponent<ISceneContext>();
+            levelOrderService ??= GetComponent<ILevelOrderService>();
+
+            if (sceneContext == null || levelOrderService == null)
+            {
+                Debug.LogError("SaveController: ISceneContext or ILevelOrderService not found on this GameObject!");
+                return;
+            }
+
+            Initialize(sceneContext, levelOrderService);
+        }
+
+        public void Initialize(ISceneContext ctx, ILevelOrderService order)
+        {
+            if (isInitialized) return;
+            sceneContext = ctx;
+            levelOrderService = order;
+            saveHandler = new SaveHandler();
+            saveData = saveHandler.Load() ?? SaveDataFactory.CreateDefault(order);
+            EnsureAllLevelsPresent(levelOrderService);
+            checkpointService = new CheckpointService(saveData, saveHandler, sceneContext, levelOrderService);
+            levelCompletionService = new LevelCompletionService(saveData, saveHandler, sceneContext, levelOrderService,
+                checkpointService);
+            
+            checkpointService.OnSavedJumpsChanged += (v) => OnSavedJumpsChanged?.Invoke(v);
+            checkpointService.OnNewCheckpointReached += () => OnNewCheckpointReached?.Invoke();
+            levelCompletionService.OnLevelFinished += () => OnLevelFinished?.Invoke();
+
+            LoadLastSave();
+            isInitialized = true;
+        }
+        
+        public void NewCheckPointReached(int index) => checkpointService.NewCheckPointReached(index);
+        public void SaveJumpCounter(int value) => checkpointService.SaveJumpCounter(value);
+        public void ClearLevelProgress() => checkpointService.ClearLevelProgress();
+        public void LevelCompleted() => levelCompletionService.LevelCompleted();
+
+        public void TutorFinished()
+        {
+            if (saveData.IsTutorFinished) return;
+            saveData.IsTutorFinished = true;
+            saveHandler.Save(saveData);
+            OnTutorFinished?.Invoke();
+        }
+
+        public void DeleteSave()
+        {
+            saveHandler.DeleteSave();
+            saveData = saveHandler.Load();
+        }
+
+        public Sprite GetSpriteByScene(SceneName sceneType)
+        {
+            return !saveData.LevelDatas[sceneType].IsOpen && LevelOrder.IsLevel(sceneType) ? sceneImageDatabase.GetCloseSceneImage() : sceneImageDatabase.GetSpriteByScene(sceneType);
+        }
+
+        private void LoadLastSave()
+        {
+            var scene = saveData.LastCheckpointData.LevelName;
+            checkpointService.LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
+            Debug.Log($"Scene loaded {scene}, checkpoint {LastCheckPointID}");
+            if (scene != sceneContext.CurrentScene)
+                sceneContext.LoadScene(scene);
+            OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
+        }
+        
+        private void EnsureAllLevelsPresent(ILevelOrderService order)
+        {
+            foreach (SceneName name in Enum.GetValues(typeof(SceneName)))
+            {
+                if (!order.IsLevel(name))
+                    continue;
+                if (!saveData.LevelDatas.ContainsKey(name))
+                {
+                    var levelData = new LevelData
+                    {
+                        LevelName = name,
+                        LastCheckpoint = new LastCheckpointData { LevelName = name }
+                    };
+                    saveData.LevelDatas.Add(name, levelData);
+                }
+            }
+        }
+    }
+}
+
+SaveData.cs
+***
+﻿using System.Collections.Generic;
+
+namespace Global
+{
+    public class SaveData
+    {
+        public Dictionary<SceneName, LevelData> LevelDatas;
+        public LastCheckpointData LastCheckpointData;
+        public bool IsTutorFinished;
+    }
+
+    public class LevelData
+    {
+        public SceneName LevelName;
+        public int JumpRecord;
+        public bool IsFinished;
+        public bool IsOpen;
+        public LastCheckpointData LastCheckpoint;
+    }
+
+    public class LastCheckpointData
+    { 
+        public SceneName LevelName;
+        public int Checkpoint;
+        public int Jumps;
+        public int Progress;
+
+        public LastCheckpointData()
+        {
+            Checkpoint = -1;
+        }
+
+        public LastCheckpointData(LastCheckpointData newData)
+        {
+            LevelName = newData.LevelName;
+            Checkpoint = newData.Checkpoint;
+            Jumps = newData.Jumps;
+            Progress = newData.Progress;
+        }
+    }
+}
+
+SaveDataFactory.cs
+***
+﻿using System;
+using System.Collections.Generic;
+
+namespace Global
+{
+    public static class SaveDataFactory
+    {
+        public static SaveData CreateDefault(ILevelOrderService levelOrderService)
+        {
+            var saveData = new SaveData
+            {
+                LevelDatas = new Dictionary<SceneName, LevelData>(),
+                LastCheckpointData = new LastCheckpointData { LevelName = SceneName.StartLab }
+            };
+
+            foreach (SceneName name in Enum.GetValues(typeof(SceneName)))
+            {
+                if (!levelOrderService.IsLevel(name))
+                    continue;
+
+                var levelData = new LevelData
+                {
+                    LevelName = name,
+                    LastCheckpoint = new LastCheckpointData { LevelName = name }
+                };
+                saveData.LevelDatas.Add(name, levelData);
+            }
+
+            // Первый уровень открыт
+            if (saveData.LevelDatas.ContainsKey(SceneName.Rocks))
+                saveData.LevelDatas[SceneName.Rocks].IsOpen = true;
+
+            return saveData;
+        }
+    }
+}
+
+SaveHandler.cs
+***
+﻿using System;
+using System.Collections.Generic;
+using UnityEngine;
+using Newtonsoft.Json;
+using Global;
+
+namespace Global
+{
+    public class SaveHandler
+    {
+        private const string SaveKey = "GameSaveData";
+
+        public void Save(SaveData data)
+        {
+            if (data == null)
+            {
+                Debug.LogError("SaveData is null. Save aborted.");
+                return;
+            }
+
+            try
+            {
+                string json = JsonConvert.SerializeObject(data, Formatting.None);
+                PlayerPrefs.SetString(SaveKey, json);
+                PlayerPrefs.Save();
+                Debug.Log("Game saved successfully.");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to save game: {e.Message}");
+            }
+        }
+
+        /// <summary> Возвращает сохранённые данные или null, если сохранения нет / ошибка. </summary>
+        public SaveData Load()
+        {
+            if (!PlayerPrefs.HasKey(SaveKey))
+            {
+                Debug.Log("No save data found. Returning null.");
+                return null;
+            }
+
+            try
+            {
+                string json = PlayerPrefs.GetString(SaveKey);
+                SaveData data = JsonConvert.DeserializeObject<SaveData>(json);
+                Debug.Log("Game loaded successfully.");
+                return data;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"Failed to load game: {e.Message}");
+                return null;
+            }
+        }
+
+        public void DeleteSave()
+        {
+            PlayerPrefs.DeleteKey(SaveKey);
+            PlayerPrefs.Save();
+            Debug.Log("Save data deleted.");
+        }
+    }
+}
+

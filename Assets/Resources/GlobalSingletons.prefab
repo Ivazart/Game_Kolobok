@@ -58,6 +58,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2602746042265343424}
   - component: {fileID: 1653573598412866073}
+  - component: {fileID: 4051692751369586678}
   m_Layer: 0
   m_Name: SaveController
   m_TagString: Untagged
@@ -93,6 +94,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Global.SaveController
   sceneImageDatabase: {fileID: 11400000, guid: 3c8c9403b35d9024b9521feacbc3e7ba, type: 2}
+--- !u!114 &4051692751369586678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943481699813177872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d08d9ed815e145f39a035faaea6213b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Global.LevelOrderService
 --- !u!1 &5269122949124597922
 GameObject:
   m_ObjectHideFlags: 0

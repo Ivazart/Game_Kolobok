@@ -27,7 +27,7 @@ namespace _Project.Player
 
         private void SetBounce()
         {
-            SceneName scene = sceneController.CurrentSceneName;
+            SceneName scene = sceneController.CurrentScene;
             float bounce = scene switch
             {
                 SceneName.Rocks => rocks,
