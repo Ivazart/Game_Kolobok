@@ -19,7 +19,7 @@ namespace _Project.UI
 
         public void ShowLevelInfo(LevelData levelData)
         {
-            if (levelData == null || LevelOrder.IsLevel(levelData.LevelName) == false)
+            if (levelData == null || LevelOrder.IsLevel(levelData.LevelName) == false || levelData.LevelName == SceneName.StartLab)
             {
                 DisplayEmpty();
                 return;
@@ -31,7 +31,7 @@ namespace _Project.UI
             levelName.text = $"{levelData.LevelName} ({complete})";
             currentProgress.text = "Last CheckPoint: " + Math.Max(levelData.LastCheckpoint.Checkpoint, 0);
             currentJumps.text = "Jumps: " + levelData.LastCheckpoint.Jumps;
-            bestScore.text = "Best Score: " + levelData.JumpRecord;
+            bestScore.text = levelData.JumpRecord>100000?  "Best Score: -" :  "Best Score: " + levelData.JumpRecord;
         }
 
         private void DisplayEmpty()

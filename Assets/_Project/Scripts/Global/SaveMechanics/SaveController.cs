@@ -28,7 +28,8 @@ namespace Global
 
         private CheckpointService checkpointService;
         private LevelCompletionService levelCompletionService;
-
+        private SaveDataFactory saveDataFactory;
+        
         private void Start()
         {
             if (isInitialized)
@@ -43,17 +44,19 @@ namespace Global
                 return;
             }
 
-            Initialize(sceneContext, levelOrderService);
+            Initialize(sceneContext, levelOrderService, new SaveDataFactory());
         }
 
-        public void Initialize(ISceneContext ctx, ILevelOrderService order)
+  
+        public void Initialize(ISceneContext ctx, ILevelOrderService order, SaveDataFactory factory)
         {
             if (isInitialized) return;
             sceneContext = ctx;
             levelOrderService = order;
             saveHandler = new SaveHandler();
-            saveData = saveHandler.Load() ?? SaveDataFactory.CreateDefault(order);
-            EnsureAllLevelsPresent(levelOrderService);
+            saveDataFactory = factory; 
+            saveData = saveHandler.Load() ?? saveDataFactory.CreateDefault(order);
+            saveData = saveDataFactory.EnsureAllLevelsPresent(levelOrderService, saveData);
             checkpointService = new CheckpointService(saveData, saveHandler, sceneContext, levelOrderService);
             levelCompletionService = new LevelCompletionService(saveData, saveHandler, sceneContext, levelOrderService,
                 checkpointService);
@@ -61,7 +64,8 @@ namespace Global
             checkpointService.OnSavedJumpsChanged += (v) => OnSavedJumpsChanged?.Invoke(v);
             checkpointService.OnNewCheckpointReached += () => OnNewCheckpointReached?.Invoke();
             levelCompletionService.OnLevelFinished += () => OnLevelFinished?.Invoke();
-
+            levelCompletionService.OnSavedJumpsChanged += (v) => OnSavedJumpsChanged?.Invoke(v);
+            
             LoadLastSave();
             isInitialized = true;
         }
@@ -82,23 +86,22 @@ namespace Global
         public void DeleteSave()
         {
             saveHandler.DeleteSave();
-            saveData = SaveDataFactory.CreateDefault(levelOrderService);
-            EnsureAllLevelsPresent(levelOrderService);
+            saveData = saveDataFactory.CreateDefault(levelOrderService);
             sceneContext.LoadScene(saveData.LastCheckpointData.LevelName);
             Reinitialize();
         }
-
-        private void Reinitialize()
-        {
-            isInitialized = false; // разрешаем повторную инициализацию
-            Initialize(sceneContext, levelOrderService);
-        }
-
+        
         public Sprite GetSpriteByScene(SceneName sceneType)
         {
             return !saveData.LevelDatas[sceneType].IsOpen && levelOrderService.IsLevel(sceneType) ? sceneImageDatabase.GetCloseSceneImage() : sceneImageDatabase.GetSpriteByScene(sceneType);
         }
 
+        private void Reinitialize()
+        {
+            isInitialized = false; // разрешаем повторную инициализацию
+            Initialize(sceneContext, levelOrderService, saveDataFactory);
+        }
+        
         private void LoadLastSave()
         {
             var scene = saveData.LastCheckpointData.LevelName;
@@ -107,26 +110,6 @@ namespace Global
             if (scene != sceneContext.CurrentScene)
                 sceneContext.LoadScene(scene);
             OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
-        }
-        
-        private void EnsureAllLevelsPresent(ILevelOrderService order)
-        {
-            foreach (SceneName name in Enum.GetValues(typeof(SceneName)))
-            {
-                if (!order.IsLevel(name))
-                    continue;
-                
-                if (!saveData.LevelDatas.ContainsKey(name))
-                {
-                    var levelData = new LevelData
-                    {
-                        LevelName = name,
-                        LastCheckpoint = new LastCheckpointData { LevelName = name },
-                        JumpRecord = int.MaxValue
-                    };
-                    saveData.LevelDatas.Add(name, levelData);
-                }
-            }
         }
     }
 }

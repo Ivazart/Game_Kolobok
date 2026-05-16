@@ -9,13 +9,14 @@ public class DeleteFlower : MonoBehaviour
 {
     [SerializeField] private GameObject flower;
     [SerializeField] private  float y;
-
+    [SerializeField] BigBubbleCreator bigBubbleCreator;
     private void Update()
     {
         y = transform.position.y;
         if (y <= -16f)
         {
             Destroy(flower);
+            bigBubbleCreator.CreateBubble();
         }
         
     }

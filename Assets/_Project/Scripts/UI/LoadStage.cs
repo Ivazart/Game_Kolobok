@@ -14,6 +14,7 @@ namespace _Project.UI
         [SerializeField] private Button buttonStart;
         
         private GameController gameController => GameController.Instance;
+        
         private void Awake()
         {
             buttonStart.onClick.AddListener(LoadLevel);
@@ -23,7 +24,7 @@ namespace _Project.UI
 
         private void LevelList_OnNewLevelSelected()
         {
-            buttonStart.enabled = levelList.SelectedLevel != null;
+            buttonStart.enabled = levelList.SelectedLevel != null && levelList.SelectedLevel.LevelData.IsOpen;
             levelInfo.ShowLevelInfo(levelList.SelectedLevel.LevelData);
         }
 

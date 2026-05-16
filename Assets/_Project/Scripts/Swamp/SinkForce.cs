@@ -22,7 +22,7 @@ public class SinkForce : MonoBehaviour
         
         rb.constraints = RigidbodyConstraints2D.None;
         rb.freezeRotation = true;
-        rb.MovePosition(rb.position + Vector2.down * speed);
+        rb.MovePosition(rb.position + Vector2.down * speed * Time.fixedDeltaTime);
 
     }
     private void OnCollisionEnter2D(Collision2D collision)

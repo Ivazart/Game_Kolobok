@@ -11,27 +11,18 @@ namespace _Project.UI
         [SerializeField] private Transform scrollRectContent;
         
         public LevelPrefab SelectedLevel { get; private set; }
-
         public event Action OnNewLevelSelected;
         
         private List<LevelPrefab> createdLevels = new();
         private SaveData SaveData => SaveController.Instance.SaveData;
 
-        
-        private void Awake()
-        {
-            LevelPrefab.OnClick += LevelPrefab_OnClick;
-        }
-
         private void OnEnable()
         {
-            foreach (SceneName name in System.Enum.GetValues(typeof(SceneName)))
+            LevelPrefab.OnClick += LevelPrefab_OnClick;
+            foreach ((SceneName key, LevelData leveldata) in SaveData.LevelDatas)
             {
-                if (name == SceneName.Space)
-                    continue;
                 var levelPref = Instantiate(levelPrefab, scrollRectContent).GetComponent<LevelPrefab>();
-                if (SaveData.LevelDatas.ContainsKey(name))
-                    levelPref.Init(SaveData.LevelDatas[name]);
+                levelPref.Init(leveldata);
                 createdLevels.Add(levelPref);
             }
         }

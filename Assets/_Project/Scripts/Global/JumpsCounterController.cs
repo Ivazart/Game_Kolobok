@@ -25,6 +25,7 @@ namespace Global
             saveController.OnSavedJumpsChanged += SaveControllerOnSavedJumpsChanged;
             saveController.OnNewCheckpointReached += SaveController_OnNewCheckpointReached;
             saveController.OnLevelFinished += ClearLocalJumps;
+            
         }
         
         public void IncreaseJumpCounter()

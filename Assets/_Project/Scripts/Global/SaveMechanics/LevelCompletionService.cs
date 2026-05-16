@@ -6,7 +6,8 @@ namespace Global
     public class LevelCompletionService
     {
         public event Action OnLevelFinished;
-
+        public event Action<int> OnSavedJumpsChanged;
+        
         private readonly SaveData saveData;
         private readonly SaveHandler saveHandler;
         private readonly ISceneContext sceneContext;
@@ -33,24 +34,40 @@ namespace Global
                 return;
             }
 
+            ClearCurrentScene(scene);
+            SceneName nextLevel = GetNextLevel(scene);
+
+
+            saveData.LastCheckpointData = saveData.LevelDatas[nextLevel].LastCheckpoint;
+            //saveData.LastCheckpointData.LevelName = nextLevel;
+            
+            saveHandler.Save(saveData);
+
+            checkpointService.LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
+            sceneContext.LoadScene(nextLevel);
+            
+            OnSavedJumpsChanged?.Invoke(0);
+            OnLevelFinished?.Invoke();
+        }
+
+        private SceneName GetNextLevel(SceneName scene)
+        {
             var nextLevel = levelOrderService.GetNextLevel(scene);
             if (nextLevel != scene)
             {
                 var nextLevelData = saveData.LevelDatas[nextLevel];
                 nextLevelData.IsOpen = true;
             }
-            
+
+            return nextLevel;
+        }
+
+        private void ClearCurrentScene(SceneName scene)
+        {
             saveData.LevelDatas[scene].IsFinished = true;
             saveData.LevelDatas[scene].JumpRecord = GetJumpRecord(scene);
             saveData.LevelDatas[scene].LastCheckpoint.Checkpoint = -1;
             saveData.LevelDatas[scene].LastCheckpoint.Jumps = 0;
-            saveData.LastCheckpointData = saveData.LevelDatas[nextLevel].LastCheckpoint;
-            saveData.LastCheckpointData.LevelName = nextLevel;
-            saveHandler.Save(saveData);
-
-            checkpointService.LastCheckPointID = -1;
-            sceneContext.LoadScene(nextLevel);
-            OnLevelFinished?.Invoke();
         }
 
         private int GetJumpRecord(SceneName scene)

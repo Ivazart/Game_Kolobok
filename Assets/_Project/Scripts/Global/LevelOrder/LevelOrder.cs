@@ -7,6 +7,7 @@
         /// </summary>
         public static readonly SceneName[] Levels = new SceneName[]
         {
+            SceneName.StartLab,
             SceneName.Rocks,
             SceneName.Swamp
         };

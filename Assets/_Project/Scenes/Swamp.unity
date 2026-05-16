@@ -42112,7 +42112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95102cd334583894bb9bb1679a2be68b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0.00001
+  speed: 1
   isDrown: 0
 --- !u!114 &958046313
 MonoBehaviour:
@@ -42128,6 +42128,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DeleteFlower
   flower: {fileID: 1453713159}
   y: 0
+  bigBubbleCreator: {fileID: 747399028}
 --- !u!1 &958987250
 GameObject:
   m_ObjectHideFlags: 0
@@ -95649,7 +95650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac36b8589e3953f4e948ab6346867ca9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sinkForce: {fileID: 0}
+  sinkForce: {fileID: 958046312}
 --- !u!1 &2088477748
 GameObject:
   m_ObjectHideFlags: 0

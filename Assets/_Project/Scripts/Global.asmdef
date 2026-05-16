@@ -1,0 +1,28 @@
+{
+    "name": "Global",
+    "rootNamespace": "",
+    "references": [
+        "UniTask.Editor",
+        "UniTask",
+        "spine-unity",
+        "Unity.TextMeshPro",
+        "Unity.InputSystem",
+        "Unity.Burst",
+        "spine-csharp",
+        "UniTask.DOTween",
+        "Unity.VisualScripting.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll",
+        "DOTween.dll",
+        "DOTweenEditor.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
