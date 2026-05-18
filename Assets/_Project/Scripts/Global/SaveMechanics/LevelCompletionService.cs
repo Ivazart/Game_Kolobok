@@ -7,7 +7,7 @@ namespace Global
     {
         public event Action OnLevelFinished;
         public event Action<int> OnSavedJumpsChanged;
-        
+
         private readonly SaveData saveData;
         private readonly SaveHandler saveHandler;
         private readonly ISceneContext sceneContext;
@@ -34,18 +34,22 @@ namespace Global
                 return;
             }
 
-            ClearCurrentScene(scene);
-            SceneName nextLevel = GetNextLevel(scene);
+            bool isFirstTime = CurrentSceneFinished(scene);
 
 
-            saveData.LastCheckpointData = saveData.LevelDatas[nextLevel].LastCheckpoint;
-            //saveData.LastCheckpointData.LevelName = nextLevel;
-            
+            SceneName nextScene = isFirstTime ? GetNextLevel(scene) : SceneName.SelectStageScene;
+            if (isFirstTime)
+            {
+                saveData.LastCheckpointData = saveData.LevelDatas[nextScene].LastCheckpoint;
+            }
+            else
+            {
+                saveData.LastCheckpointData.LevelName = SceneName.SelectStageScene;
+            }
+
             saveHandler.Save(saveData);
-
             checkpointService.LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
-            sceneContext.LoadScene(nextLevel);
-            
+            sceneContext.LoadScene(nextScene);
             OnSavedJumpsChanged?.Invoke(0);
             OnLevelFinished?.Invoke();
         }
@@ -62,12 +66,14 @@ namespace Global
             return nextLevel;
         }
 
-        private void ClearCurrentScene(SceneName scene)
+        private bool CurrentSceneFinished(SceneName scene)
         {
+            bool isFirstTime = !saveData.LevelDatas[scene].IsFinished;
             saveData.LevelDatas[scene].IsFinished = true;
             saveData.LevelDatas[scene].JumpRecord = GetJumpRecord(scene);
             saveData.LevelDatas[scene].LastCheckpoint.Checkpoint = -1;
             saveData.LevelDatas[scene].LastCheckpoint.Jumps = 0;
+            return isFirstTime;
         }
 
         private int GetJumpRecord(SceneName scene)

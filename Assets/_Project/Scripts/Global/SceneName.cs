@@ -5,6 +5,9 @@
         StartLab,
         Space,
         Rocks,
-        Swamp
+        Swamp,
+        ResumeGameScene,
+        LoadingScene,
+        SelectStageScene
     }
 }

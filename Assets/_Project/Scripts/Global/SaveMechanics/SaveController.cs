@@ -29,7 +29,8 @@ namespace Global
         private CheckpointService checkpointService;
         private LevelCompletionService levelCompletionService;
         private SaveDataFactory saveDataFactory;
-        
+        private bool isFirstGame;
+
         private void Start()
         {
             if (isInitialized)
@@ -47,29 +48,37 @@ namespace Global
             Initialize(sceneContext, levelOrderService, new SaveDataFactory());
         }
 
-  
+
         public void Initialize(ISceneContext ctx, ILevelOrderService order, SaveDataFactory factory)
         {
             if (isInitialized) return;
             sceneContext = ctx;
             levelOrderService = order;
             saveHandler = new SaveHandler();
-            saveDataFactory = factory; 
-            saveData = saveHandler.Load() ?? saveDataFactory.CreateDefault(order);
-            saveData = saveDataFactory.EnsureAllLevelsPresent(levelOrderService, saveData);
+            saveDataFactory = factory;
+            saveData = saveHandler.Load();
+            if (saveData == null)
+            {
+                isFirstGame = true;
+                saveData = saveDataFactory.CreateDefault(order);
+            }
+            else
+                saveData = saveDataFactory.EnsureAllLevelsPresent(levelOrderService, saveData);
+            
             checkpointService = new CheckpointService(saveData, saveHandler, sceneContext, levelOrderService);
             levelCompletionService = new LevelCompletionService(saveData, saveHandler, sceneContext, levelOrderService,
                 checkpointService);
-            
+
             checkpointService.OnSavedJumpsChanged += (v) => OnSavedJumpsChanged?.Invoke(v);
             checkpointService.OnNewCheckpointReached += () => OnNewCheckpointReached?.Invoke();
             levelCompletionService.OnLevelFinished += () => OnLevelFinished?.Invoke();
             levelCompletionService.OnSavedJumpsChanged += (v) => OnSavedJumpsChanged?.Invoke(v);
-            
-            LoadLastSave();
+
+            sceneContext.LoadScene(isFirstGame? SceneName.StartLab: SceneName.ResumeGameScene);
+            //LoadLastSave();
             isInitialized = true;
         }
-        
+
         public void NewCheckPointReached(int index) => checkpointService.NewCheckPointReached(index);
         public void SaveJumpCounter(int value) => checkpointService.SaveJumpCounter(value);
         public void ClearLevelProgress() => checkpointService.ClearLevelProgress();
@@ -90,19 +99,15 @@ namespace Global
             sceneContext.LoadScene(saveData.LastCheckpointData.LevelName);
             Reinitialize();
         }
-        
+
         public Sprite GetSpriteByScene(SceneName sceneType)
         {
-            return !saveData.LevelDatas[sceneType].IsOpen && levelOrderService.IsLevel(sceneType) ? sceneImageDatabase.GetCloseSceneImage() : sceneImageDatabase.GetSpriteByScene(sceneType);
+            return !saveData.LevelDatas[sceneType].IsOpen && levelOrderService.IsLevel(sceneType)
+                ? sceneImageDatabase.GetCloseSceneImage()
+                : sceneImageDatabase.GetSpriteByScene(sceneType);
         }
 
-        private void Reinitialize()
-        {
-            isInitialized = false; // разрешаем повторную инициализацию
-            Initialize(sceneContext, levelOrderService, saveDataFactory);
-        }
-        
-        private void LoadLastSave()
+        public void LoadLastSave()
         {
             var scene = saveData.LastCheckpointData.LevelName;
             checkpointService.LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
@@ -110,6 +115,12 @@ namespace Global
             if (scene != sceneContext.CurrentScene)
                 sceneContext.LoadScene(scene);
             OnSavedJumpsChanged?.Invoke(saveData.LastCheckpointData.Jumps);
+        }
+
+        private void Reinitialize()
+        {
+            isInitialized = false; // разрешаем повторную инициализацию
+            Initialize(sceneContext, levelOrderService, saveDataFactory);
         }
     }
 }
