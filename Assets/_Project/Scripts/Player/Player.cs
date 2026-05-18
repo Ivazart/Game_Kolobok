@@ -26,6 +26,7 @@ namespace _Project.Player
         {
             rb = GetComponent<Rigidbody2D>();
             gameManager.OnPlayerDeath += GameManager_OnPlayerDeath;
+            movementDetector.OnCanBeStopped += stopper.BallStop;
         }
         
         private void GameManager_OnPlayerDeath(DeathType death)

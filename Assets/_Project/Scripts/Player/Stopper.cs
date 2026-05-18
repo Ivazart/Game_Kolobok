@@ -26,7 +26,7 @@ public class Stopper : MonoBehaviour
 
     }
 
-    private void BallStop()
+    public void BallStop()
     {
         Debug.Log("Ball stop");
         Vector2 speed = rb.linearVelocity;
