@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 namespace _Project.Core
 {
-    [RequireComponent(typeof(TextMeshProUGUI) )]
     public class JumpCountDisplayer : MonoBehaviour
     {
+        [SerializeField] private TextMeshProUGUI text;
+        
         private JumpsCounterController jumpController => JumpsCounterController.Instance;
-        private TextMeshProUGUI tmp;
+        
         private void Awake()
         {
-            tmp = GetComponent<TextMeshProUGUI>();
             jumpController.OnJumpsChanged += SaveController_OnJumpCounterChanged;
             DisplayJumps(jumpController.Jumps);
         }
@@ -25,7 +25,7 @@ namespace _Project.Core
 
         private void DisplayJumps(int count)
         {
-            tmp.text = " " + count;
+            text.text = " " + count;
         }
         
         private void OnDestroy()
