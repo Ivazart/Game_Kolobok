@@ -25,7 +25,7 @@ namespace _Project.Core
 
         private void DisplayJumps(int count)
         {
-            tmp.text = "Jumps: " + count;
+            tmp.text = " " + count;
         }
         
         private void OnDestroy()
