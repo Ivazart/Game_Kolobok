@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CheckPoints : MonoBehaviour
+public class CheckPointTrigger : MonoBehaviour
 {
-    public static event Action<CheckPoints> OnCheckpointEnter;
+    public event Action OnCheckpointEnter;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            OnCheckpointEnter?.Invoke(this);
+            OnCheckpointEnter?.Invoke();
         }
     }
 }

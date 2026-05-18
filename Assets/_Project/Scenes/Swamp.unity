@@ -34339,7 +34339,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: CheckPointListSwamp
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3574010826952705029, guid: 6ea3aba8d7da3fa498545d7284db7ed4, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

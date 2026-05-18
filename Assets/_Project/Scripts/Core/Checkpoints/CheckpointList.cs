@@ -7,7 +7,7 @@ namespace _Project.Core
 {
     public class CheckpointList : MonoBehaviour
     {
-        private List<CheckPoints> checkpoints = new ();
+        private List<CheckPoint> checkpoints = new ();
         private SaveController saveController => SaveController.Instance;
         private int LastCheckpoint => saveController.LastCheckPointID;
 
@@ -25,11 +25,11 @@ namespace _Project.Core
         
         private void Awake()
         {
-            checkpoints.AddRange(GetComponentsInChildren<CheckPoints>(true));
-            CheckPoints.OnCheckpointEnter += CheckPoints_OnCheckpointEnter;
+            checkpoints.AddRange(GetComponentsInChildren<CheckPoint>(true));
+            CheckPoint.OnCheckpointEnter += CheckPoints_OnCheckpointEnter;
         }
 
-        private void CheckPoints_OnCheckpointEnter(CheckPoints obj)
+        private void CheckPoints_OnCheckpointEnter(CheckPoint obj)
         {
             int index = checkpoints.IndexOf(obj);
             if (index == -1)
@@ -43,7 +43,7 @@ namespace _Project.Core
 
         private void OnDestroy()
         {
-            CheckPoints.OnCheckpointEnter -= CheckPoints_OnCheckpointEnter;
+            CheckPoint.OnCheckpointEnter -= CheckPoints_OnCheckpointEnter;
         }
     }
 }
