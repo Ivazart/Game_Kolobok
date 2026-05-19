@@ -1,3 +1,4 @@
+using System;
 using _Project.Core;
 using _Project.Player;
 using UnityEngine;
@@ -8,13 +9,14 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private LevelProgress levelProgress;
     [SerializeField] private PlayerSpawner playerSpawner;
-    [SerializeField] private DragHandler dragHandler;   // ссылка на новый компонент
+    [SerializeField] private DragHandler dragHandler; 
 
     private SaveController saveController => SaveController.Instance;
     private JumpsCounterController jumpController => JumpsCounterController.Instance;
 
     private Player player;
     private bool isIdle;
+    private bool isDead;
 
     private void Start()
     {
@@ -22,35 +24,22 @@ public class GameManager : MonoBehaviour
         dragHandler.Init(player);
         playerSpawner.MoveToLastPoint();
         levelProgress.StartDistanceCalculation(player.transform);
-        
+
         Time.timeScale = 1f;
         Debug.Log("Timescale: " + Time.timeScale);
-        // Подписываемся на события DragHandler
-        if (dragHandler != null)
-        {
-            dragHandler.OnDragStarted += HandleDragStarted;
-            dragHandler.OnDragEnded += HandleDragEnded;
-        }
+        
+        dragHandler.OnDragStarted += HandleDragStarted;
+        dragHandler.OnDragEnded += HandleDragEnded;
     }
-
-    private void OnDestroy()
-    {
-        if (dragHandler != null)
-        {
-            dragHandler.OnDragStarted -= HandleDragStarted;
-            dragHandler.OnDragEnded -= HandleDragEnded;
-        }
-    }
-
+    
     private void Update()
     {
-        AnimationLoop(); // только анимационная логика
+        AnimationLoop();
     }
 
     private void HandleDragStarted()
     {
         saveController.TutorFinished();
-        // здесь можно сбросить isIdle, если нужно
     }
 
     private void HandleDragEnded()
@@ -77,6 +66,19 @@ public class GameManager : MonoBehaviour
 
             isIdle = false;
             player.PlayerAnimation.StopIdle();
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        try
+        {
+            dragHandler.OnDragStarted -= HandleDragStarted;
+            dragHandler.OnDragEnded -= HandleDragEnded;
+        }
+        catch (Exception ex)
+        {
+            // ignored
         }
     }
 }

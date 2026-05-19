@@ -4,32 +4,41 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.EventSystems;
 using Cysharp.Threading.Tasks;
+using Global;
 
 public class DragHandler : MonoBehaviour
 {
     [SerializeField] private float pushForce = 4f;
     [SerializeField] private float heightStartAnimation = 8.5f;
 
-    [Header("References")]
-    [SerializeField] private Trajectory trajectory;
+    [Header("References")] [SerializeField]
+    private Trajectory trajectory;
 
+    private GameController gameController => GameController.Instance;
     public event Action OnDragEnded;
     public event Action OnDragStarted;
 
     private Camera cam;
     private Player player;
-    private Pointer pointer;   // кешируем указатель
+    private Pointer pointer; // кешируем указатель
 
-    private bool isDragging = false;
+    private bool isDragging;
+    private bool isDead;
     private Vector2 startPoint, endPoint, direction, force;
     private float distance;
-    
     public void Init(Player playerRef) => player = playerRef;
 
     private void Start()
     {
         cam = Camera.main;
-        pointer = Pointer.current;   // один раз получили
+        pointer = Pointer.current;
+        if (gameController != null)
+            gameController.OnPlayerDeath += GameController_OnPlayerDeath;
+    }
+
+    private void GameController_OnPlayerDeath(DeathType obj)
+    {
+        isDead = true;
     }
 
     private void Update()
@@ -54,9 +63,9 @@ public class DragHandler : MonoBehaviour
             DragUpdate(pointer.position.ReadValue());
         }
     }
-    
-    private bool CanStartDrag() => player.MovementDetector.CanMove || isDragging;
-    
+
+    private bool CanStartDrag() => (player.MovementDetector.CanMove || isDragging) && !isDead;
+
     private void StartDrag(Vector2 pointerPos)
     {
         isDragging = true;
@@ -99,6 +108,18 @@ public class DragHandler : MonoBehaviour
 
     private static bool IsPointerOverUI() =>
         EventSystem.current != null && EventSystem.current.IsPointerOverGameObject();
+
+    private void OnDestroy()
+    {
+        try
+        {
+            gameController.OnPlayerDeath -= GameController_OnPlayerDeath;
+        }
+        catch (Exception ex)
+        {
+            // ignored
+        }
+    }
 }
 
 

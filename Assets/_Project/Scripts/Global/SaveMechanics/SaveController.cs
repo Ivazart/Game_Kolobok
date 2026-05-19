@@ -98,6 +98,7 @@ namespace Global
             saveData = saveDataFactory.CreateDefault(levelOrderService);
             sceneContext.LoadScene(saveData.LastCheckpointData.LevelName);
             Reinitialize();
+            OnSavedJumpsChanged?.Invoke(0);
         }
 
         public Sprite GetSpriteByScene(SceneName sceneType)

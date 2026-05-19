@@ -112,7 +112,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: -0.000092983246, y: 0}
-  m_Radius: 0.57453537
+  m_Radius: 0.76
 --- !u!50 &1286770124998387828
 Rigidbody2D:
   serializedVersion: 5
@@ -192,6 +192,7 @@ MonoBehaviour:
   playerAnimation: {fileID: 3671779114342654495}
   movementDetector: {fileID: 4904088471463261290}
   stopper: {fileID: 929992921826994370}
+  isDying: 0
 --- !u!114 &4904088471463261290
 MonoBehaviour:
   m_ObjectHideFlags: 0

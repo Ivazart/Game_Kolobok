@@ -68,7 +68,6 @@ public class MenuController : MonoBehaviour
     private void RestartLevel()
     {
         gameController.RestartLevel();
-       
     }
 
     private void RestartCheckpoint()
