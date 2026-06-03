@@ -351,6 +351,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: LoadStage
       objectReference: {fileID: 0}
+    - target: {fileID: 7125468661052401715, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8192504914604787603, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8444553985112839062, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
       propertyPath: m_fontSize
       value: 72
