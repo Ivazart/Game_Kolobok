@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: SceneImageDatabase
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scriptable.SceneImageDatabase
   sceneImagePairs:
+  - sceneType: 0
+    sceneImage: {fileID: 1538949286, guid: d18fcc0fcb7304149a48ff19d9ce6966, type: 3}
   - sceneType: 2
     sceneImage: {fileID: -568455031, guid: 6b38dea36b0d32144ae4abc9b8c688d9, type: 3}
   - sceneType: 3
+    sceneImage: {fileID: -568455031, guid: 6b38dea36b0d32144ae4abc9b8c688d9, type: 3}
+  - sceneType: 4
     sceneImage: {fileID: -1647712683, guid: ffa2b68138b901848bf1095ec85930f9, type: 3}
-  - sceneType: 0
-    sceneImage: {fileID: 1538949286, guid: d18fcc0fcb7304149a48ff19d9ce6966, type: 3}
   CloseSceneImage: {fileID: -1259746967, guid: f2a176317e2a99348a966a6db6146598, type: 3}

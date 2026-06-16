@@ -1,4 +1,6 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
+using Global;
 using Spine.Unity;
 using UnityEngine;
 
@@ -7,9 +9,9 @@ namespace StartingLab
     [RequireComponent(typeof(SkeletonAnimation))]
     public class StartingLabAnimation : MonoBehaviour
     {
-        private const string IdleAnimationName = "idle";
-        private const string AlarmAnimationName = "alarm";
-        private const string ActiveAnimationName = "activate";
+        protected const string IdleAnimationName = "idle";
+        protected const string AlarmAnimationName = "alarm";
+        protected const string ActiveAnimationName = "activate";
 
         private SkeletonAnimation skeletonAnimation;
 
@@ -27,22 +29,13 @@ namespace StartingLab
                 StartingLabState.Active => ActiveAnimationName,
                 _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
             };
-            TryPlayAnimation(animationName);
+            PlayAnimation(animationName).Forget();
         }
 
-        private void TryPlayAnimation(string animationName)
+        protected virtual async UniTask PlayAnimation(string animationName, bool loop = true)
         {
-            Spine.Animation anim = skeletonAnimation.Skeleton.Data.FindAnimation(animationName);
-
-            if (anim == null)
-            {
-                Debug.LogError($"Animation '{animationName}' not found in {gameObject.name}!");
-            }
-            else
-            {
-                Debug.Log($" {gameObject.name} is playing animation {animationName}");
-                skeletonAnimation.AnimationState.SetAnimation(0, anim, true);
-            }
+           await UniTaskUtils.PlayAnimation(skeletonAnimation, animationName, loop: loop );
         }
+        
     }
 }

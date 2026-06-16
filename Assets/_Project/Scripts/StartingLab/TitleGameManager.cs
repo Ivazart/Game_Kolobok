@@ -9,10 +9,11 @@ using UnityEngine;
 public class TitleGameManager : MonoBehaviour
 {
     [SerializeField] private PlayButton startingButton;
+    [SerializeField] private StartingLabManAnimation manAnimation;
     [SerializeField] private UIController uiController;
     [SerializeField] private AudioSource al;
     [SerializeField] private List<StartingLabAnimation> elements = new();
-
+    
     private SceneController sceneController => SceneController.Instance;
     private CancellationTokenSource cts = new();
 
@@ -21,6 +22,12 @@ public class TitleGameManager : MonoBehaviour
         Debug.Log($"TitleGameManager instance: {GetInstanceID()}", this);
         startingButton.OnButtonClicked += () =>
             UniTaskUtils.RunWithCancellationAsync(StartingButton_OnButtonClicked, cts.Token).Forget();
+        manAnimation.OnManClickButtonAnimFinish += ManAnimation_OnManClickButtonAnimFinish;
+    }
+
+    private void ManAnimation_OnManClickButtonAnimFinish()
+    {
+        //throw new System.NotImplementedException();
     }
 
     private void Start()
@@ -39,7 +46,7 @@ public class TitleGameManager : MonoBehaviour
     {
         await UniTask.WaitForSeconds(2f, cancellationToken: token);
         SetState(StartingLabState.Active);
-        await UniTask.WaitForSeconds(6f, cancellationToken: token);
+        await UniTask.WaitForSeconds(8f, cancellationToken: token);
         sceneController.LoadScene(SceneName.Space);
     }
 

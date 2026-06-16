@@ -9,6 +9,8 @@ namespace Global
     {
         [SerializeField] private SceneImageDatabase sceneImageDatabase;
 
+        [SerializeField] private bool SkipInitialSceneLoad;
+        
         public SaveData SaveData => saveData;
         public int LastCheckPointID => checkpointService.LastCheckPointID;
 
@@ -74,7 +76,14 @@ namespace Global
             levelCompletionService.OnLevelFinished += () => OnLevelFinished?.Invoke();
             levelCompletionService.OnSavedJumpsChanged += (v) => OnSavedJumpsChanged?.Invoke(v);
 
-            sceneContext.LoadScene(isFirstGame? SceneName.StartLab: SceneName.ResumeGameScene);
+            if (!SkipInitialSceneLoad)
+            {
+                sceneContext.LoadScene(isFirstGame ? SceneName.StartLab : SceneName.ResumeGameScene);
+            }
+            else
+            {
+                Debug.Log("SaveController: начальная загрузка сцены пропущена (тестовый режим). Текущая сцена: " + sceneContext.CurrentScene);
+            }
             //LoadLastSave();
             isInitialized = true;
         }

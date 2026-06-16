@@ -37,9 +37,10 @@ public class LevelProgress : MonoBehaviour
         }
     }
 
-    private float GetDistance ()
+    private float GetDistance()
     {
-        return Vector3.Distance(playerTransform.position, endLinePosition);
+        float distance = endLinePosition.x - playerTransform.position.x;
+        return Mathf.Max(0f, distance);
     }
 
     private void OnDestroy()
