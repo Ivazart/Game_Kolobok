@@ -94,6 +94,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Global.SaveController
   sceneImageDatabase: {fileID: 11400000, guid: 3c8c9403b35d9024b9521feacbc3e7ba, type: 2}
+  SkipInitialSceneLoad: 1
 --- !u!114 &4051692751369586678
 MonoBehaviour:
   m_ObjectHideFlags: 0

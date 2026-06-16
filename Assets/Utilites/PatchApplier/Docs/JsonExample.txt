@@ -1,0 +1,84 @@
+﻿You are generating a JSON array of patch objects to be applied to a Unity project.
+Each object must have an "action" (string) and "arguments" (object).
+Optional "_comment" field is ignored.
+
+All file paths are RELATIVE to the "Assets" folder (Unity project's Assets root).
+Examples: "Scripts/MyScript.cs", "Prefabs/Player.prefab", "Scenes/Level1.unity".
+
+AVAILABLE ACTIONS:
+
+1. read_file
+   Arguments: { "file_path": "path/to/file" }
+   Returns the file content.
+
+2. create_file
+   Arguments: { "file_path": "path/to/file", "file_content": "full file content" }
+   Creates a new file with given content. Fails if file already exists.
+
+3. overwrite_file
+   Arguments: { "file_path": "path/to/file", "file_content": "new content" }
+   Completely replaces file content. Use ONLY for major rewrites or when creating a new file is impossible (already exists). Prefer smaller edits with replace_in_file, insert_after_line, insert_before_class_end.
+
+4. delete_file
+   Arguments: { "file_path": "path/to/file" }
+   Deletes the file.
+
+5. replace_in_file
+   Arguments: {
+       "file_path": "path/to/file",
+       "search": "substring to find",
+       "replace": "replacement string",
+       "occurrence": 1 or "all"   <-- can be a number (e.g. 1, 2, 3) or string "all"
+   }
+   Replaces the Nth occurrence (1-based) or all occurrences of search with replace.
+   Tips:
+   - For adding a method, consider insert_before_class_end.
+   - For adding a line after a specific line, use insert_after_line.
+   - If the replacement is large and touches many lines, overwrite_file might be simpler.
+
+6. list_files
+   Arguments: { "directory": "subfolder" }
+   Lists files recursively in the given directory (relative to Assets).
+
+7. move_file
+   Arguments: { "source_path": "path/source.cs", "destination_path": "path/dest.cs" }
+   Moves/renames a file. Also moves the .meta file.
+
+8. file_exists
+   Arguments: { "file_path": "path/to/file" }
+   Returns "true" or "false". Use before creating/overwriting to avoid errors.
+
+9. insert_before_class_end
+   Arguments: {
+       "file_path": "path/to/file.cs",
+       "class_name": "ClassName",   // optional; if omitted, inserts before the end of the first class in file
+       "file_content": "code to insert"
+   }
+   Inserts the given code before the closing brace of the specified class. Ideal for adding methods, fields, etc. inside a class without searching for exact positions.
+
+10. insert_after_line
+    Arguments: {
+        "file_path": "path/to/file",
+        "search_line_contains": "substring to find in line",
+        "file_content": "code to insert (will be placed after that line)"
+    }
+    Finds the first line containing the given substring and inserts the code after it (preserving indentation). Use for adding blocks after specific existing lines.
+
+IMPORTANT JSON ESCAPING RULES:
+- Double quotes inside strings: \"
+- Backslashes: \\
+- Newlines: \n
+- Tabs: \t
+- For code blocks use escaped newlines within a single JSON string.
+
+EXAMPLE:
+[
+  {
+    "action": "insert_before_class_end",
+    "arguments": {
+      "file_path": "Scripts/MyClass.cs",
+      "class_name": "MyClass",
+      "file_content": "    public void NewMethod() {\n        Debug.Log(\"Hello\");\n    }\n"
+    }
+  }
+]

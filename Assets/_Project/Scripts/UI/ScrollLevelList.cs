@@ -9,6 +9,7 @@ namespace _Project.UI
     {
         [SerializeField] private GameObject levelPrefab;
         [SerializeField] private Transform scrollRectContent;
+        [SerializeField] private GameObject FinalImage;
         
         public LevelPrefab SelectedLevel { get; private set; }
         public event Action OnNewLevelSelected;
@@ -25,6 +26,7 @@ namespace _Project.UI
                 levelPref.Init(leveldata);
                 createdLevels.Add(levelPref);
             }
+            FinalImage.transform.SetAsLastSibling();
         }
 
         private void LevelPrefab_OnClick(LevelPrefab level)

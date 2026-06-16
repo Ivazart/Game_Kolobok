@@ -619,12 +619,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startingButton: {fileID: 1946050624}
+  manAnimation: {fileID: 1034654083}
   uiController: {fileID: 729679383}
   al: {fileID: 630494004}
   elements:
-  - {fileID: 2130152364}
   - {fileID: 1466770587}
-  - {fileID: 1034654084}
+  - {fileID: 1034654083}
   - {fileID: 2008645265}
   - {fileID: 1008902236}
   - {fileID: 755343400}
@@ -1395,7 +1395,7 @@ GameObject:
   - component: {fileID: 1034654081}
   - component: {fileID: 1034654080}
   - component: {fileID: 1034654079}
-  - component: {fileID: 1034654084}
+  - component: {fileID: 1034654083}
   m_Layer: 0
   m_Name: Spine GO (man)
   m_TagString: Untagged
@@ -1518,7 +1518,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1775919097}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1034654084
+--- !u!114 &1034654083
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1527,9 +1527,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1034654078}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e2af81e0a6548379031e1092ea6dac6, type: 3}
+  m_Script: {fileID: 11500000, guid: bd80428923d84d9e97a6dd0fe789aaca, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::StartingLab.StartingLabAnimation
+  m_EditorClassIdentifier: Global::StartingLab.StartingLabManAnimation
 --- !u!1 &1466770581
 GameObject:
   m_ObjectHideFlags: 0

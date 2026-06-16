@@ -6,14 +6,14 @@ namespace _Project.Core.Camera
     public class CameraMove : MonoBehaviour
     {
         [Header("Dynamic Horizontal Follow")] 
-        [SerializeField] private float damping = 1.5f; // базовое время сглаживания
-        [SerializeField] private float speedInfluence = 0.1f; // влияние скорости игрока
-        [SerializeField] private float distanceInfluence = 0.05f; // влияние расстояния до цели
+        [SerializeField] private float damping = 1.5f;
+        [SerializeField] private float speedInfluence = 0.1f;
+        [SerializeField] private float distanceInfluence = 0.05f;
         [SerializeField] private float minSmoothTime = 0.5f;
         [SerializeField] private float maxSmoothTime = 2f;
 
         [Header("Vertical Follow (Zones)")] 
-        [SerializeField] private float verticalSmoothTime = 0.5f; // время сглаживания подъёма/спуска
+        [SerializeField] private float verticalSmoothTime = 0.5f;
         [SerializeField] private List<CameraLiftZone> liftZones = new List<CameraLiftZone>();
 
         [Header("Base Offset")] 
@@ -21,8 +21,12 @@ namespace _Project.Core.Camera
         [SerializeField] private float offsetYForGroundVision = 1f;
         
         [Header("ScreenScale")]
-        [SerializeField] private float targetWorldWidth = 19.2f; // ширина в юнитах, которую всегда видно
+        [SerializeField] private float targetWorldWidth = 19.2f;
         [SerializeField] private bool adjustCameraSize = true;
+        
+        [Header("Boundaries")]
+        [SerializeField] private Transform startMarker;
+        [SerializeField] private Transform finishMarker;
         
         private const float OffsetZ = -10f;
         private Transform player;
@@ -30,13 +34,19 @@ namespace _Project.Core.Camera
         private float playerSpeed;
         private UnityEngine.Camera followCamera;
         
-        // Раздельные скорости для осей
         private float velocityX = 0f;
         private float velocityY = 0f;
 
-        // Текущая плавная высота, которую отрабатывает камера
-        private float currentDesiredY; // значение, к которому стремится камера по Y (обновляется редко)
-        private float targetDesiredY; // что мы вычисляем из зон
+        private float currentDesiredY;
+        private float targetDesiredY;
+
+        // --- Кэшированные значения ---
+        private float cameraHalfWidth;      // orthographicSize * aspect
+        private float baseCameraY;          // offset.y - offsetYForGroundVision
+        private bool hasStartMarker;
+        private bool hasFinishMarker;
+        private float startMarkerX;         // если маркеры статичны
+        private float finishMarkerX;
 
         public void SetPlayer(Transform player)
         {
@@ -44,7 +54,7 @@ namespace _Project.Core.Camera
             if (player != null)
             {
                 lastPlayerPosition = player.position;
-                currentDesiredY = GetBaseY();
+                currentDesiredY = baseCameraY;
             }
         }
 
@@ -60,6 +70,18 @@ namespace _Project.Core.Camera
         {
             followCamera = GetComponent<UnityEngine.Camera>();
             UpdateCameraOrthoSize();
+            
+            // Кэшируем полуширину камеры (если размер динамический – нужно будет обновлять)
+            cameraHalfWidth = followCamera.orthographicSize * followCamera.aspect;
+            
+            // Кэшируем базовую высоту
+            baseCameraY = offset.y - offsetYForGroundVision;
+            
+            // Кэшируем информацию о маркерах
+            hasStartMarker = startMarker != null;
+            hasFinishMarker = finishMarker != null;
+            if (hasStartMarker) startMarkerX = startMarker.position.x;
+            if (hasFinishMarker) finishMarkerX = finishMarker.position.x;
         }
         
         private void UpdateCameraOrthoSize()
@@ -67,16 +89,15 @@ namespace _Project.Core.Camera
             if (!adjustCameraSize || followCamera == null) return;
 
             float targetSize = targetWorldWidth / (2f * followCamera.aspect);
-            // опционально ограничь, чтобы не уезжало в крайности (очень высокий/широкий экран)
-            Debug.Log("targetSize: " + targetSize);
             targetSize = Mathf.Clamp(targetSize, 6f, 10f);
-
+            Debug.Log("targetSize: " + targetSize);
             followCamera.orthographicSize = targetSize;
+            // После изменения размера обязательно обновить кэш полуширины
+            cameraHalfWidth = targetSize * followCamera.aspect;
         }
         
         private void Update()
         {
-            // Если игра на паузе — не двигаем камеру и сбрасываем скорость
             if (Time.timeScale <= 0.0001f || Time.deltaTime <= 0.0001f)
             {
                 playerSpeed = 0f;
@@ -87,7 +108,6 @@ namespace _Project.Core.Camera
             if (float.IsNaN(playerPos.x) || float.IsNaN(playerPos.y))
                 return;
 
-            // Расчёт скорости игрока для динамического демпфирования
             Vector3 playerDelta = playerPos - lastPlayerPosition;
             if (float.IsNaN(playerDelta.x) || float.IsNaN(playerDelta.y))
                 playerDelta = Vector3.zero;
@@ -100,17 +120,13 @@ namespace _Project.Core.Camera
 
         private void MoveToPosition(bool instantMove = false)
         {
-            Vector3 pos = transform.position;
-
-            // Цель по X (относительно игрока)
             float targetX = player.position.x - offset.x;
+            targetX = ClampTargetX(targetX);
 
-            // Определяем желаемую высоту камеры в зависимости от зон
             targetDesiredY = GetDesiredYForX(targetX);
 
             if (instantMove)
             {
-                // Мгновенное перемещение и сброс скоростей
                 transform.position = new Vector3(targetX, targetDesiredY, OffsetZ);
                 velocityX = 0f;
                 velocityY = 0f;
@@ -118,33 +134,37 @@ namespace _Project.Core.Camera
                 return;
             }
 
-            // --- Горизонтальное движение с динамическим сглаживанием ---
+            Vector3 pos = transform.position;
             float distance = Mathf.Abs(targetX - pos.x);
             float dynamicSmoothTime = damping - (playerSpeed * speedInfluence) - (distance * distanceInfluence);
             dynamicSmoothTime = Mathf.Clamp(dynamicSmoothTime, minSmoothTime, maxSmoothTime);
 
             float newX = Mathf.SmoothDamp(pos.x, targetX, ref velocityX, dynamicSmoothTime);
-
-            // --- Вертикальное движение (независимое сглаживание) ---
             currentDesiredY = Mathf.SmoothDamp(currentDesiredY, targetDesiredY, ref velocityY, verticalSmoothTime);
-            // currentDesiredY — та высота, к которой камера подтягивается плавно
 
             transform.position = new Vector3(newX, currentDesiredY, OffsetZ);
         }
 
-        /// <summary>
-        /// Базовая высота камеры вне зон подъёма.
-        /// </summary>
-        private float GetBaseY()
+        private float ClampTargetX(float desiredX)
         {
-            return offset.y - offsetYForGroundVision;
+            // Используем закэшированные данные
+            float minX = hasStartMarker ? startMarkerX + cameraHalfWidth : float.MinValue;
+            float maxX = hasFinishMarker ? finishMarkerX - cameraHalfWidth : float.MaxValue;
+
+            if (minX > maxX) // Уровень уже камеры, фиксируем по центру
+            {
+                float center = (startMarkerX + finishMarkerX) * 0.5f;
+                return center;
+            }
+
+            return Mathf.Clamp(desiredX, minX, maxX);
         }
 
-        /// <summary>
-        /// Вычисляет желаемую высоту камеры для заданной мировой X (точки, куда движется камера).
-        /// Если X внутри одной из зон, возвращает интерполированное значение;
-        /// иначе — базовую высоту.
-        /// </summary>
+        private float GetBaseY()
+        {
+            return baseCameraY;
+        }
+
         private float GetDesiredYForX(float worldX)
         {
             foreach (var zone in liftZones)
@@ -154,15 +174,13 @@ namespace _Project.Core.Camera
                     return zone.GetYForX(worldX);
                 }
             }
-
-            return GetBaseY();
+            return baseCameraY;
         }
 
-        // Визуализация базовой высоты
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.green;
-            Vector3 basePos = new Vector3(transform.position.x, GetBaseY(), transform.position.z);
+            Vector3 basePos = new Vector3(transform.position.x, baseCameraY, transform.position.z);
             Gizmos.DrawWireSphere(basePos, 0.2f);
         }
     }

@@ -57,14 +57,14 @@ public class PlayButton : MonoBehaviour , IPointerClickHandler
 
     private async UniTask MouseDownHandler()
     {
-        TryPlayAnimation(AnimationNames.press);
+        TryPlayAnimation(AnimationNames.press, false);
         isPressed = true;
         UniTask.Post(() => OnButtonClicked?.Invoke());
-        await UniTask.WaitForSeconds(2f);
-        await spineFader.FadeOutSpine(2f);
+        //await UniTask.WaitForSeconds(.3f);
+        await spineFader.FadeOutSpine(.7f);
     }
     
-    private void TryPlayAnimation(AnimationNames animationName)
+    private void TryPlayAnimation(AnimationNames animationName, bool loop = true)
     {
         Spine.Animation anim = buttonSpineAnimation.Skeleton.Data.FindAnimation(animationName.ToString());
 
@@ -75,7 +75,7 @@ public class PlayButton : MonoBehaviour , IPointerClickHandler
         else
         {
             Debug.Log($" {gameObject.name} is playing animation {animationName}");
-            buttonSpineAnimation.AnimationState.SetAnimation(0, anim, true);
+            buttonSpineAnimation.AnimationState.SetAnimation(0, anim, loop);
         }
     }
 }

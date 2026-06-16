@@ -38,15 +38,9 @@ namespace Global
 
 
             SceneName nextScene = isFirstTime ? GetNextLevel(scene) : SceneName.SelectStageScene;
-            if (isFirstTime)
-            {
-                saveData.LastCheckpointData = saveData.LevelDatas[nextScene].LastCheckpoint;
-            }
-            else
-            {
-                saveData.LastCheckpointData.LevelName = SceneName.SelectStageScene;
-            }
-
+            
+            saveData.LastCheckpointData.LevelName = nextScene;
+            saveData.LastCheckpointData.Checkpoint = -1;
             saveHandler.Save(saveData);
             checkpointService.LastCheckPointID = saveData.LastCheckpointData.Checkpoint;
             sceneContext.LoadScene(nextScene);

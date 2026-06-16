@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4351703134026781716, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
+      propertyPath: liftZones.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5565440993715912319, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 397.57016
@@ -50,7 +54,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8615835805948290689, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_Name
-      value: Main Camera_Temp_d173a66b
+      value: Main CameraRocks2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

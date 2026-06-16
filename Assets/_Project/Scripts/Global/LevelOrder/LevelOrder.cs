@@ -9,6 +9,7 @@
         {
             SceneName.StartLab,
             SceneName.Rocks,
+            SceneName.Rocks2,
             SceneName.Swamp
         };
 

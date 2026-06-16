@@ -243,6 +243,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1058710539027171146, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1058710539027171146, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1058710539027171146, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1058710539027171146, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2781435555732223625, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -343,10 +359,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4632472507195579175, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.000026319705
-      objectReference: {fileID: 0}
     - target: {fileID: 7125468661052401715, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
       propertyPath: m_Name
       value: LoadStage
@@ -358,10 +370,6 @@ PrefabInstance:
     - target: {fileID: 8192504914604787603, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8444553985112839062, guid: bd9f0c1bf83ace6409504b1293fe8600, type: 3}
-      propertyPath: m_fontSize
-      value: 72
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
