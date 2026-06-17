@@ -72,7 +72,8 @@ namespace _Project.Player
 
             StopAllAnimation();
             await UniTaskUtils.PlayAnimation(skeletonAnimation, deathEyes, 1, true, 0.7f);
-            await UniTaskUtils.PlayAnimation(skeletonAnimation, death);
+            await UniTaskUtils.PlayAnimation(skeletonAnimation, death, 1);
+            
         }
         
         public async UniTask PlayEyesDown()

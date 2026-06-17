@@ -13,7 +13,7 @@ public class CodeCollectorWindow : EditorWindow
 {
     // ---- Состояние UI ----
     private Vector2 scroll;
-    private List<string> sourceFolders = new List<string> {"Assets"};
+    private HashSet<string> selectedFolders = new HashSet<string> {"Assets"};
     private List<string> fileExtensionWhitelist = new List<string> {".cs", ".shader", ".compute", ".hlsl"};
     private List<string> fileExtensionBlacklist = new List<string>();
     private bool useWhitelist = true;
@@ -22,6 +22,10 @@ public class CodeCollectorWindow : EditorWindow
     private string outputPath = "Assets/combined_code.txt";
     private bool includeUsings = true;
     private bool includeXmlDocs = true;
+
+    // Кэш дерева папок
+    private FolderNode rootFolderNode;
+    private bool folderTreeDirty = true;
 
     private enum CollectionMode
     {
@@ -36,14 +40,12 @@ public class CodeCollectorWindow : EditorWindow
 
     private void OnEnable()
     {
-        minSize = new Vector2(400, 650);
+        minSize = new Vector2(450, 700);
         LoadSettings();
+        folderTreeDirty = true;
     }
 
-    private void OnDisable()
-    {
-        SaveSettings();
-    }
+    private void OnDisable() => SaveSettings();
 
     private void OnGUI()
     {
@@ -61,31 +63,33 @@ public class CodeCollectorWindow : EditorWindow
             includeXmlDocs = EditorGUILayout.Toggle("Include XML doc comments (///)", includeXmlDocs);
         }
 
-        // --- Папки-источники ---
+        // --- Папки-источники (дерево с чекбоксами) ---
         EditorGUILayout.LabelField("Папки для сбора", EditorStyles.boldLabel);
-        for (int i = 0; i < sourceFolders.Count; i++)
-        {
-            EditorGUILayout.BeginHorizontal();
-            sourceFolders[i] = EditorGUILayout.TextField(sourceFolders[i]);
-            if (GUILayout.Button("...", GUILayout.Width(30)))
-            {
-                string selected = EditorUtility.OpenFolderPanel("Выбери папку", "Assets", "");
-                if (!string.IsNullOrEmpty(selected))
-                {
-                    if (selected.StartsWith(Application.dataPath))
-                        sourceFolders[i] = "Assets" + selected.Substring(Application.dataPath.Length);
-                    else
-                        Debug.LogWarning("Папка должна находиться внутри проекта!");
-                }
-            }
 
-            if (GUILayout.Button("-", GUILayout.Width(20)))
-                sourceFolders.RemoveAt(i--);
-            EditorGUILayout.EndHorizontal();
+        if (folderTreeDirty)
+        {
+            rootFolderNode = BuildFolderTree("Assets");
+            folderTreeDirty = false;
         }
 
-        if (GUILayout.Button("+ Добавить папку"))
-            sourceFolders.Add("Assets");
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Select All", GUILayout.Width(100)))
+        {
+            SetFolderSelectedRecursive(rootFolderNode, true);
+            UpdateAncestors(rootFolderNode);
+        }
+
+        if (GUILayout.Button("Deselect All", GUILayout.Width(100)))
+        {
+            SetFolderSelectedRecursive(rootFolderNode, false);
+            UpdateAncestors(rootFolderNode);
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        if (rootFolderNode != null)
+            DrawFolderNode(rootFolderNode, 0);
+
         EditorGUILayout.Space();
 
         // --- Фильтры расширений ---
@@ -147,6 +151,141 @@ public class CodeCollectorWindow : EditorWindow
             list.Add(defaultNewValue);
     }
 
+    // ---- Дерево папок с поддержкой mixed state и рекурсивным выделением ----
+    private class FolderNode
+    {
+        public string path;
+        public string name;
+        public FolderNode parent;
+        public List<FolderNode> children = new List<FolderNode>();
+        public bool isExpanded;
+    }
+
+    private FolderNode BuildFolderTree(string rootPath, FolderNode parent = null)
+    {
+        var node = new FolderNode
+        {
+            path = rootPath,
+            name = rootPath == "Assets" ? "Assets" : Path.GetFileName(rootPath),
+            parent = parent
+        };
+
+        string[] subFolders = AssetDatabase.GetSubFolders(rootPath);
+        foreach (string sub in subFolders)
+        {
+            string name = Path.GetFileName(sub);
+            if (name.StartsWith(".")) continue;
+            node.children.Add(BuildFolderTree(sub, node));
+        }
+
+        return node;
+    }
+
+    private bool? GetFolderCheckState(FolderNode node)
+    {
+        if (node.children.Count == 0)
+            return selectedFolders.Contains(node.path);
+
+        bool anySelected = false;
+        bool allSelected = true;
+
+        foreach (var child in node.children)
+        {
+            bool? childState = GetFolderCheckState(child);
+            if (childState == true) anySelected = true;
+            else if (childState == null)
+            {
+                anySelected = true;
+                allSelected = false;
+            }
+            else allSelected = false;
+        }
+
+        if (allSelected) return true;
+        if (anySelected) return null; // mixed
+        return false;
+    }
+
+    private void DrawFolderNode(FolderNode node, int indent)
+    {
+        EditorGUILayout.BeginHorizontal();
+        GUILayout.Space(indent * 15);
+
+        bool? checkState = GetFolderCheckState(node);
+        bool newChecked;
+
+        if (checkState.HasValue)
+        {
+            newChecked = EditorGUILayout.ToggleLeft(node.name, checkState.Value, GUILayout.Width(200));
+        }
+        else
+        {
+            EditorGUI.showMixedValue = true;
+            newChecked = EditorGUILayout.ToggleLeft(node.name, false, GUILayout.Width(200));
+            EditorGUI.showMixedValue = false;
+        }
+
+        if (newChecked != (checkState == true))
+        {
+            SetFolderSelectedRecursive(node, newChecked);
+            if (node.parent != null)
+                UpdateAncestors(node.parent);
+            else
+                UpdateAncestors(node);
+        }
+
+        if (node.children.Count > 0)
+        {
+            node.isExpanded = EditorGUILayout.Foldout(node.isExpanded, "", toggleOnLabelClick: false);
+        }
+
+        EditorGUILayout.EndHorizontal();
+
+        if (node.isExpanded)
+        {
+            foreach (var child in node.children)
+                DrawFolderNode(child, indent + 1);
+        }
+    }
+
+    private void SetFolderSelectedRecursive(FolderNode node, bool selected)
+    {
+        if (selected)
+            selectedFolders.Add(node.path);
+        else
+            selectedFolders.Remove(node.path);
+
+        foreach (var child in node.children)
+            SetFolderSelectedRecursive(child, selected);
+    }
+
+    private void UpdateAncestors(FolderNode node)
+    {
+        if (node.children.Count == 0)
+            return;
+
+        bool allSelected = true;
+        bool anySelected = false;
+
+        foreach (var child in node.children)
+        {
+            bool? childState = GetFolderCheckState(child);
+            if (childState != false) anySelected = true; // true или mixed
+            if (childState != true) allSelected = false; // false или mixed
+        }
+
+        if (allSelected)
+            selectedFolders.Add(node.path);
+        else if (!anySelected)
+            selectedFolders.Remove(node.path);
+        else
+            selectedFolders.Remove(node.path); // частичный выбор – удаляем, чтобы получить mixed
+
+        if (node.parent != null)
+            UpdateAncestors(node.parent);
+    }
+
+    // ---- Сбор файлов ----
     private void CollectCode()
     {
         try
@@ -170,7 +309,7 @@ public class CodeCollectorWindow : EditorWindow
                     extensionsSet.UnionWith(fileExtensionBlacklist);
             }
 
-            foreach (string relativeFolder in sourceFolders)
+            foreach (string relativeFolder in selectedFolders)
             {
                 string fullFolder = Path.Combine(Application.dataPath,
                     relativeFolder.StartsWith("Assets/") ? relativeFolder.Substring(7) : relativeFolder);
@@ -251,7 +390,8 @@ public class CodeCollectorWindow : EditorWindow
 
         if (!includeXmlDocs)
         {
-            result = System.Text.RegularExpressions.Regex.Replace(result, @"^\s*///.*$", "", System.Text.RegularExpressions.RegexOptions.Multiline);
+            result = System.Text.RegularExpressions.Regex.Replace(result, @"^\s*///.*$", "",
+                System.Text.RegularExpressions.RegexOptions.Multiline);
             result = System.Text.RegularExpressions.Regex.Replace(result, @"\n\s*\n", "\n");
         }
 
@@ -269,36 +409,31 @@ public class CodeCollectorWindow : EditorWindow
 
         public override SyntaxNode VisitClassDeclaration(ClassDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return base.VisitClassDeclaration(node);
         }
 
         public override SyntaxNode VisitStructDeclaration(StructDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return base.VisitStructDeclaration(node);
         }
 
         public override SyntaxNode VisitInterfaceDeclaration(InterfaceDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return base.VisitInterfaceDeclaration(node);
         }
 
         public override SyntaxNode VisitEnumDeclaration(EnumDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return base.VisitEnumDeclaration(node);
         }
 
         public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node.WithBody(null)
                 .WithExpressionBody(null)
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken))
@@ -308,8 +443,7 @@ public class CodeCollectorWindow : EditorWindow
 
         public override SyntaxNode VisitPropertyDeclaration(PropertyDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             var accessors = node.AccessorList?.Accessors;
             if (accessors != null && accessors.Value.Any())
             {
@@ -317,9 +451,10 @@ public class CodeCollectorWindow : EditorWindow
                     acc.WithBody(null)
                         .WithExpressionBody(null)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
-                node = node.WithAccessorList(SyntaxFactory.AccessorList(
-                    new SyntaxList<AccessorDeclarationSyntax>(newAccessors)));
+                node = node.WithAccessorList(
+                    SyntaxFactory.AccessorList(new SyntaxList<AccessorDeclarationSyntax>(newAccessors)));
             }
+
             node = node.WithExpressionBody(null)
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
             return node;
@@ -327,62 +462,56 @@ public class CodeCollectorWindow : EditorWindow
 
         public override SyntaxNode VisitFieldDeclaration(FieldDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node;
         }
 
         public override SyntaxNode VisitConstructorDeclaration(ConstructorDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node.WithBody(null)
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
         }
 
         public override SyntaxNode VisitEventDeclaration(EventDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node;
         }
 
         public override SyntaxNode VisitDelegateDeclaration(DelegateDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node;
         }
 
         public override SyntaxNode VisitOperatorDeclaration(OperatorDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node.WithBody(null)
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
         }
 
         public override SyntaxNode VisitConversionOperatorDeclaration(ConversionOperatorDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             return node.WithBody(null)
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
         }
 
         public override SyntaxNode VisitIndexerDeclaration(IndexerDeclarationSyntax node)
         {
-            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword)))
-                return null;
+            if (!node.Modifiers.Any(m => m.IsKind(SyntaxKind.PublicKeyword))) return null;
             var accessors = node.AccessorList?.Accessors;
             if (accessors != null && accessors.Value.Any())
             {
                 var newAccessors = accessors.Value.Select(acc =>
                     acc.WithBody(null).WithExpressionBody(null)
                         .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken)));
-                node = node.WithAccessorList(SyntaxFactory.AccessorList(
-                    new SyntaxList<AccessorDeclarationSyntax>(newAccessors)));
+                node = node.WithAccessorList(
+                    SyntaxFactory.AccessorList(new SyntaxList<AccessorDeclarationSyntax>(newAccessors)));
             }
+
             node = node.WithExpressionBody(null)
                 .WithSemicolonToken(SyntaxFactory.Token(SyntaxKind.SemicolonToken));
             return node;
@@ -390,8 +519,7 @@ public class CodeCollectorWindow : EditorWindow
 
         public override SyntaxNode VisitUsingDirective(UsingDirectiveSyntax node)
         {
-            if (!_includeUsings)
-                return null;
+            if (!_includeUsings) return null;
             return node;
         }
     }
@@ -399,7 +527,7 @@ public class CodeCollectorWindow : EditorWindow
     [Serializable]
     private class Settings
     {
-        public List<string> sourceFolders;
+        public List<string> selectedFolders;
         public List<string> fileExtensionWhitelist;
         public List<string> fileExtensionBlacklist;
         public bool useWhitelist;
@@ -415,7 +543,7 @@ public class CodeCollectorWindow : EditorWindow
     {
         var s = new Settings
         {
-            sourceFolders = this.sourceFolders,
+            selectedFolders = this.selectedFolders.ToList(),
             fileExtensionWhitelist = this.fileExtensionWhitelist,
             fileExtensionBlacklist = this.fileExtensionBlacklist,
             useWhitelist = this.useWhitelist,
@@ -437,7 +565,7 @@ public class CodeCollectorWindow : EditorWindow
             try
             {
                 var s = JsonUtility.FromJson<Settings>(json);
-                if (s.sourceFolders != null) this.sourceFolders = s.sourceFolders;
+                if (s.selectedFolders != null) this.selectedFolders = new HashSet<string>(s.selectedFolders);
                 if (s.fileExtensionWhitelist != null) this.fileExtensionWhitelist = s.fileExtensionWhitelist;
                 if (s.fileExtensionBlacklist != null) this.fileExtensionBlacklist = s.fileExtensionBlacklist;
                 this.useWhitelist = s.useWhitelist;
@@ -457,7 +585,7 @@ public class CodeCollectorWindow : EditorWindow
 
     private void ResetToDefaults()
     {
-        sourceFolders = new List<string> {"Assets"};
+        selectedFolders = new HashSet<string> {"Assets"};
         fileExtensionWhitelist = new List<string> {".cs", ".shader", ".compute", ".hlsl"};
         fileExtensionBlacklist = new List<string>();
         useWhitelist = true;
@@ -467,6 +595,7 @@ public class CodeCollectorWindow : EditorWindow
         includeUsings = true;
         includeXmlDocs = true;
         mode = CollectionMode.Full;
+        folderTreeDirty = true;
         SaveSettings();
         Debug.Log("Code Collector settings reset to defaults.");
         Repaint();

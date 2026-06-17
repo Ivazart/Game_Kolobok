@@ -43,6 +43,7 @@ namespace _Project.Player
             rb.bodyType = RigidbodyType2D.Kinematic;
             rb.linearVelocity = Vector2.zero;
             await playerAnimation.PlayDeath(death);
+            this.gameObject.SetActive(false);
             gameManager.PlayerDeathAnimationFinished();
         }
 
