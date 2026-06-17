@@ -7,6 +7,7 @@
         Rocks,
         Rocks2,
         Swamp,
+        Mine,
         ResumeGameScene,
         LoadingScene,
         SelectStageScene
