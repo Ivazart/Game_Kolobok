@@ -1092,26 +1092,6 @@ PrefabInstance:
       propertyPath: startLineTransform
       value: 
       objectReference: {fileID: 10108338}
-    - target: {fileID: 5878455885559956119, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5878455885559956119, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5878455885559956119, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5878455885559956119, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5878455885559956119, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7128273038387117859, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
