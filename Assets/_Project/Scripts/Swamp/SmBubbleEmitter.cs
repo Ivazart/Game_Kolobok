@@ -14,7 +14,13 @@ public class SmBubbleEmitter : MonoBehaviour
     private float randomSc;
     private float x;
     private float y;
-
+    private GameObject parent;
+    
+    private void Awake()
+    {
+        parent = GameObject.FindWithTag("Temporal");
+    }
+    
     private void Start()
     {
         InvokeRepeating(nameof(Create), 2.0f, time);
@@ -33,7 +39,7 @@ public class SmBubbleEmitter : MonoBehaviour
     {
         randomSc = Random.Range(0.3f, 1f);
         randomXp = Random.Range(-10f, 10f); 
-        var babbleC = Instantiate(bubblePrefab);
+        var babbleC = Instantiate(bubblePrefab, parent.transform);
 
         babbleC.transform.localScale = new Vector2(scale * randomSc, scale * randomSc);
         var position = transform.position;

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 446015739005181874, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
+      propertyPath: menuButton
+      value: 
+      objectReference: {fileID: 469777058556887907}
     - target: {fileID: 630564733458224502, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
       propertyPath: m_Name
       value: UIStarting
@@ -140,6 +144,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 88
       objectReference: {fileID: 0}
+    - target: {fileID: 8392169180276417675, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 2521425893531436913, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
     m_RemovedGameObjects:
@@ -147,3 +155,14 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
+--- !u!114 &469777058556887907 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8392169180276417675, guid: 46f12c866a8fd9d4f9a8704ecbf7a256, type: 3}
+  m_PrefabInstance: {fileID: 8282685795982256104}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Button
