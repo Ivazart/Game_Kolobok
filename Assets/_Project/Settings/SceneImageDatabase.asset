@@ -21,4 +21,8 @@ MonoBehaviour:
     sceneImage: {fileID: 21300000, guid: b4323f69d8772ab4f80644630faac399, type: 3}
   - sceneType: 4
     sceneImage: {fileID: 21300000, guid: 7dfb4e485d452324f8fe6b8f6b19cf43, type: 3}
+  - sceneType: 5
+    sceneImage: {fileID: 21300000, guid: 0d640a43c959d1643a183766ccdae77e, type: 3}
+  - sceneType: 6
+    sceneImage: {fileID: 21300000, guid: d6508508a72a92246abbbd933bad823d, type: 3}
   CloseSceneImage: {fileID: -1259746967, guid: f2a176317e2a99348a966a6db6146598, type: 3}
