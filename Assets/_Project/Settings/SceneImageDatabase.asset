@@ -14,11 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scriptable.SceneImageDatabase
   sceneImagePairs:
   - sceneType: 0
-    sceneImage: {fileID: 1538949286, guid: d18fcc0fcb7304149a48ff19d9ce6966, type: 3}
+    sceneImage: {fileID: 21300000, guid: 7d8e780907902f6419e2e2bd6c4f04f0, type: 3}
   - sceneType: 2
-    sceneImage: {fileID: -568455031, guid: 6b38dea36b0d32144ae4abc9b8c688d9, type: 3}
+    sceneImage: {fileID: 21300000, guid: d6508508a72a92246abbbd933bad823d, type: 3}
   - sceneType: 3
-    sceneImage: {fileID: -568455031, guid: 6b38dea36b0d32144ae4abc9b8c688d9, type: 3}
+    sceneImage: {fileID: 21300000, guid: b4323f69d8772ab4f80644630faac399, type: 3}
   - sceneType: 4
-    sceneImage: {fileID: -1647712683, guid: ffa2b68138b901848bf1095ec85930f9, type: 3}
+    sceneImage: {fileID: 21300000, guid: 7dfb4e485d452324f8fe6b8f6b19cf43, type: 3}
+  - sceneType: 5
+    sceneImage: {fileID: 21300000, guid: 0d640a43c959d1643a183766ccdae77e, type: 3}
+  - sceneType: 6
+    sceneImage: {fileID: 21300000, guid: d6508508a72a92246abbbd933bad823d, type: 3}
   CloseSceneImage: {fileID: -1259746967, guid: f2a176317e2a99348a966a6db6146598, type: 3}

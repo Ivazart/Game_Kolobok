@@ -9,6 +9,13 @@ public class Emitter : MonoBehaviour
     [SerializeField] private GameObject bubble;
     [SerializeField] private int n;
 
+    private GameObject parent;
+   
+    private void Awake()
+    {
+        parent = GameObject.FindWithTag("Temporal");
+    }
+
     private void Update()
     {
         Create();
@@ -19,7 +26,7 @@ public class Emitter : MonoBehaviour
         int random = UnityEngine.Random.Range(1, n);
         if (random == 1)
         {
-            var bubbleGO = Instantiate(bubble);
+            var bubbleGO = Instantiate(bubble,parent.transform);
             bubbleGO.transform.position = transform.position;
             Destroy(bubbleGO, 17);
         }

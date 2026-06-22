@@ -9,6 +9,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private GameObject menuPanel;
     [SerializeField] private GameObject restartGamePopup;
     [SerializeField] private Button closeButton;
+    [SerializeField] private Button menuButton;
     [SerializeField] private Button selectStageButton;
     [SerializeField] private Button restartLevelButton;
     [SerializeField] private Button exitButton;
@@ -31,6 +32,7 @@ public class MenuController : MonoBehaviour
         restartGameButton.onClick.AddListener(OpenPopupRestartGame);
         restartGameCancelButton.onClick.AddListener(ClosePopupRestartGame);
         restartGameOKButton.onClick.AddListener(RestartGame);
+        menuButton.onClick.AddListener(OpenMenu);
        // loadStage.OnLoadStageFinished += LoadStageFinished;
         loadStage.OnLoadSelectLevel += LoadSelectLevel;
     }

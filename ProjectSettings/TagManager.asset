@@ -9,6 +9,7 @@ TagManager:
   - stopper
   - poison
   - fire
+  - Temporal
   layers:
   - Default
   - TransparentFX
