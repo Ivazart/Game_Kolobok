@@ -9,8 +9,8 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private LevelProgress levelProgress;
     [SerializeField] private PlayerSpawner playerSpawner;
-    [SerializeField] private DragHandler dragHandler; 
-
+    [SerializeField] private DragHandler dragHandler;
+    
     private SaveController saveController => SaveController.Instance;
     private JumpsCounterController jumpController => JumpsCounterController.Instance;
 

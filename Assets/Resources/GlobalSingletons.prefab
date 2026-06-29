@@ -34,6 +34,7 @@ Transform:
   - {fileID: 2602746042265343424}
   - {fileID: 2020313619457393263}
   - {fileID: 5571623036724278270}
+  - {fileID: 9058331888785785042}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7958177489059592832
@@ -94,7 +95,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Global.SaveController
   sceneImageDatabase: {fileID: 11400000, guid: 3c8c9403b35d9024b9521feacbc3e7ba, type: 2}
-  SkipInitialSceneLoad: 0
+  SkipInitialSceneLoad: 1
 --- !u!114 &4051692751369586678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,6 +152,59 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b526d008d87e4239b50c4fef18acf2f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Global.JumpsCounterController
+--- !u!1 &6003642115423771698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9058331888785785042}
+  - component: {fileID: 2677958374290900414}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9058331888785785042
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6003642115423771698}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6024154311311087904}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2677958374290900414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6003642115423771698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fdd046c234a4a6d95f6e3c3f7fbf681, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Global::Global.AudioManager
+  audioMixer: {fileID: 24100000, guid: 8692bb6442fc2e64385a77287e0e5a59, type: 2}
+  masterVolumeParam: MasterVolume
+  musicVolumeParam: MusicVolume
+  sfxVolumeParam: SFXVolume
+  musicGroup: {fileID: -4537892872490161971, guid: 8692bb6442fc2e64385a77287e0e5a59, type: 2}
+  sfxGroup: {fileID: 1134643688387311852, guid: 8692bb6442fc2e64385a77287e0e5a59, type: 2}
+  defaultMasterVolume: 1
+  defaultMusicVolume: 0.8
+  defaultSFXVolume: 1
 --- !u!1 &6337720163048333276
 GameObject:
   m_ObjectHideFlags: 0

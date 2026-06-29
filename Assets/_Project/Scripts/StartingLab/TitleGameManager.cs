@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -10,12 +11,13 @@ public class TitleGameManager : MonoBehaviour
     [SerializeField] private PlayButton startingButton;
     [SerializeField] private StartingLabManAnimation manAnimation;
     [SerializeField] private UIController uiController;
-    [SerializeField] private AudioSource al;
+    [SerializeField] private TitleSceneAudio sceneAudio;
     [SerializeField] private List<StartingLabAnimation> elements = new();
 
     private SceneController sceneController => SceneController.Instance;
+    private AudioManager audioManager => AudioManager.Instance;
+    
     private CancellationTokenSource cts = new();
-
     private bool _isProcessing; // защита от повторного клика
 
     private void Awake()
@@ -38,30 +40,31 @@ public class TitleGameManager : MonoBehaviour
     /// <summary> Шаг 1-2: Idle → Alarm по таймеру. </summary>
     private async UniTask PlayIntroSequence(CancellationToken token)
     {
+        sceneAudio.PlayLabAmbient(); 
+        
         SetStateForAll(StartingLabState.Idle);
         await UniTask.WaitForSeconds(7f, cancellationToken: token);
         SetStateForAll(StartingLabState.Alarm);
-        al.Play();
+        sceneAudio.PlayAlarm();
     }
 
     /// <summary> Шаг 3-5: клик → анимация человека → активация → загрузка сцены. </summary>
     private async UniTask HandleButtonClicked(CancellationToken token)
     {
-        // Шаг 3: разово проигрываем анимацию человека
-        manAnimation.SetState(StartingLabState.Active);  // запускает ClickButtonAnim и вернётся в Idle
-
-        // Ждём, пока анимация человека закончится
+        manAnimation.SetState(StartingLabState.Active);
+        
         bool manFinished = false;
-        manAnimation.OnManClickButtonAnimFinish += () => manFinished = true;
+        void Handler() => manFinished = true;
+        manAnimation.OnManClickButtonAnimFinish += Handler;
         await UniTask.WaitUntil(() => manFinished, cancellationToken: token);
-        manAnimation.OnManClickButtonAnimFinish -= () => manFinished = true; // отписка необязательна, но для порядка
+        
+        sceneAudio.StopAlarm();
+        manAnimation.OnManClickButtonAnimFinish -= Handler;   
 
-        // Шаг 4: активируем остальные анимации (кроме человека)
         SetStateForAllExceptMan(StartingLabState.Active);
         startingButton.SetLabState(StartingLabState.Active);
         uiController.SetState(StartingLabState.Active);
 
-        // Шаг 5: через несколько секунд загружаем следующий уровень
         await UniTask.WaitForSeconds(8f, cancellationToken: token);
         sceneController.LoadScene(SceneName.Space);
     }
