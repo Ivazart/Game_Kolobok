@@ -150,12 +150,12 @@ namespace Global
 
         private void SetMixerVolume(string paramName, float normalizedValue)
         {
-            if (audioMixer == null)
-            {
-                Debug.LogWarning("AudioMixer is not assigned in AudioManager.");
-                return;
-            }
-            float db = Mathf.Lerp(-80f, 0f, Mathf.Max(0.001f, normalizedValue));
+            if (audioMixer == null) return;
+
+            // Не даём уйти в минус бесконечность (при 0)
+            float clamped = Mathf.Max(0.0001f, normalizedValue);
+            // Перевод в децибелы с логарифмической шкалой: 1.0 → 0 dB, 0.0001 → -80 dB
+            float db = 20f * Mathf.Log10(clamped);
             audioMixer.SetFloat(paramName, db);
         }
     }

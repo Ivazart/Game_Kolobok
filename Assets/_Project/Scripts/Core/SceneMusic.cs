@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using Global;
 
 public class SceneMusic : MonoBehaviour
@@ -13,7 +14,13 @@ public class SceneMusic : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (AudioManager.Instance != null)
+        try
+        {
             AudioManager.Instance.StopMusic();
+        }
+        catch (Exception e)
+        {
+            // ignored
+        }
     }
 }
