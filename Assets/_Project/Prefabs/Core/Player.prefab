@@ -17,6 +17,8 @@ GameObject:
   - component: {fileID: 8235327928963662765}
   - component: {fileID: 7142263155056138551}
   - component: {fileID: 4904088471463261290}
+  - component: {fileID: 3665405243819139389}
+  - component: {fileID: 5764938965690893082}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -205,6 +207,45 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8622317b28e24c989dbccc3b6e408773, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Player.MovementDetector
+--- !u!114 &3665405243819139389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712890831788300035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac12e4cb60144913b04210f010e28083, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Global::_Project.Player.ObstacleCollisionSound
+  sceneSounds:
+  - scene: 2
+    clip: {fileID: 8300000, guid: 0bac5c9a2e481cc4f9f9a76b654bb5c2, type: 3}
+  - scene: 3
+    clip: {fileID: 8300000, guid: 0bac5c9a2e481cc4f9f9a76b654bb5c2, type: 3}
+  - scene: 4
+    clip: {fileID: 8300000, guid: f853e26564cfebd42ba508b958af186a, type: 3}
+  - scene: 5
+    clip: {fileID: 8300000, guid: f853e26564cfebd42ba508b958af186a, type: 3}
+  obstacleTags:
+  - obstacle
+  - stopper
+--- !u!114 &5764938965690893082
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712890831788300035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef0a0b8713cf4672aeb200a028470c01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Global::_Project.Player.PlayerSounds
+  deathSoundPoison: {fileID: 8300000, guid: 200c8840975395944b5f9e590d5e1d43, type: 3}
+  deathSoundFire: {fileID: 8300000, guid: 200c8840975395944b5f9e590d5e1d43, type: 3}
+  deathSoundSwamp: {fileID: 8300000, guid: 72ae76fccd7d8db449ac3dd785e7c45e, type: 3}
 --- !u!1 &4257082705144924050
 GameObject:
   m_ObjectHideFlags: 0
