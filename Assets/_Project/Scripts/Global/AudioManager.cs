@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
 
 namespace Global
 {
@@ -61,7 +62,7 @@ namespace Global
         protected override void Awake()
         {
             base.Awake();
-
+            SceneManager.sceneLoaded += OnSceneLoaded;
             // Создаём и настраиваем AudioSource для музыки
             musicSource = gameObject.AddComponent<AudioSource>();
             musicSource.outputAudioMixerGroup = musicGroup;
@@ -72,10 +73,13 @@ namespace Global
             sfxSource = gameObject.AddComponent<AudioSource>();
             sfxSource.outputAudioMixerGroup = sfxGroup;
             sfxSource.playOnAwake = false;
-
-            ApplyAllVolumes();
         }
-
+        
+        private void Start()
+        {
+            ApplyAllVolumes();   
+        }
+        
         /// <summary> Воспроизведение музыки (зациклено по умолчанию). </summary>
         public void PlayMusic(AudioClip clip)
         {
@@ -136,6 +140,11 @@ namespace Global
         public void SetMusicVolume(float value) => MusicVolume = value;
         public void SetSFXVolume(float value) => SFXVolume = value;
 
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            ApplyAllVolumes();
+        }
+        
         // Применение громкости к микшеру
         private void ApplyAllVolumes()
         {
@@ -157,6 +166,12 @@ namespace Global
             // Перевод в децибелы с логарифмической шкалой: 1.0 → 0 dB, 0.0001 → -80 dB
             float db = 20f * Mathf.Log10(clamped);
             audioMixer.SetFloat(paramName, db);
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
     }
 }
