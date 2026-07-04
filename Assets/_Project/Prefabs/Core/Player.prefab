@@ -228,9 +228,12 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: f853e26564cfebd42ba508b958af186a, type: 3}
   - scene: 5
     clip: {fileID: 8300000, guid: f853e26564cfebd42ba508b958af186a, type: 3}
+  - scene: 6
+    clip: {fileID: 8300000, guid: f853e26564cfebd42ba508b958af186a, type: 3}
   obstacleTags:
   - obstacle
   - stopper
+  cooldown: 0.5
 --- !u!114 &5764938965690893082
 MonoBehaviour:
   m_ObjectHideFlags: 0
