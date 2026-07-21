@@ -79,10 +79,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Global::_Project.Player.PlayerDragSounds
   stretchClip: {fileID: 8300000, guid: f763ac7128741f24392084edca53712d, type: 3}
-  flightClip: {fileID: 8300000, guid: bb3c13e7d0d54fd47a351c999ea664ec, type: 3}
+  jumpClip: {fileID: 8300000, guid: bb3c13e7d0d54fd47a351c999ea664ec, type: 3}
   minPitch: 0.8
   maxPitch: 1.5
   maxForceForPitch: 14
+  minForceChange: 0.1
+  stretchSilenceDelay: 0.05
+  stretchVolume: 1
+  jumpVolume: 1
 --- !u!1 &5763793735657616767
 GameObject:
   m_ObjectHideFlags: 0

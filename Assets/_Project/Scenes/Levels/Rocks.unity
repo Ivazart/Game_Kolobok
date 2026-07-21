@@ -131582,7 +131582,7 @@ PrefabInstance:
       objectReference: {fileID: 484740272}
     - target: {fileID: 914997255857430294, guid: f8f31d9bd83c4df4aaf815f903636538, type: 3}
       propertyPath: stretchVolume
-      value: 3
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1384741604390577148, guid: f8f31d9bd83c4df4aaf815f903636538, type: 3}
       propertyPath: m_LocalPosition.x
