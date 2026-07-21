@@ -233,7 +233,7 @@ MonoBehaviour:
   obstacleTags:
   - obstacle
   - stopper
-  cooldown: 0.5
+  cooldown: 2
 --- !u!114 &5764938965690893082
 MonoBehaviour:
   m_ObjectHideFlags: 0

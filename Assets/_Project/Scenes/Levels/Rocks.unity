@@ -108094,7 +108094,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d29853852abe476893f66f17d0aba846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Global::SceneMusic
-  musicClip: {fileID: 8300000, guid: 2a3da3edb7758014f8bc0235322e849d, type: 3}
+  musicClip: {fileID: 8300000, guid: 469c3546ccf143d40afe8d78d8ddefd5, type: 3}
 --- !u!4 &1809208856
 Transform:
   m_ObjectHideFlags: 0
