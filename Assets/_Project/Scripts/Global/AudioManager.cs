@@ -134,6 +134,26 @@ namespace Global
                 Destroy(source);
             }
         }
+        
+        public void PlaySFX(AudioClip clip, float volume)
+        {
+            if (clip == null) return;
+            sfxSource.PlayOneShot(clip, volume);
+        }
+
+        /// <summary> Создаёт зацикленный SFX с указанной громкостью. </summary>
+        public AudioSource PlaySFXLoop(AudioClip clip, float volume)
+        {
+            if (clip == null) return null;
+            var source = gameObject.AddComponent<AudioSource>();
+            source.clip = clip;
+            source.loop = true;
+            source.volume = volume;
+            source.outputAudioMixerGroup = sfxGroup;
+            source.Play();
+            return source;
+        }
+        
 
         // Управление громкостью (вызывается из UI)
         public void SetMasterVolume(float value) => MasterVolume = value;

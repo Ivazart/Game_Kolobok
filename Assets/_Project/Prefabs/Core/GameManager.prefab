@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5321985035307149270}
   - component: {fileID: 1891827651386695082}
   - component: {fileID: 8789516427355212639}
+  - component: {fileID: 914997255857430294}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -50,7 +51,6 @@ MonoBehaviour:
   levelProgress: {fileID: 0}
   playerSpawner: {fileID: 0}
   dragHandler: {fileID: 8789516427355212639}
-  levelMusic: {fileID: 0}
 --- !u!114 &8789516427355212639
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,6 +66,23 @@ MonoBehaviour:
   pushForce: 4
   heightStartAnimation: 8.5
   trajectory: {fileID: 0}
+--- !u!114 &914997255857430294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1732037354534314282}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79b59e99abad437ba8e9b4665496dc4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Global::_Project.Player.PlayerDragSounds
+  stretchClip: {fileID: 8300000, guid: f763ac7128741f24392084edca53712d, type: 3}
+  flightClip: {fileID: 8300000, guid: bb3c13e7d0d54fd47a351c999ea664ec, type: 3}
+  minPitch: 0.8
+  maxPitch: 1.5
+  maxForceForPitch: 14
 --- !u!1 &5763793735657616767
 GameObject:
   m_ObjectHideFlags: 0

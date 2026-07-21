@@ -15,5 +15,10 @@ namespace _Project.UI
             menuButton.onClick.AddListener( ()=>soundMenu.SetActive(true));
             closeButton.onClick.AddListener(()=> soundMenu.SetActive(false));
         }
+
+        public void ShowSoundButton(bool isShown)
+        {
+            menuButton.gameObject.SetActive(isShown);
+        }
     }
 }

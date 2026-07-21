@@ -18,7 +18,7 @@ public class MenuController : MonoBehaviour
     [SerializeField] private Button restartGameCancelButton;
     [SerializeField] private Button restartGameOKButton;
     [SerializeField] private LoadStage loadStage;
-    
+    [SerializeField] private SoundMenu soundMenu;
     private SceneController sceneController => SceneController.Instance;
     private SaveController saveController => SaveController.Instance;
     private GameController gameController => GameController.Instance;
@@ -43,22 +43,21 @@ public class MenuController : MonoBehaviour
         CloseMenu();
     }
     
-    // Метод для открытия
     private void OpenMenu()
     {
         loadStage.gameObject.SetActive(false);
         menuPanel.SetActive(true);
+        soundMenu.ShowSoundButton(true);
         Time.timeScale = 0f;
     }
     
-    // Метод для закрытия
     private void CloseMenu()
     {
         menuPanel.SetActive(false);
+        soundMenu.ShowSoundButton(false);
         Time.timeScale = 1f;
     }
     
-    //Открыть список уровней
     private void OpenSelectStage()
     {
         menuPanel.SetActive(false);
@@ -66,7 +65,6 @@ public class MenuController : MonoBehaviour
         Time.timeScale = 0f;
     }
     
-    //Перезагрузить уровень
     private void RestartLevel()
     {
         gameController.RestartLevel();

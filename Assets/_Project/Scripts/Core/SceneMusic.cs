@@ -18,7 +18,7 @@ public class SceneMusic : MonoBehaviour
         {
             AudioManager.Instance.StopMusic();
         }
-        catch (Exception e)
+        catch 
         {
             // ignored
         }

@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // или обычный Text, замените по необходимости
+using TMPro;
 
 namespace _Project.UI
 {
     public class SoundBar : MonoBehaviour
     {
         [SerializeField] private Slider slider;
-        [SerializeField] private TMP_Text percentText; // или Text
+        [SerializeField] private TMP_Text percentText;
 
         public float Value
         {
@@ -21,9 +21,8 @@ namespace _Project.UI
 
         public System.Action<float> OnValueChanged { get; set; }
 
-        private void Start()
+        private void Awake()
         {
-            // При изменении слайдера вызываем внешний обработчик и обновляем текст
             slider.onValueChanged.AddListener(OnSliderValueChanged);
             UpdatePercentText();
         }
@@ -42,7 +41,6 @@ namespace _Project.UI
             percentText.text = $"{percent}%";
         }
 
-        // Для подписки извне удобно использовать метод Init
         public void Init(float initialValue, System.Action<float> callback)
         {
             OnValueChanged = callback;

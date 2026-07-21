@@ -38,7 +38,7 @@ namespace _Project.Player
             {
                 gameController.OnPlayerDeath -= OnPlayerDeath;
             }
-            catch (Exception e)
+            catch 
             {
                 // ignored
             }

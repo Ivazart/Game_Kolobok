@@ -18,12 +18,13 @@ public class DragHandler : MonoBehaviour
     public event Action OnDragEnded;
     public event Action OnDragStarted;
 
+    public bool IsDragging => isDragging;
+    public Vector2 CurrentForce => force;
+    
     private Camera cam;
     private Player player;
 
-    // === НОВОЕ: InputAction для универсального нажатия ===
     private InputAction pressAction;
-    // ====================================================
 
     private bool isDragging;
     private bool isDead;
@@ -34,7 +35,6 @@ public class DragHandler : MonoBehaviour
 
     private void Awake()
     {
-        // Создаём экшен, который реагирует на любой указатель (мышь, тач, стилус)
         pressAction = new InputAction("Press", type: InputActionType.Button);
         pressAction.AddBinding("<Pointer>/press");       // основной для мыши и тачскрина
         pressAction.AddBinding("<Mouse>/leftButton");    // на случай, если Pointer/press не поддерживается
@@ -56,7 +56,6 @@ public class DragHandler : MonoBehaviour
         if (!CanStartDrag())
             return;
 
-        // === ИСПОЛЬЗУЕМ НАШ ЭКШЕН вместо Pointer.current.press ===
         if (pressAction.WasPressedThisFrame())
         {
             if (IsPointerOverUI()) return;
@@ -77,14 +76,11 @@ public class DragHandler : MonoBehaviour
 
     private bool CanStartDrag() => (player.MovementDetector.CanMove || isDragging) && !isDead;
 
-    // Вспомогательный метод для безопасного получения позиции указателя
     private Vector2 GetPointerPosition()
     {
-        // Пробуем через Pointer (работает даже без press)
         if (Pointer.current != null)
             return Pointer.current.position.ReadValue();
 
-        // Запасные варианты
         if (Touchscreen.current != null)
             return Touchscreen.current.primaryTouch.position.ReadValue();
 

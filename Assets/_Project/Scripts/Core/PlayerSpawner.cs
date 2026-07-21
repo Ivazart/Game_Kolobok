@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace _Project.Core
 {
-    public class PlayerSpawner:MonoBehaviour
+    public class PlayerSpawner : MonoBehaviour
     {
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private CheckpointList checkpointList;
@@ -19,10 +19,10 @@ namespace _Project.Core
 
         public void MoveToLastPoint()
         {
-           var checkPointPosition =  checkpointList.GetLastCheckPointPosition();
-           Player.transform.position = checkPointPosition;
-           cameraMove.SetPlayer(Player.transform);
-           cameraMove.InstantMove();
+            var checkPointPosition = checkpointList.GetLastCheckPointPosition();
+            Player.transform.position = checkPointPosition;
+            cameraMove.SetPlayer(Player.transform);
+            cameraMove.InstantMove();
         }
     }
 }

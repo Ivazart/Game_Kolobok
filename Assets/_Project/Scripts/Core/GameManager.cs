@@ -18,9 +18,15 @@ public class GameManager : MonoBehaviour
     private bool isIdle;
     private bool isDead;
 
+    
+    public Player GetPlayer()
+    {
+        return playerSpawner.Player.GetComponent<Player>();
+    }
+    
     private void Start()
     {
-        player = playerSpawner.Player.GetComponent<Player>();
+        player = GetPlayer();
         dragHandler.Init(player);
         playerSpawner.MoveToLastPoint();
         levelProgress.StartDistanceCalculation(player.transform);
@@ -76,7 +82,7 @@ public class GameManager : MonoBehaviour
             dragHandler.OnDragStarted -= HandleDragStarted;
             dragHandler.OnDragEnded -= HandleDragEnded;
         }
-        catch (Exception ex)
+        catch
         {
             // ignored
         }
