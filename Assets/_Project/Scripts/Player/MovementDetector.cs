@@ -52,15 +52,7 @@ namespace _Project.Player
                     OnCanBeStopped?.Invoke();
             }
         }
-
-        /*private void OnTriggerStay2D(Collider2D trig)
-        {
-            if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
-            {
-                isGrounded = true;
-            }
-        }*/
-
+        
         private void OnTriggerExit2D(Collider2D trig)
         {
             if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))

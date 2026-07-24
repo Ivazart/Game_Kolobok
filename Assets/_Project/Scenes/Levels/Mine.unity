@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 3845332}
   m_Layer: 0
   m_Name: arm_r
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -306,13 +306,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3845331}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 307.5359, y: 3.6840365, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2063482797}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &10108338 stripped
 Transform:
@@ -616,7 +616,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0.15487279, y: -1.0081668}
+  m_ConnectedAnchor: {x: 0.15487279, y: -1.0081667}
   m_DampingRatio: 0.01
   m_Frequency: 3
 --- !u!1 &50523539
@@ -886,7 +886,7 @@ GameObject:
   - component: {fileID: 110190940}
   m_Layer: 0
   m_Name: rail_h (10)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1004,12 +1004,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 110190936}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 80.49, y: -1.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!50 &110190940
 Rigidbody2D:
@@ -1491,7 +1491,7 @@ GameObject:
   - component: {fileID: 209817707}
   m_Layer: 0
   m_Name: rail_vert_back (6)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1585,7 +1585,7 @@ GameObject:
   - component: {fileID: 248660047}
   m_Layer: 0
   m_Name: arm_l
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1758,13 +1758,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 248660046}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 305.65237, y: 3.49, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1414502686}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &265456059
 GameObject:
@@ -2171,7 +2171,7 @@ GameObject:
   - component: {fileID: 306960996}
   m_Layer: 0
   m_Name: rail_h (17)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2316,12 +2316,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 306960995}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 290.6, y: -6.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &307407773
 GameObject:
@@ -2465,7 +2465,7 @@ GameObject:
   - component: {fileID: 311257700}
   m_Layer: 0
   m_Name: _0021_geound1 (4)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2625,7 +2625,7 @@ GameObject:
   - component: {fileID: 313516610}
   m_Layer: 0
   m_Name: root3 (3)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2720,7 +2720,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313516609}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 123.1, y: 23.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2729,7 +2729,7 @@ Transform:
   - {fileID: 466851304}
   - {fileID: 2098618332}
   - {fileID: 101687748}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &334077710
 GameObject:
@@ -2744,7 +2744,7 @@ GameObject:
   - component: {fileID: 334077711}
   m_Layer: 0
   m_Name: rail_vert
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2862,12 +2862,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 334077710}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 86.05, y: 2.24, z: 0}
   m_LocalScale: {x: 0.3625, y: 1.5140978, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &394504915
 GameObject:
@@ -2881,7 +2881,7 @@ GameObject:
   - component: {fileID: 394504917}
   m_Layer: 0
   m_Name: rail_vert_back (3)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2972,7 +2972,7 @@ GameObject:
   - component: {fileID: 408605093}
   m_Layer: 0
   m_Name: rail_vert_back (4)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3386,7 +3386,7 @@ GameObject:
   - component: {fileID: 480991695}
   m_Layer: 0
   m_Name: rail_h
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3504,12 +3504,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 480991694}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 33.60229, y: -2.2190566, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &482993057
 GameObject:
@@ -3524,7 +3524,7 @@ GameObject:
   - component: {fileID: 482993058}
   m_Layer: 0
   m_Name: rail_h (8)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3642,13 +3642,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 482993057}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.38268343, w: 0.92387956}
+  m_LocalRotation: {x: -0, y: -0, z: -0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 103.14389, y: 6.694661, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1452097254}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
 --- !u!114 &484740272 stripped
 MonoBehaviour:
@@ -3739,7 +3739,7 @@ GameObject:
   - component: {fileID: 541806124}
   m_Layer: 0
   m_Name: door
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3930,12 +3930,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 541806118}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.38268343, w: 0.92387956}
+  m_LocalRotation: {x: -0, y: -0, z: -0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 111.77389, y: 6.934661, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
 --- !u!233 &541806124
 HingeJoint2D:
@@ -3978,7 +3978,7 @@ GameObject:
   - component: {fileID: 544395798}
   m_Layer: 0
   m_Name: man_body
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4055,7 +4055,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -5.91}
 --- !u!50 &544395795
 Rigidbody2D:
@@ -4168,7 +4168,7 @@ GameObject:
   - component: {fileID: 562259188}
   m_Layer: 0
   m_Name: rail_h (22)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4286,12 +4286,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 562259187}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 418.5, y: 4.3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &582189884
 GameObject:
@@ -4306,7 +4306,7 @@ GameObject:
   - component: {fileID: 582189886}
   m_Layer: 0
   m_Name: _0021_geound1 (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4622,7 +4622,7 @@ GameObject:
   - component: {fileID: 599646546}
   m_Layer: 0
   m_Name: rail_h (25)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4746,7 +4746,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1043304198}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.274}
 --- !u!1 &604381023
 GameObject:
@@ -4877,7 +4877,7 @@ GameObject:
   - component: {fileID: 610710436}
   m_Layer: 0
   m_Name: rail_vert_back (5)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5191,7 +5191,7 @@ HingeJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0.9}
-  m_ConnectedAnchor: {x: 5.865097, y: 0.7421116}
+  m_ConnectedAnchor: {x: 5.8650975, y: 0.7421116}
   m_UseConnectedAnchor: 1
   m_UseMotor: 0
   m_Motor:
@@ -5492,7 +5492,7 @@ GameObject:
   - component: {fileID: 677167206}
   m_Layer: 0
   m_Name: structure
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5566,10 +5566,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.49389935, w: 0.86951905}
   m_LocalPosition: {x: 531.7, y: 6.9, z: 0}
-  m_LocalScale: {x: 3.9730456, y: 1, z: 1}
+  m_LocalScale: {x: 3.9730453, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 59.194}
 --- !u!1 &683193674
 GameObject:
@@ -5584,7 +5584,7 @@ GameObject:
   - component: {fileID: 683193675}
   m_Layer: 0
   m_Name: rail_h (12)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5702,12 +5702,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 683193674}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 80.45, y: 5.98, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &700576577
 PrefabInstance:
@@ -5783,7 +5783,7 @@ GameObject:
   - component: {fileID: 718393389}
   m_Layer: 0
   m_Name: sky_bottom
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -5855,12 +5855,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 718393388}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 289.6983, y: -6.6929, z: 0}
   m_LocalScale: {x: 633.21515, y: 0.76052386, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &719087742
 GameObject:
@@ -6032,10 +6032,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.022244874, w: 0.9997526}
   m_LocalPosition: {x: 18.723, y: -3.789, z: 0}
-  m_LocalScale: {x: 0.80936974, y: 0.80936974, z: 0.80936974}
+  m_LocalScale: {x: 0.80936986, y: 0.80936986, z: 0.80936974}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -2.549}
 --- !u!1 &724200491
 GameObject:
@@ -6050,7 +6050,7 @@ GameObject:
   - component: {fileID: 724200493}
   m_Layer: 0
   m_Name: _0021_geound1 (2)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -6684,7 +6684,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: -1.3699408, y: -2.1104374}
-  m_ConnectedAnchor: {x: -0.12388465, y: 0.5686553}
+  m_ConnectedAnchor: {x: -0.12388463, y: 0.5686553}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!1 &757984184
@@ -6800,7 +6800,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 2.5303054, y: -1.0157605}
+  m_ConnectedAnchor: {x: 2.5303051, y: -1.0157604}
   m_DampingRatio: 0.01
   m_Frequency: 3
 --- !u!1 &774250791
@@ -6973,7 +6973,7 @@ GameObject:
   - component: {fileID: 780027943}
   m_Layer: 0
   m_Name: crutch (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7134,7 +7134,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -43.198}
 --- !u!1 &782801672
 GameObject:
@@ -7309,7 +7309,7 @@ Transform:
   m_LocalScale: {x: 1.5599849, y: 1.5599849, z: 1.5599849}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -4.892}
 --- !u!1 &800094974
 GameObject:
@@ -7508,7 +7508,7 @@ GameObject:
   - component: {fileID: 800682685}
   m_Layer: 0
   m_Name: rail_h (13)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -7626,13 +7626,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 800682684}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.38268343, w: 0.92387956}
+  m_LocalRotation: {x: -0, y: -0, z: -0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 99.81, y: 3.62, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 464473726}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
 --- !u!1 &811071836
 GameObject:
@@ -7960,7 +7960,7 @@ GameObject:
   - component: {fileID: 853724751}
   m_Layer: 0
   m_Name: rail_h (15)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8083,7 +8083,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.969}
 --- !u!114 &875236884 stripped
 MonoBehaviour:
@@ -8817,7 +8817,7 @@ GameObject:
   - component: {fileID: 956690199}
   m_Layer: 0
   m_Name: wotter (2)
-  m_TagString: poison
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -8962,12 +8962,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 956690198}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 512.8933, y: -10.0126, z: 0}
   m_LocalScale: {x: 67.52043, y: 5.318816, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &966000845
 GameObject:
@@ -9167,7 +9167,7 @@ GameObject:
   - component: {fileID: 972573591}
   m_Layer: 0
   m_Name: barrel
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9312,12 +9312,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972573590}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 40.27, y: 0.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &992965506
 GameObject:
@@ -9332,7 +9332,7 @@ GameObject:
   - component: {fileID: 992965507}
   m_Layer: 0
   m_Name: rail_h (11)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9450,12 +9450,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 992965506}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 78.42, y: 2.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &998060149
 GameObject:
@@ -9470,7 +9470,7 @@ GameObject:
   - component: {fileID: 998060152}
   m_Layer: 0
   m_Name: rail_h (3)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9542,12 +9542,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 998060149}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.7071068, w: 0.7071068}
+  m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 14.29, y: 7.8, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
 --- !u!61 &998060152
 BoxCollider2D:
@@ -9950,7 +9950,7 @@ GameObject:
   - component: {fileID: 1043799884}
   m_Layer: 0
   m_Name: rail_h (18)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -10095,12 +10095,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1043799883}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 304.1, y: -6.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1082567084
 GameObject:
@@ -15223,7 +15223,7 @@ GameObject:
   - component: {fileID: 1118573699}
   m_Layer: 0
   m_Name: rope_up
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15316,14 +15316,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1118573698}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 306.5, y: 8.302754, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 604381026}
   - {fileID: 1960098582}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1121088519
 PrefabInstance:
@@ -15400,7 +15400,7 @@ GameObject:
   - component: {fileID: 1128436047}
   m_Layer: 0
   m_Name: rail_h (4)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -15523,7 +15523,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.969}
 --- !u!1 &1194011251
 GameObject:
@@ -16007,10 +16007,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.009746824, w: 0.99995255}
   m_LocalPosition: {x: 78.73, y: -0.349, z: 0}
-  m_LocalScale: {x: 1.5599849, y: 1.5599849, z: 1.5599849}
+  m_LocalScale: {x: 1.5599848, y: 1.5599848, z: 1.5599849}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.117}
 --- !u!1 &1275226798
 GameObject:
@@ -16026,7 +16026,7 @@ GameObject:
   - component: {fileID: 1275226799}
   m_Layer: 0
   m_Name: rail_h (21)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16171,12 +16171,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1275226798}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 202.5, y: -6.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1283951860
 GameObject:
@@ -16354,7 +16354,7 @@ Transform:
   m_LocalScale: {x: 0.726, y: 0.726, z: 0.726}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 65.419}
 --- !u!1 &1306345769
 GameObject:
@@ -16581,7 +16581,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 2.0064604, y: -0.088690296}
+  m_ConnectedAnchor: {x: 2.0064602, y: -0.08869029}
   m_DampingRatio: 0.1
   m_Frequency: 3
 --- !u!1 &1337249957
@@ -16939,7 +16939,7 @@ GameObject:
   - component: {fileID: 1388932470}
   m_Layer: 0
   m_Name: lag_left (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -16960,7 +16960,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0.78, y: 0.48}
-  m_ConnectedAnchor: {x: 0.39999706, y: -0.78941053}
+  m_ConnectedAnchor: {x: 0.39999703, y: -0.7894103}
   m_DampingRatio: 1
   m_Frequency: 2
 --- !u!50 &1388932471
@@ -17112,12 +17112,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1388932469}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: 0.30469805, w: 0.95244896}
+  m_LocalRotation: {x: -0, y: -0, z: 0.30469808, w: 0.952449}
   m_LocalPosition: {x: 306.6459, y: 1.4640362, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 35.48}
 --- !u!1 &1390563851
 GameObject:
@@ -17131,7 +17131,7 @@ GameObject:
   - component: {fileID: 1390563852}
   m_Layer: 0
   m_Name: ladle (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -17203,12 +17203,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1390563851}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 521.4, y: 3.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1396513163
 GameObject:
@@ -22653,7 +22653,7 @@ GameObject:
   - component: {fileID: 1481098183}
   m_Layer: 0
   m_Name: rail_h (7)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22776,7 +22776,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.969}
 --- !u!1 &1481412501
 GameObject:
@@ -22791,7 +22791,7 @@ GameObject:
   - component: {fileID: 1481412502}
   m_Layer: 0
   m_Name: root3
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22888,14 +22888,14 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.08980184, w: 0.99595964}
   m_LocalPosition: {x: 116.65, y: 22.84, z: 0}
-  m_LocalScale: {x: 0.67297, y: 0.67297, z: 0.67297}
+  m_LocalScale: {x: 0.67297006, y: 0.67297006, z: 0.67297}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1911454362}
   - {fileID: 1306686616}
   - {fileID: 32551645}
   - {fileID: 757984185}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -10.304}
 --- !u!1 &1498890802
 GameObject:
@@ -22909,7 +22909,7 @@ GameObject:
   - component: {fileID: 1498890803}
   m_Layer: 0
   m_Name: ladle (2)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -22981,12 +22981,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1498890802}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 497.1, y: -7.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1525514371
 GameObject:
@@ -23002,7 +23002,7 @@ GameObject:
   - component: {fileID: 1525514372}
   m_Layer: 0
   m_Name: rail_h (16)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23147,12 +23147,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525514371}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 266, y: -6.08, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1528949655
 GameObject:
@@ -23305,7 +23305,7 @@ GameObject:
   - component: {fileID: 1531808524}
   m_Layer: 0
   m_Name: rail_h (9)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -23428,7 +23428,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.969}
 --- !u!1 &1534185188
 GameObject:
@@ -23912,7 +23912,7 @@ GameObject:
   - component: {fileID: 1574351001}
   m_Layer: 0
   m_Name: wotter
-  m_TagString: poison
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24030,12 +24030,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1574350997}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 165.8158, y: -9.4855, z: 0}
   m_LocalScale: {x: 38.086918, y: 4.6195, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1574351001
 MonoBehaviour:
@@ -24418,7 +24418,7 @@ GameObject:
   - component: {fileID: 1654226869}
   m_Layer: 0
   m_Name: rail_h (14)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24536,13 +24536,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1654226865}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: -0.38268343, w: 0.92387956}
+  m_LocalRotation: {x: -0, y: -0, z: -0.38268343, w: 0.92387956}
   m_LocalPosition: {x: 96.1, y: -0.09, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1797472871}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -45}
 --- !u!50 &1654226869
 Rigidbody2D:
@@ -24740,7 +24740,7 @@ GameObject:
   - component: {fileID: 1681977597}
   m_Layer: 0
   m_Name: rail_vert (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -24858,12 +24858,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1681977596}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 72.55, y: -1.54, z: 0}
   m_LocalScale: {x: 0.3625, y: 1.5140978, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1682800429
 GameObject:
@@ -25063,7 +25063,7 @@ GameObject:
   - component: {fileID: 1689455215}
   m_Layer: 0
   m_Name: bucket
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25219,10 +25219,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.0775036, w: 0.9969921}
   m_LocalPosition: {x: 56.286, y: -4.827, z: 0}
-  m_LocalScale: {x: 0.81438, y: 0.81438, z: 0.81438}
+  m_LocalScale: {x: 0.81438005, y: 0.81438005, z: 0.81438}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 8.89}
 --- !u!1 &1690373801
 GameObject:
@@ -25567,7 +25567,7 @@ GameObject:
   - component: {fileID: 1714778091}
   m_Layer: 0
   m_Name: rail_h (23)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -25685,12 +25685,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1714778090}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 426.29, y: -5.51, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1714867067
 GameObject:
@@ -25705,7 +25705,7 @@ GameObject:
   - component: {fileID: 1714867069}
   m_Layer: 0
   m_Name: _0021_geound1 (3)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30701,7 +30701,7 @@ GameObject:
   - component: {fileID: 1744730436}
   m_Layer: 0
   m_Name: root3 (2)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30796,7 +30796,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1744730435}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 113.91, y: 23.140001, z: 0}
   m_LocalScale: {x: 0.61993, y: 0.61993, z: 0.61993}
   m_ConstrainProportionsScale: 0
@@ -30805,7 +30805,7 @@ Transform:
   - {fileID: 2073945382}
   - {fileID: 1107899109}
   - {fileID: 1929670235}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1765912496
 GameObject:
@@ -30820,7 +30820,7 @@ GameObject:
   - component: {fileID: 1765912497}
   m_Layer: 0
   m_Name: rail_h (19)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -30938,12 +30938,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1765912496}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 278, y: -1.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1768098071
 GameObject:
@@ -30958,7 +30958,7 @@ GameObject:
   - component: {fileID: 1768098072}
   m_Layer: 0
   m_Name: root3 (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31062,7 +31062,7 @@ Transform:
   - {fileID: 50523543}
   - {fileID: 1995140685}
   - {fileID: 1647211872}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -37.463}
 --- !u!1 &1780645961
 GameObject:
@@ -31077,7 +31077,7 @@ GameObject:
   - component: {fileID: 1780645962}
   m_Layer: 0
   m_Name: rail_h (5)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31200,7 +31200,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.969}
 --- !u!1 &1797472870
 GameObject:
@@ -31400,7 +31400,7 @@ GameObject:
   - component: {fileID: 1803045498}
   m_Layer: 0
   m_Name: rail_h (20)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31518,12 +31518,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1803045497}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 253.1, y: 3.5, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1816034817 stripped
 MonoBehaviour:
@@ -31705,7 +31705,7 @@ GameObject:
   - component: {fileID: 1841271283}
   m_Layer: 0
   m_Name: black_s
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31777,12 +31777,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1841271282}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 25.7674, y: -8.5532, z: 0}
   m_LocalScale: {x: 81.57967, y: 4.6924644, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1849516937
 GameObject:
@@ -31799,7 +31799,7 @@ GameObject:
   - component: {fileID: 1849516943}
   m_Layer: 0
   m_Name: lag_left
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -31953,12 +31953,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1849516937}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 305.54587, y: 1.8340361, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!255 &1849516943
 FixedJoint2D:
@@ -32003,7 +32003,7 @@ GameObject:
   - component: {fileID: 1904763201}
   m_Layer: 0
   m_Name: rail_h (6)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -32126,7 +32126,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -89.969}
 --- !u!1 &1911454361
 GameObject:
@@ -33160,7 +33160,7 @@ GameObject:
   - component: {fileID: 1981424827}
   m_Layer: 0
   m_Name: ladle
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33232,12 +33232,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1981424826}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 515.9, y: -5.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1991059177
 GameObject:
@@ -33253,7 +33253,7 @@ GameObject:
   - component: {fileID: 1991059178}
   m_Layer: 0
   m_Name: crutch (2)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33411,10 +33411,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.0041515096, w: 0.9999914}
   m_LocalPosition: {x: 424.34, y: -1.3900001, z: 0}
-  m_LocalScale: {x: -1.0771, y: 1, z: 1}
+  m_LocalScale: {x: -1.0771002, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -0.476}
 --- !u!1 &1995140684
 GameObject:
@@ -33543,7 +33543,7 @@ GameObject:
   - component: {fileID: 1996459202}
   m_Layer: 0
   m_Name: chain (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33567,7 +33567,7 @@ Transform:
   - {fileID: 1937271888}
   - {fileID: 800094975}
   - {fileID: 622566363}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2022418030
 GameObject:
@@ -33583,7 +33583,7 @@ GameObject:
   - component: {fileID: 2022418031}
   m_Layer: 0
   m_Name: barrel (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -33733,7 +33733,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -1.031}
 --- !u!1 &2037088101
 GameObject:
@@ -34435,7 +34435,7 @@ GameObject:
   - component: {fileID: 2091270546}
   m_Layer: 0
   m_Name: rail_h (2)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34553,12 +34553,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2091270545}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 45.46, y: -2.23, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2092229357
 GameObject:
@@ -34571,7 +34571,7 @@ GameObject:
   - component: {fileID: 2092229358}
   m_Layer: 0
   m_Name: chain
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -34595,7 +34595,7 @@ Transform:
   - {fileID: 1682800434}
   - {fileID: 966000850}
   - {fileID: 1347550072}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2098618331
 GameObject:
@@ -34866,7 +34866,7 @@ GameObject:
   - component: {fileID: 2142678846}
   m_Layer: 0
   m_Name: structure (1)
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35013,10 +35013,10 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.7905882, w: 0.61234826}
   m_LocalPosition: {x: 444, y: 70, z: 0}
-  m_LocalScale: {x: 10.356315, y: 0.20427659, z: 1}
+  m_LocalScale: {x: 10.356314, y: 0.20427659, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -104.481}
 --- !u!233 &2142678846
 HingeJoint2D:
@@ -35058,7 +35058,7 @@ GameObject:
   - component: {fileID: 2146610197}
   m_Layer: 0
   m_Name: wotter (1)
-  m_TagString: poison
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35203,12 +35203,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2146610196}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 282.3662, y: -9.5, z: 0}
   m_LocalScale: {x: 22.70496, y: 4.6195, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!58 &139425335925286808
 CircleCollider2D:
@@ -36168,7 +36168,7 @@ GameObject:
   - component: {fileID: 1837583002182338073}
   m_Layer: 0
   m_Name: level2
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -36614,7 +36614,7 @@ GameObject:
   - component: {fileID: 186863166358678958}
   m_Layer: 0
   m_Name: _0023_ground
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37088,7 +37088,7 @@ GameObject:
   - component: {fileID: 6645365024214900207}
   m_Layer: 0
   m_Name: level3
-  m_TagString: Untagged
+  m_TagString: obstacle
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -37439,6 +37439,64 @@ Transform:
   - {fileID: 671627972}
   - {fileID: 8153709163125121058}
   - {fileID: 1919144554}
+  - {fileID: 480991697}
+  - {fileID: 2091270548}
+  - {fileID: 110190939}
+  - {fileID: 1525514375}
+  - {fileID: 1275226802}
+  - {fileID: 306960999}
+  - {fileID: 1043799887}
+  - {fileID: 992965509}
+  - {fileID: 683193677}
+  - {fileID: 562259190}
+  - {fileID: 1714778093}
+  - {fileID: 1765912499}
+  - {fileID: 1803045500}
+  - {fileID: 998060151}
+  - {fileID: 1128436049}
+  - {fileID: 1780645964}
+  - {fileID: 1904763203}
+  - {fileID: 853724753}
+  - {fileID: 482993060}
+  - {fileID: 800682687}
+  - {fileID: 599646548}
+  - {fileID: 1654226868}
+  - {fileID: 1481098185}
+  - {fileID: 1531808526}
+  - {fileID: 972573594}
+  - {fileID: 2022418034}
+  - {fileID: 782801676}
+  - {fileID: 1262482353}
+  - {fileID: 719087746}
+  - {fileID: 1283951864}
+  - {fileID: 2092229358}
+  - {fileID: 1996459202}
+  - {fileID: 1481412504}
+  - {fileID: 313516612}
+  - {fileID: 1744730438}
+  - {fileID: 1768098074}
+  - {fileID: 541806123}
+  - {fileID: 780027946}
+  - {fileID: 1991059181}
+  - {fileID: 1574351000}
+  - {fileID: 2146610200}
+  - {fileID: 956690202}
+  - {fileID: 544395794}
+  - {fileID: 1118573701}
+  - {fileID: 1849516942}
+  - {fileID: 1388932474}
+  - {fileID: 3845336}
+  - {fileID: 248660051}
+  - {fileID: 334077713}
+  - {fileID: 1681977599}
+  - {fileID: 1841271284}
+  - {fileID: 1981424828}
+  - {fileID: 1498890804}
+  - {fileID: 1390563853}
+  - {fileID: 718393390}
+  - {fileID: 677167207}
+  - {fileID: 1689455218}
+  - {fileID: 2142678845}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8747797730645604725
@@ -37541,61 +37599,3 @@ SceneRoots:
   - {fileID: 1603868768}
   - {fileID: 1704863015}
   - {fileID: 8693591773043332669}
-  - {fileID: 480991697}
-  - {fileID: 2091270548}
-  - {fileID: 110190939}
-  - {fileID: 1525514375}
-  - {fileID: 1275226802}
-  - {fileID: 306960999}
-  - {fileID: 1043799887}
-  - {fileID: 992965509}
-  - {fileID: 683193677}
-  - {fileID: 562259190}
-  - {fileID: 1714778093}
-  - {fileID: 1765912499}
-  - {fileID: 1803045500}
-  - {fileID: 998060151}
-  - {fileID: 1128436049}
-  - {fileID: 1780645964}
-  - {fileID: 1904763203}
-  - {fileID: 853724753}
-  - {fileID: 482993060}
-  - {fileID: 800682687}
-  - {fileID: 599646548}
-  - {fileID: 1654226868}
-  - {fileID: 1481098185}
-  - {fileID: 1531808526}
-  - {fileID: 972573594}
-  - {fileID: 2022418034}
-  - {fileID: 782801676}
-  - {fileID: 1262482353}
-  - {fileID: 719087746}
-  - {fileID: 1283951864}
-  - {fileID: 2092229358}
-  - {fileID: 1996459202}
-  - {fileID: 1481412504}
-  - {fileID: 313516612}
-  - {fileID: 1744730438}
-  - {fileID: 1768098074}
-  - {fileID: 541806123}
-  - {fileID: 780027946}
-  - {fileID: 1991059181}
-  - {fileID: 1574351000}
-  - {fileID: 2146610200}
-  - {fileID: 956690202}
-  - {fileID: 544395794}
-  - {fileID: 1118573701}
-  - {fileID: 1849516942}
-  - {fileID: 1388932474}
-  - {fileID: 3845336}
-  - {fileID: 248660051}
-  - {fileID: 334077713}
-  - {fileID: 1681977599}
-  - {fileID: 1841271284}
-  - {fileID: 1981424828}
-  - {fileID: 1498890804}
-  - {fileID: 1390563853}
-  - {fileID: 718393390}
-  - {fileID: 677167207}
-  - {fileID: 1689455218}
-  - {fileID: 2142678845}
