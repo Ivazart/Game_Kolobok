@@ -7,7 +7,10 @@ namespace Global
     {
         public event Action<DeathType> OnPlayerDeath; 
         public event Action OnLevelRestarted; 
-        public event Action OnCheckpointRestarted; 
+        public event Action OnCheckpointRestarted;
+
+        public event Action OnDragStarted;
+        public event Action OnDragEnded;
         
         public event Action  OnGameRestarted;
         public event Action OnSaveLoaded; 
@@ -56,5 +59,12 @@ namespace Global
         {
             OnSaveLoaded?.Invoke();
         }
+
+        public void SetDragHandler(DragHandler handler)
+        {
+            handler.OnDragEnded += () =>  OnDragEnded?.Invoke();
+            handler.OnDragStarted += () => OnDragStarted?.Invoke();
+        }
+        
     }
 }

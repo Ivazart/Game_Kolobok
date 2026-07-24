@@ -17,15 +17,42 @@ namespace _Project.Player
         [SerializeField] private SceneSound[] sceneSounds;
         [SerializeField] private List<string> obstacleTags;
         [SerializeField] private float minRelativeVelocity = 0.3f;
-        [SerializeField] private float exitCooldown = 0.2f;
-        [SerializeField] private float globalCooldown = 2f;   // минимальный интервал между любыми звуками столкновений
+        [SerializeField] private float soundInterval = 0.2f;      // минимальное время между звуками в пределах одного прыжка
+        
+        private int remainingSounds = 3;          // сколько звуков ещё можно проиграть после текущего прыжка
+        private float lastSoundTime = -10f;       // время последнего проигранного звука столкновения
 
-        private int contactCount;
-        private float lastZeroTime = -10f;
-        private float lastSoundTime = -10f;
-
+        // Громкости: 1-й звук -> 1f, 2-й -> 0.5f, 3-й -> 0.2f
+        private static readonly float[] Volumes = { 1f, 0.5f, 0.2f };
+        private GameController gameController => GameController.Instance;
         private SceneController sceneController => SceneController.Instance;
         private AudioManager audioManager => AudioManager.Instance;
+
+        private void Start()
+        {
+            gameController.OnDragEnded += OnJump;
+            gameController.OnPlayerDeath += OnDeath;
+        }
+
+        private void OnDestroy()
+        {
+            try
+            {
+                gameController.OnDragEnded -= OnJump;
+                gameController.OnPlayerDeath -= OnDeath;
+            }
+            catch { }
+        }
+
+        private void OnJump()
+        {
+            remainingSounds = 3;
+        }
+
+        private void OnDeath(DeathType deathType)
+        {
+            remainingSounds = 3;
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -35,29 +62,21 @@ namespace _Project.Player
             if (!HasObstacleTag(collision.gameObject))
                 return;
 
-            bool wasZero = (contactCount == 0);
-            contactCount++;
-
-            if (wasZero && Time.time - lastZeroTime > exitCooldown)
-            {
-                if (Time.time - lastSoundTime >= globalCooldown)
-                {
-                    lastSoundTime = Time.time;
-                    PlaySceneSound();
-                }
-            }
-        }
-
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-            if (!HasObstacleTag(collision.gameObject))
+            // Проверяем, не слишком ли часто
+            if (Time.time - lastSoundTime < soundInterval)
                 return;
 
-            contactCount--;
-            if (contactCount <= 0)
+            if (remainingSounds <= 0)
+                return;
+
+            // Вычисляем громкость в зависимости от того, какой по счёту звук (3, 2, 1)
+            int soundIndex = 3 - remainingSounds; // 0, 1, 2
+            float volume = Volumes[soundIndex];
+
+            if (PlaySceneSound(volume))
             {
-                contactCount = 0;
-                lastZeroTime = Time.time;
+                remainingSounds--;
+                lastSoundTime = Time.time;
             }
         }
 
@@ -71,9 +90,9 @@ namespace _Project.Player
             return false;
         }
 
-        private void PlaySceneSound()
+        private bool PlaySceneSound(float volume)
         {
-            if (sceneController == null) return;
+            if (sceneController == null) return false;
 
             SceneName currentScene = sceneController.CurrentScene;
 
@@ -82,10 +101,13 @@ namespace _Project.Player
                 if (ss.scene == currentScene)
                 {
                     if (ss.clip != null)
-                        audioManager.PlaySFX(ss.clip);
-                    return;
+                    {
+                        audioManager.PlaySFX(ss.clip, volume);
+                        return true;
+                    }
                 }
             }
+            return false;
         }
     }
 }

@@ -11,8 +11,8 @@ public class DragHandler : MonoBehaviour
     [SerializeField] private float pushForce = 4f;
     [SerializeField] private float heightStartAnimation = 8.5f;
 
-    [Header("References")] [SerializeField]
-    private Trajectory trajectory;
+    [Header("References")] 
+    [SerializeField] private Trajectory trajectory;
 
     private GameController gameController => GameController.Instance;
     public event Action OnDragEnded;
@@ -46,7 +46,10 @@ public class DragHandler : MonoBehaviour
     {
         cam = Camera.main;
         if (gameController != null)
+        {
+            gameController.SetDragHandler(this);
             gameController.OnPlayerDeath += GameController_OnPlayerDeath;
+        }
     }
 
     private void GameController_OnPlayerDeath(DeathType obj) => isDead = true;
