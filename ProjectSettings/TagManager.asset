@@ -10,6 +10,7 @@ TagManager:
   - poison
   - fire
   - Temporal
+  - spores
   layers:
   - Default
   - TransparentFX

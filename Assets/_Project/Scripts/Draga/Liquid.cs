@@ -4,37 +4,29 @@ using UnityEngine;
 public class Liquid2D : MonoBehaviour
 {
     [Header("Основные настройки жидкости")]
-    [Tooltip("Плотность жидкости. Чем больше значение, тем сильнее объект выталкивается вверх.")]
     [SerializeField] private float fluidDensity = 2.0f;
-
-    [Tooltip("Сопротивление жидкости движению объекта.")]
     [SerializeField] private float linearWaterDrag = 4.0f;
-
-    [Tooltip("Сопротивление жидкости вращению объекта.")]
-    [SerializeField] private float angularWaterDrag = 2.0f;
-
-    [Tooltip("Глубина, на которой точка считается полностью погруженной.")]
+    [SerializeField] private float angularWaterDrag = 5.0f;
     [SerializeField] private float maxSubmersionDepth = 1.0f;
 
     [Header("Поверхность жидкости")]
-    [Tooltip("Если включено, верхняя граница коллайдера считается поверхностью жидкости.")]
     [SerializeField] private bool useColliderTopAsSurface = true;
-
-    [Tooltip("Смещение поверхности жидкости. Работает от верхней границы коллайдера или от позиции объекта.")]
     [SerializeField] private float surfaceOffset = 0.0f;
 
     [Header("Точки расчёта плавучести")]
-    [Tooltip("Количество точек по горизонтали. Больше — точнее наклон и плавание.")]
-    [SerializeField] private int horizontalSamples = 3;
-
-    [Tooltip("Количество точек по вертикали. Больше — точнее погружение.")]
+    [SerializeField] private int horizontalSamples = 7;
     [SerializeField] private int verticalSamples = 3;
 
-    [Header("Ограничения")]
-    [Tooltip("Максимальная сила в одной точке. 0 — без ограничения.")]
-    [SerializeField] private float maxForcePerPoint = 0.0f;
+    [Header("Стабилизация длинных объектов")]
+    [SerializeField] private bool stabilizeLongObjects = true;
+    [SerializeField] private float minAspectRatioForStabilization = 1.5f;
+    [SerializeField] private float stabilizationStrength = 5.0f;
+    [SerializeField] private float stabilizationDamping = 2.5f;
+    [Range(0f, 1f)]
+    [SerializeField] private float minSubmergedRatioForStabilization = 0.15f;
 
-    [Tooltip("Игнорировать триггер-коллайдеры объектов.")]
+    [Header("Ограничения")]
+    [SerializeField] private float maxForcePerPoint = 0.0f;
     [SerializeField] private bool ignoreOtherTriggers = true;
 
     private Collider2D liquidCollider;
@@ -56,8 +48,10 @@ public class Liquid2D : MonoBehaviour
         horizontalSamples = Mathf.Max(1, horizontalSamples);
         verticalSamples = Mathf.Max(1, verticalSamples);
         maxSubmersionDepth = Mathf.Max(0.01f, maxSubmersionDepth);
+        minAspectRatioForStabilization = Mathf.Max(1f, minAspectRatioForStabilization);
 
         Collider2D col = GetComponent<Collider2D>();
+
         if (col != null)
         {
             col.isTrigger = true;
@@ -131,9 +125,18 @@ public class Liquid2D : MonoBehaviour
 
                 Vector2 pointVelocity = rb.GetPointVelocity(samplePoint);
 
-                Vector2 buoyancyForce = Vector2.up * fluidDensity * sampleArea * gravity * submersionFactor;
+                Vector2 buoyancyForce =
+                    Vector2.up *
+                    fluidDensity *
+                    sampleArea *
+                    gravity *
+                    submersionFactor;
 
-                Vector2 dragForce = -pointVelocity * linearWaterDrag * sampleArea * submersionFactor;
+                Vector2 dragForce =
+                    -pointVelocity *
+                    linearWaterDrag *
+                    sampleArea *
+                    submersionFactor;
 
                 Vector2 totalForce = buoyancyForce + dragForce;
 
@@ -150,10 +153,102 @@ public class Liquid2D : MonoBehaviour
         {
             float submergedRatio = submergedSamples / (float)totalSamples;
 
-            float angularDampingForce = -rb.angularVelocity * angularWaterDrag * submergedRatio;
+            rb.AddTorque(
+                -rb.angularVelocity * angularWaterDrag * submergedRatio,
+                ForceMode2D.Force
+            );
 
-            rb.AddTorque(angularDampingForce, ForceMode2D.Force);
+            if (stabilizeLongObjects)
+            {
+                ApplyLongObjectStabilization(rb, objectCollider, submergedRatio);
+            }
         }
+    }
+
+    private void ApplyLongObjectStabilization(
+        Rigidbody2D rb,
+        Collider2D objectCollider,
+        float submergedRatio)
+    {
+        if (submergedRatio < minSubmergedRatioForStabilization)
+            return;
+
+        Vector2 size = GetApproximateLocalColliderSize(objectCollider);
+
+        float width = Mathf.Max(size.x, 0.001f);
+        float height = Mathf.Max(size.y, 0.001f);
+
+        float aspectRatio = Mathf.Max(width, height) / Mathf.Min(width, height);
+
+        if (aspectRatio < minAspectRatioForStabilization)
+            return;
+
+        float localLongAxisAngle = width >= height ? 0f : 90f;
+
+        float worldLongAxisAngle = rb.rotation + localLongAxisAngle;
+
+        float errorTo0 = Mathf.DeltaAngle(worldLongAxisAngle, 0f);
+        float errorTo180 = Mathf.DeltaAngle(worldLongAxisAngle, 180f);
+
+        float angleError = Mathf.Abs(errorTo0) < Mathf.Abs(errorTo180)
+            ? errorTo0
+            : errorTo180;
+
+        float torque =
+            angleError *
+            stabilizationStrength *
+            submergedRatio *
+            rb.mass
+            -
+            rb.angularVelocity *
+            stabilizationDamping *
+            submergedRatio *
+            rb.mass;
+
+        rb.AddTorque(torque, ForceMode2D.Force);
+    }
+
+    private Vector2 GetApproximateLocalColliderSize(Collider2D col)
+    {
+        if (col is BoxCollider2D box)
+            return box.size;
+
+        if (col is CapsuleCollider2D capsule)
+            return capsule.size;
+
+        if (col is CircleCollider2D circle)
+            return Vector2.one * circle.radius * 2f;
+
+        if (col is PolygonCollider2D polygon)
+        {
+            Bounds localBounds = new Bounds();
+            bool initialized = false;
+
+            for (int p = 0; p < polygon.pathCount; p++)
+            {
+                Vector2[] path = polygon.GetPath(p);
+
+                for (int i = 0; i < path.Length; i++)
+                {
+                    Vector2 point = path[i] + polygon.offset;
+
+                    if (!initialized)
+                    {
+                        localBounds = new Bounds(point, Vector3.zero);
+                        initialized = true;
+                    }
+                    else
+                    {
+                        localBounds.Encapsulate(point);
+                    }
+                }
+            }
+
+            if (initialized)
+                return localBounds.size;
+        }
+
+        return col.bounds.size;
     }
 
     private float GetSurfaceY()
