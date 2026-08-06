@@ -1,0 +1,9 @@
+Boiling2.png
+size:449,375
+filter:Linear,Linear
+pma:true
+splash
+bounds:384,243,130,63
+rotate:90
+splash_anim
+bounds:2,2,380,371
