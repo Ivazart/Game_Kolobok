@@ -53643,7 +53643,6 @@ GameObject:
   - component: {fileID: 1227714465}
   - component: {fileID: 1227714464}
   - component: {fileID: 1227714463}
-  - component: {fileID: 1227714462}
   m_Layer: 0
   m_Name: assets_0000_ground (1)
   m_TagString: swamp
@@ -53651,19 +53650,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1227714462
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1227714461}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d9ec258c3b0bf842a6c4ae5662cc43b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gm: {fileID: 0}
 --- !u!61 &1227714463
 BoxCollider2D:
   m_ObjectHideFlags: 0

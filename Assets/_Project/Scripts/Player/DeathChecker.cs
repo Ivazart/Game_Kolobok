@@ -19,6 +19,7 @@ public class DeathChecker : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("swamp")) 
             gameController.PlayerDeath(deathType: DeathType.Swamp);
-        
+        if (collision.gameObject.CompareTag("poison"))
+            gameController.PlayerDeath(deathType: DeathType.Poison);
     }
 }

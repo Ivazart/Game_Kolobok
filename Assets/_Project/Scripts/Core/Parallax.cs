@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Parallax : MonoBehaviour
 {
-    [SerializeField] private Transform followingTarget;
+    private Transform followingTarget;
     [SerializeField, Range(0f, 1f)] private float ParallaxStrength = 0.1f;
 
     private Vector3 targetPreviousPosition;

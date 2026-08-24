@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &8247638447167846346
+--- !u!1001 &5703401359406032472
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8615835805948290689, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_Name
-      value: Main Camera_Temp_212de7df
+      value: Main Camera_Temp_ff89899a
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
