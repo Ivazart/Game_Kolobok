@@ -2,8 +2,12 @@
 {
     public enum DeathType
     {
+        None,
         Poison,
         Fire,
-        Swamp
+        Swamp,
+        Acid,
+        Infection,
+        Splash
     }
 }

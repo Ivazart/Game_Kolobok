@@ -1,0 +1,13 @@
+Heand.png
+size:575,326
+filter:Linear,Linear
+pma:true
+Heand
+bounds:2,66,393,258
+offsets:6,4,408,272
+circle
+bounds:397,148,176,176
+offsets:1,1,178,178
+line
+bounds:2,2,338,62
+offsets:1,1,340,64

@@ -11,6 +11,9 @@ TagManager:
   - fire
   - Temporal
   - spores
+  - Acid_source
+  - Infection_source
+  - Splash_source
   layers:
   - Default
   - TransparentFX

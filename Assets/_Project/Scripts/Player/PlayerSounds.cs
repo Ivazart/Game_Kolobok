@@ -25,6 +25,9 @@ namespace _Project.Player
                 DeathType.Poison => deathSoundPoison,
                 DeathType.Fire => deathSoundFire,
                 DeathType.Swamp => deathSoundSwamp,
+                DeathType.Infection => deathSoundFire,
+                DeathType.Acid => deathSoundFire,
+                DeathType.Splash => deathSoundFire,
                 _ => throw new ArgumentOutOfRangeException(nameof(deathType), deathType, null)
             };
 

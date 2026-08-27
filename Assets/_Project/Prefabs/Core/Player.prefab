@@ -233,7 +233,8 @@ MonoBehaviour:
   obstacleTags:
   - obstacle
   - stopper
-  cooldown: 2
+  minRelativeVelocity: 0.3
+  soundInterval: 0.2
 --- !u!114 &5764938965690893082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,7 +354,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d247ba06193faa74d9335f5481b2b56c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonAnimation
-  skeletonDataAsset: {fileID: 11400000, guid: 9ae97631470cccf4db21b9da14c62d53, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 71f47df5f2c65b2429d4477c739119b2, type: 2}
   initialSkinName: 
   fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
@@ -406,6 +407,9 @@ MonoBehaviour:
   eyesDown: eyes_down
   eyesUp: eyes_up
   blinking: blinking
+  acidDeath: acid
+  infectionDeath: infection
+  splashDeath: splash
 --- !u!1 &4972564144116689363
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,7 +478,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4f4e8b5235febbf4bab1f4bbf98f091e, type: 2}
+  - {fileID: 2100000, guid: 13d7a612c038a9545a6ee90096bb2cc6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

@@ -22,6 +22,9 @@ namespace _Project.Player
         [SerializeField] private string eyesDown;
         [SerializeField] private string eyesUp;
         [SerializeField] private string blinking;
+        [SerializeField] private string acidDeath;
+        [SerializeField] private string infectionDeath;
+        [SerializeField] private string splashDeath;
         
         private bool idleStart = false;
         private string[] idleAnimations = { "idle", "static2" };
@@ -60,6 +63,9 @@ namespace _Project.Player
                 DeathType.Poison => deathPoison,
                 DeathType.Fire => deathFire,
                 DeathType.Swamp => deathPoison,
+                DeathType.Acid => acidDeath,
+                DeathType.Infection => infectionDeath,
+                DeathType.Splash => splashDeath,
                 _ => deathPoison
             };
             if (deathType == DeathType.Swamp)
