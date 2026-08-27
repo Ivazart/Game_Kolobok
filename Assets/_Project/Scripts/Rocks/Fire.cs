@@ -9,10 +9,10 @@ public class Fire : MonoBehaviour
 
     private void OnParticleCollision(GameObject other)
     {
-        if (other.CompareTag("Player"))
+        /*if (other.CompareTag("Player"))
         {
             fire = other.GetComponent<FireD>();
             fire.Burned();
-        }
+        }*/
     }
 }

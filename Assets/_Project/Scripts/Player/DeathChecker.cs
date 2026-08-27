@@ -29,6 +29,11 @@ public class DeathChecker : MonoBehaviour
         SendDeathType(collision.gameObject.tag);
     }
 
+    private void OnParticleCollision(GameObject other)
+    {
+        SendDeathType(other.gameObject.tag);
+    }
+
     private void SendDeathType(string Tag)
     {
         var tag = DeathTags.None;
@@ -51,6 +56,9 @@ public class DeathChecker : MonoBehaviour
         };
 
         if (type != DeathType.None)
+        {
+            Debug.Log($"Death from tag: {Tag}");
             gameController.PlayerDeath(type);
+        }
     }
 }
