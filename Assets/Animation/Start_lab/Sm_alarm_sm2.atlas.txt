@@ -1,0 +1,9 @@
+Sm_alarm_sm2.png
+size:194,101
+filter:Linear,Linear
+pma:true
+alarm_symbol2
+bounds:2,2,97,105
+rotate:90
+text
+bounds:109,3,83,96

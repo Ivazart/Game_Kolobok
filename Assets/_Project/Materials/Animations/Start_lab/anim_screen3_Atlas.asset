@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   textureLoadingMode: 0
   onDemandTextureLoader: {fileID: 0}
-  atlasFile: {fileID: 4900000, guid: 7f0790158ef2e054ba046cf6e90c0a0a, type: 3}
+  atlasFile: {fileID: 4900000, guid: 7e7df1deba26f2440aea297f1deeb746, type: 3}
   materials:
-  - {fileID: 2100000, guid: 76d2192a5d08e62498466f535b6de3b0, type: 2}
+  - {fileID: 2100000, guid: 9bf24808d4c433349ae761f542fb0806, type: 2}
