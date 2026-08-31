@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace _Project.Player
 {
+    [RequireComponent(typeof(CollisionLogic))]
     public class ObstacleCollisionSound : MonoBehaviour
     {
         [Serializable]
@@ -21,7 +22,8 @@ namespace _Project.Player
         
         private int remainingSounds = 3;          // сколько звуков ещё можно проиграть после текущего прыжка
         private float lastSoundTime = -10f;       // время последнего проигранного звука столкновения
-
+        private CollisionLogic collision;
+        
         // Громкости: 1-й звук -> 1f, 2-й -> 0.5f, 3-й -> 0.2f
         private static readonly float[] Volumes = { 1f, 0.5f, 0.2f };
         private GameController gameController => GameController.Instance;
@@ -30,8 +32,10 @@ namespace _Project.Player
 
         private void Start()
         {
+            collision = GetComponent<CollisionLogic>();
             gameController.OnDragEnded += OnJump;
             gameController.OnPlayerDeath += OnDeath;
+            collision.OnEnterPlayerSolidEnemySolid += CollisionEnterHandler;
         }
 
         private void OnDestroy()
@@ -54,12 +58,14 @@ namespace _Project.Player
             remainingSounds = 3;
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void CollisionEnterHandler(CollisionEventData data)
         {
-            if (collision.relativeVelocity.magnitude < minRelativeVelocity)
+            Collision2D collisionData = data.FullCollision;
+            
+            if (collisionData.relativeVelocity.magnitude < minRelativeVelocity)
                 return;
 
-            if (!HasObstacleTag(collision.gameObject))
+            if (!HasObstacleTag(collisionData.gameObject))
                 return;
 
             // Проверяем, не слишком ли часто

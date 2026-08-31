@@ -6,6 +6,7 @@ using Global;
 
 namespace _Project.Player
 {
+    [RequireComponent(typeof(CollisionLogic))]
     [RequireComponent(typeof(Rigidbody2D))]
     public class MovementDetector : MonoBehaviour
     {
@@ -17,11 +18,15 @@ namespace _Project.Player
         private float movementThreshold = 0.1f;
         private Rigidbody2D rb;
         private CancellationTokenSource cts = new();
+        private CollisionLogic collision;
         
         private void Awake()
         {
             rb = GetComponent<Rigidbody2D>();
+            collision = GetComponent<CollisionLogic>();
             UniTaskUtils.RunWithCancellationAsync(CheckMovement, cts.Token).Forget();
+            collision.OnEnterPlayerTrigger += TriggerEnterHandler;
+            collision.OnExitPlayerTrigger += TriggerExitHandler;
         }
 
         private async UniTask CheckMovement(CancellationToken cancellationToken)
@@ -43,8 +48,9 @@ namespace _Project.Player
             return rb.linearVelocity.sqrMagnitude > movementThreshold * movementThreshold;
         }
 
-        private void OnTriggerEnter2D(Collider2D trig)
+        private void TriggerEnterHandler(CollisionEventData data)
         {
+            Collider2D trig = data.OtherCollider;
             if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
             {
                 isGrounded = true;
@@ -53,14 +59,15 @@ namespace _Project.Player
             }
         }
         
-        private void OnTriggerExit2D(Collider2D trig)
+        private void TriggerExitHandler(CollisionEventData data)
         {
+            Collider2D trig = data.OtherCollider;
             if (trig.gameObject.CompareTag("obstacle") || trig.gameObject.CompareTag("stopper"))
             {
                 isGrounded = false;
             }
         }
-        
+
         private void OnDestroy()
         {
             cts.Cancel();

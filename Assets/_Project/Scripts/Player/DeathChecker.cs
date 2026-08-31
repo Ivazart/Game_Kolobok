@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using Global;
 using UnityEngine;
 
+[RequireComponent(typeof(CollisionLogic))]
 public class DeathChecker : MonoBehaviour
 {
     private GameController gameController => GameController.Instance;
+    private CollisionLogic collision;
 
     private enum DeathTags
     {
@@ -18,32 +20,35 @@ public class DeathChecker : MonoBehaviour
         Infection_source,
         Splash_source
     }
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    
+    private void Awake()
     {
-        SendDeathType(collision.gameObject.tag);
+        collision = GetComponent<CollisionLogic>();
+        collision.OnEnterPlayerSolidEnemySolid += OnCollision;
+        collision.OnEnterPlayerSolidEnemyTrigger += OnCollision;
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollision(CollisionEventData data)
     {
-        SendDeathType(collision.gameObject.tag);
+        string enemyTag = data.OtherCollider.tag;
+        SendDeathType(enemyTag);
     }
-
+    
     private void OnParticleCollision(GameObject other)
     {
         SendDeathType(other.gameObject.tag);
     }
 
-    private void SendDeathType(string Tag)
+    private void SendDeathType(string enemyTag)
     {
-        var tag = DeathTags.None;
+        var deathTags = DeathTags.None;
         foreach (DeathTags value in Enum.GetValues(typeof(DeathTags)))
         {
-            if (Tag.Equals(value.ToString()))
-                tag = value;
+            if (enemyTag.Equals(value.ToString()))
+                deathTags = value;
         }
 
-        DeathType type = tag switch
+        DeathType type = deathTags switch
         {
             DeathTags.None => DeathType.None,
             DeathTags.poison => DeathType.Poison,
@@ -57,7 +62,7 @@ public class DeathChecker : MonoBehaviour
 
         if (type != DeathType.None)
         {
-            Debug.Log($"Death from tag: {Tag}");
+            Debug.Log($"Death from tag: {enemyTag}");
             gameController.PlayerDeath(type);
         }
     }
