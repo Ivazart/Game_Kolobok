@@ -25,11 +25,19 @@ public class DeathChecker : MonoBehaviour
     {
         collision = GetComponent<CollisionLogic>();
         collision.OnEnterPlayerSolidEnemySolid += OnCollision;
-        collision.OnEnterPlayerSolidEnemyTrigger += OnCollision;
+        collision.OnEnterPlayerSolidEnemyTrigger += OnCollision2;
     }
 
     private void OnCollision(CollisionEventData data)
     {
+        Debug.Log($"Death from solid {data.OtherCollider.gameObject.name}");
+        string enemyTag = data.OtherCollider.tag;
+        SendDeathType(enemyTag);
+    }
+    
+    private void OnCollision2(CollisionEventData data)
+    {
+        Debug.Log($"Death from trigger {data.OtherCollider.gameObject.name}");
         string enemyTag = data.OtherCollider.tag;
         SendDeathType(enemyTag);
     }

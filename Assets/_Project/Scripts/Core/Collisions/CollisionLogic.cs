@@ -13,6 +13,7 @@ public class CollisionLogic : MonoBehaviour
     public event Action<CollisionEventData> OnExitPlayerTrigger;
     public event Action<CollisionEventData> OnEnterPlayerTrigger;
     
+    private enum HeroColliderRole { Unspecified, OuterTrigger, InnerCollider }
     
     private void OnEnable()
     {
@@ -35,14 +36,15 @@ public class CollisionLogic : MonoBehaviour
     {
         if (data.Phase == CollisionPhase.Stay) return;
 
-        string role = data.SelfCollider.name;
-        bool isOuter = role == "OuterTrigger";
-        bool isInner = role == gameObject.name; // Player(Clone)
+        var role = ResolveRole(data.SelfCollider.name);
+        bool isOuter = role == HeroColliderRole.OuterTrigger;
+        bool isInner = role == HeroColliderRole.InnerCollider;
+        
         bool otherIsTrigger = data.OtherCollider != null && data.OtherCollider.isTrigger;
 
         if (isOuter && data.Kind == CollisionKind.Trigger && !otherIsTrigger)
         {
-            //Debug.Log("1. внешний trigger + вражеский solid");
+//            Debug.Log($"1. внешний trigger + вражеский solid {data.OtherCollider.gameObject.name}");
             if (data.Phase == CollisionPhase.Enter)
             {
                 OnEnterPlayerTriggerEnemySolid?.Invoke(data);
@@ -53,13 +55,13 @@ public class CollisionLogic : MonoBehaviour
         }
         else if (isInner && data.Kind == CollisionKind.Collision)
         {
-            //Debug.Log("2. внутренний solid + вражеский solid");
+   //         Debug.Log($"2. внутренний solid + вражеский solid {data.OtherCollider.gameObject.name}");
             if (data.Phase == CollisionPhase.Enter)
                 OnEnterPlayerSolidEnemySolid?.Invoke(data);
         }
         else if (isOuter && data.Kind == CollisionKind.Trigger && otherIsTrigger)
         {
-            //Debug.Log("3. внешний trigger + вражеский trigger");
+     //       Debug.Log($"3. внешний trigger + вражеский trigger {data.OtherCollider.gameObject.name}");
             if (data.Phase == CollisionPhase.Enter)
             {
                 OnEnterPlayerTriggerEnemyTrigger?.Invoke(data);
@@ -70,9 +72,23 @@ public class CollisionLogic : MonoBehaviour
         }
         else if (isInner && data.Kind == CollisionKind.Trigger && otherIsTrigger)
         {
-            //Debug.Log("4. внутренний solid + вражеский trigger");
+     //       Debug.Log($"4. внутренний solid + вражеский trigger {data.OtherCollider.gameObject.name}");
             if (data.Phase == CollisionPhase.Enter)
                 OnEnterPlayerSolidEnemyTrigger?.Invoke(data);
+        }
+    }
+    
+    private HeroColliderRole ResolveRole(string selfName)
+    {
+        switch (selfName)
+        {
+            case nameof(HeroColliderRole.OuterTrigger): return HeroColliderRole.OuterTrigger;
+            case nameof(HeroColliderRole.InnerCollider): return HeroColliderRole.InnerCollider;
+            default:
+                Debug.LogWarning(
+                    $"[HeroLogic] Имя коллайдера \"{selfName}\" не совпадает ни с одной известной ролью героя " +
+                    $"(\"{nameof(HeroColliderRole.OuterTrigger)}\" / \"{nameof(HeroColliderRole.InnerCollider)}\").", this);
+                return HeroColliderRole.Unspecified;
         }
     }
 }
