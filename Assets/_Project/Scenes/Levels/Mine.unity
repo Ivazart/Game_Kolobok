@@ -39413,11 +39413,6 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!1 &1633331359 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2762440852797028530, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
-  m_PrefabInstance: {fileID: 8747797730645604725}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1647211871
 GameObject:
   m_ObjectHideFlags: 0
@@ -47228,30 +47223,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 8693591773043332669}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1816034821
+--- !u!114 &1816034822 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 5018322614646241959, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
+  m_PrefabInstance: {fileID: 8747797730645604725}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633331359}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1239a6ee9a644cdfbebc545b8f0c6bb1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Global::_Project.Core.CameraController.CameraMove
-  damping: 1
-  speedInfluence: 0.1
-  distanceInfluence: 0.05
-  minSmoothTime: 0.4
-  maxSmoothTime: 1.5
-  verticalSmoothTime: 0.4
-  offset: {x: 0, y: 0}
-  offsetYForGroundVision: 1
-  targetWorldWidth: 19.2
-  adjustCameraSize: 1
-  startMarker: {fileID: 0}
-  finishMarker: {fileID: 0}
+  m_EditorClassIdentifier: Global::_Project.Core.Camera.CameraMove
 --- !u!1 &1832888546
 GameObject:
   m_ObjectHideFlags: 0
@@ -52772,7 +52754,7 @@ PrefabInstance:
     - target: {fileID: 4363692980464247225, guid: 48644e54491f0a541b558a5dce98c989, type: 3}
       propertyPath: cameraMove
       value: 
-      objectReference: {fileID: 1816034821}
+      objectReference: {fileID: 1816034822}
     - target: {fileID: 4363692980464247225, guid: 48644e54491f0a541b558a5dce98c989, type: 3}
       propertyPath: checkpointList
       value: 
@@ -54052,7 +54034,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2088503977443893324, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 2088503977443893324, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
       propertyPath: m_LocalRotation.w
@@ -54110,10 +54092,7 @@ PrefabInstance:
     - {fileID: 7900416162251606567, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 2762440852797028530, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1816034821}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 41e1238855efac2409c8c988e6c0a9cd, type: 3}
 --- !u!114 &8870011759185740413
 MonoBehaviour:
