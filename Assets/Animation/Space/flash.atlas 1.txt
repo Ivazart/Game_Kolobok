@@ -1,0 +1,8 @@
+flash.png
+size:825,405
+filter:Linear,Linear
+pma:true
+glow
+bounds:2,85,821,318
+rocket
+bounds:2,2,773,81
