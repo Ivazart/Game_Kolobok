@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5565440993715912319}
   - component: {fileID: 3744610981228947593}
   - component: {fileID: 5829761280132698650}
-  - component: {fileID: 4351703134026781716}
+  - component: {fileID: 1469045949338854548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -93,7 +93,7 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8615835805948290689}
   m_Enabled: 1
---- !u!114 &4351703134026781716
+--- !u!114 &1469045949338854548
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -102,15 +102,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8615835805948290689}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f77148500c4aafd41846c3be886126de, type: 3}
+  m_Script: {fileID: 11500000, guid: 1239a6ee9a644cdfbebc545b8f0c6bb1, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  damping: 0.8
+  m_EditorClassIdentifier: Global::_Project.Core.Camera.CameraMove
+  damping: 1.2
   speedInfluence: 0.1
   distanceInfluence: 0.05
-  minSmoothTime: 0.5
-  maxSmoothTime: 2
-  verticalSmoothTime: 0.5
-  liftZones: []
-  offset: {x: -5, y: 0}
+  minSmoothTime: 0.4
+  maxSmoothTime: 1.5
+  verticalSmoothTime: 0.35
+  offset: {x: 0, y: 0}
   offsetYForGroundVision: 1
+  targetWorldWidth: 19.2
+  adjustCameraSize: 1
+  startMarker: {fileID: 0}
+  finishMarker: {fileID: 0}

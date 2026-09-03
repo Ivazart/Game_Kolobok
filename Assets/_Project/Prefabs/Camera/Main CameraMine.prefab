@@ -50,9 +50,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8615835805948290689, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_Name
-      value: Main Camera_Temp_174930d4
+      value: Main CameraMine
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 4351703134026781716, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
