@@ -25,9 +25,13 @@ namespace _Project.Core.Camera
         public Mode mode = Mode.Horizontal;
 
         [Header("Horizontal")]
+        [Tooltip("Смещение по Y относительно позиции зоны.")]
         public float fixedY = 0f;
 
         [Header("Elevator")]
+        [Tooltip("Точка, к которой камера должна прийти по X. Если не задана, используется X зоны.")]
+        public Transform elevatorXMarker;
+        [Tooltip("Устарело: теперь X берётся из маркера или позиции зоны.")]
         public bool lockXOnEnter = true;
 
         [Header("Slope")]
@@ -74,13 +78,17 @@ namespace _Project.Core.Camera
                 case Mode.Horizontal:
                     state.followX = true;
                     state.followY = false;
-                    state.targetY = fixedY;
+                    state.targetY = transform.position.y + fixedY;
                     break;
 
                 case Mode.Elevator:
                     state.followX = false;
                     state.followY = true;
-                    state.targetX = lockedX;
+                    // X берём из маркера, если он есть, иначе из позиции зоны
+                    float targetX = elevatorXMarker != null 
+                        ? elevatorXMarker.position.x 
+                        : transform.position.x;
+                    state.targetX = targetX;
                     state.targetY = playerPos.y;
                     break;
 
@@ -105,7 +113,7 @@ namespace _Project.Core.Camera
                     {
                         state.followX = true;
                         state.followY = false;
-                        state.targetY = fixedY;
+                        state.targetY = transform.position.y + fixedY;
                     }
                     break;
             }
@@ -148,12 +156,10 @@ namespace _Project.Core.Camera
             Vector2 a = startMarker.position;
             Vector2 b = endMarker.position;
 
-            // Защита от горизонтальной линии (Slope не поддерживает горизонталь)
             float dy = b.y - a.y;
             if (Mathf.Abs(dy) < 0.0001f)
                 return false;
 
-            // Прогресс по вертикали: Y игрока соответствует Y центра платформы
             float rawT = (pos.y - a.y) / dy;
 
             if (rawT < -projectionPadding || rawT > 1f + projectionPadding)
@@ -161,7 +167,6 @@ namespace _Project.Core.Camera
 
             t = Mathf.Clamp01(rawT);
 
-            // Горизонтальное отклонение от линии (из-за ходьбы по платформе)
             float lineX = Mathf.Lerp(a.x, b.x, t);
             return Mathf.Abs(pos.x - lineX) <= halfWidth;
         }
@@ -180,6 +185,8 @@ namespace _Project.Core.Camera
                 DrawSlopeGizmo(true);
             else if (mode == Mode.Fixed)
                 DrawFixedCameraGizmo();
+            else if (mode == Mode.Elevator)
+                DrawElevatorGizmo();
         }
 
         private void DrawSlopeGizmo(bool selected)
@@ -190,7 +197,6 @@ namespace _Project.Core.Camera
             Vector2 a = startMarker.position;
             Vector2 b = endMarker.position;
 
-            // Горизонтальный коридор: линии, параллельные исходной, смещённые по X
             Vector2 aRight = new Vector2(a.x + halfWidth, a.y);
             Vector2 aLeft  = new Vector2(a.x - halfWidth, a.y);
             Vector2 bRight = new Vector2(b.x + halfWidth, b.y);
@@ -204,16 +210,13 @@ namespace _Project.Core.Camera
                 ? Color.yellow
                 : new Color(1f, 1f, 0f, 0.7f);
 
-            // Основная линия
             Handles.DrawAAPolyLine(3f, a, b);
 
-            // Границы горизонтального коридора
             Handles.DrawAAPolyLine(2f, aRight, bRight);
             Handles.DrawAAPolyLine(2f, aLeft, bLeft);
             Handles.DrawAAPolyLine(2f, aRight, aLeft);
             Handles.DrawAAPolyLine(2f, bRight, bLeft);
 
-            // Заливка коридора
             Color fill = new Color(1f, 1f, 0f, selected ? 0.18f : 0.08f);
             Handles.DrawSolidRectangleWithOutline(
                 new Vector3[] { aRight, bRight, bLeft, aLeft },
@@ -230,9 +233,8 @@ namespace _Project.Core.Camera
                 ? (Vector2)fixedCameraMarker.position 
                 : (Vector2)transform.position;
 
-            // Получаем размеры камеры (если есть CameraMove в сцене)
-            float halfHeight = 5f; // запасное значение
-            float halfWidth = halfHeight * 1.777f; // 16:9
+            float halfHeight = 5f;
+            float halfWidth = halfHeight * 1.777f;
 
             var camMove = FindFirstObjectByType<CameraMove>();
             if (camMove != null)
@@ -252,6 +254,17 @@ namespace _Project.Core.Camera
             Gizmos.DrawWireCube(center, size);
 
             Handles.Label(center + Vector3.up * (halfHeight + 0.3f), "Fixed Camera");
+        }
+
+        private void DrawElevatorGizmo()
+        {
+            float x = elevatorXMarker != null ? elevatorXMarker.position.x : transform.position.x;
+            Vector3 p1 = new Vector3(x, transform.position.y - 5f, 0f);
+            Vector3 p2 = new Vector3(x, transform.position.y + 5f, 0f);
+
+            Gizmos.color = Color.green;
+            Handles.DrawAAPolyLine(3f, p1, p2);
+            Handles.Label(new Vector3(x, transform.position.y + 5.5f, 0f), "Elevator X");
         }
 
 #endif

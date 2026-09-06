@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &5703401359406032472
+--- !u!1001 &193383781466103298
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -10,11 +10,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5565440993715912319, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 397.57016
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5565440993715912319, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -5.10284
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5565440993715912319, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -50,7 +50,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8615835805948290689, guid: 024332b2c6eb77449ae8cf73f4118e8c, type: 3}
       propertyPath: m_Name
-      value: Main Camera_Temp_ff89899a
+      value: Main Camera
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

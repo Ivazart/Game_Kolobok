@@ -43,8 +43,6 @@ namespace _Project.Core.Camera
         private float cameraHalfWidth;
         private float baseCameraY;
 
-        private float lockedElevatorX;
-
         private readonly List<ActiveArea> activeAreas = new();
 
         private struct ActiveArea
@@ -105,15 +103,14 @@ namespace _Project.Core.Camera
 
             if (useCustom)
             {
-                // Полностью полагаемся на кастомную экранную позицию
-                CameraState state = area.Evaluate(player.position, lockedElevatorX,
+                CameraState state = area.Evaluate(player.position, 0f,
                     cam.orthographicSize, cameraHalfWidth);
                 targetX = state.targetX;
                 targetY = state.targetY;
             }
             else if (area != null)
             {
-                CameraState state = area.Evaluate(player.position, lockedElevatorX,
+                CameraState state = area.Evaluate(player.position, 0f,
                     cam.orthographicSize, cameraHalfWidth);
 
                 if (!state.followX)
@@ -214,9 +211,6 @@ namespace _Project.Core.Camera
                 area = area,
                 enterOrder = ++enterCounter
             });
-
-            if (area.mode == CameraArea.Mode.Elevator && area.lockXOnEnter)
-                lockedElevatorX = transform.position.x;
         }
 
         public void ExitArea(CameraArea area)

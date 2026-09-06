@@ -12,7 +12,8 @@
             SceneName.Rocks2,
             SceneName.Swamp,
             SceneName.Swamp2,
-            SceneName.Mine
+            SceneName.Mine,
+            SceneName.MineFinal
         };
 
         /// <summary>

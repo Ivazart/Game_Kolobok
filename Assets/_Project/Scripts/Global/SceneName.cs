@@ -9,6 +9,7 @@
         Swamp,
         Swamp2,
         Mine,
+        MineFinal,
         ResumeGameScene,
         LoadingScene,
         SelectStageScene
