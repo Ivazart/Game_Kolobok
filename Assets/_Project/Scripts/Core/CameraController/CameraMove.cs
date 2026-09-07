@@ -44,6 +44,7 @@ namespace _Project.Core.Camera
         private float baseCameraY;
 
         private readonly List<ActiveArea> activeAreas = new();
+        private CameraArea lastArea; // последняя зона, в которой был игрок
 
         private struct ActiveArea
         {
@@ -95,6 +96,8 @@ namespace _Project.Core.Camera
         private void MoveCamera(bool instant = false)
         {
             CameraArea area = GetCurrentArea();
+            if (area == null)
+                area = lastArea; // используем последнюю зону, если ни одна не активна
 
             float targetX = player.position.x - offset.x;
             float targetY = baseCameraY;
@@ -206,6 +209,10 @@ namespace _Project.Core.Camera
             if (activeAreas.Exists(a => a.area == area))
                 return;
 
+            // Если это первая активная зона, запоминаем её как последнюю
+            if (activeAreas.Count == 0)
+                lastArea = area;
+
             activeAreas.Add(new ActiveArea
             {
                 area = area,
@@ -215,7 +222,14 @@ namespace _Project.Core.Camera
 
         public void ExitArea(CameraArea area)
         {
+            if (area == null)
+                return;
+
             activeAreas.RemoveAll(a => a.area == area);
+
+            // Если активных зон не осталось, фиксируем последнюю зону
+            if (activeAreas.Count == 0)
+                lastArea = area;
         }
     }
 }
