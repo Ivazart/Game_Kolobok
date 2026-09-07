@@ -5149,9 +5149,69 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1439259169015913714, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.13
+      objectReference: {fileID: 0}
+    - target: {fileID: 1439259169015913714, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 14.24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2048028119382383412, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 13.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 3931893744736455840, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3987919503100972543, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
       propertyPath: m_Name
       value: CameraAreas_mineFinal
+      objectReference: {fileID: 0}
+    - target: {fileID: 4873982287419135345, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 9.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 4873982287419135345, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 22.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5353490978503460165, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6368816244301000178, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -13.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6942125668913207011, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_Size.x
+      value: 41.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 6942125668913207011, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_Size.y
+      value: 7.64
+      objectReference: {fileID: 0}
+    - target: {fileID: 6995461364794909690, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: playerScreenPosition.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7962811796198745148, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7962811796198745148, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: playerScreenPosition.x
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 8053046002528538917, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_Size.x
+      value: 33.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8053046002528538917, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: m_Size.y
+      value: 48.2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5166,26 +5226,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
-      propertyPath: startMarker
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
-      propertyPath: finishMarker
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
-      propertyPath: liftZones.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
-      propertyPath: offsetYForGroundVision
-      value: 20.39
-      objectReference: {fileID: 0}
-    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
-      propertyPath: 'liftZones.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 5734035183587205245, guid: 17992739a2daff7438eefdfabe397f93, type: 3}
       propertyPath: m_LocalPosition.x
       value: 397.57016
@@ -5229,6 +5269,26 @@ PrefabInstance:
     - target: {fileID: 8448348839537571971, guid: 17992739a2daff7438eefdfabe397f93, type: 3}
       propertyPath: m_Name
       value: Main CameraMineFinal
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
+      propertyPath: startMarker
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
+      propertyPath: finishMarker
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
+      propertyPath: liftZones.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
+      propertyPath: offsetYForGroundVision
+      value: 20.39
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461031137781716797, guid: a097fd66c944bf74d89bbc3bb184affd, type: 3}
+      propertyPath: 'liftZones.Array.data[0]'
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
