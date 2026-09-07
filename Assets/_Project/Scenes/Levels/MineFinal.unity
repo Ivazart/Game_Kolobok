@@ -5202,6 +5202,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7962811796198745148, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
+      propertyPath: fixedY
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7962811796198745148, guid: 92da3b3ddccfa41408f97ddee23e014d, type: 3}
       propertyPath: playerScreenPosition.x
       value: 0.75
       objectReference: {fileID: 0}

@@ -39,6 +39,8 @@ namespace _Project.Core.Camera
         public Transform endMarker;
         public float halfWidth = 2f;
         public float projectionPadding = 0.05f;
+        [Tooltip("Смещение по Y относительно последней валидной позиции Slope, используется при выходе из коридора.")]
+        public float slopeFallbackYOffset = 0f; // необязательно, можно оставить 0
 
         [Header("Fixed")]
         [Tooltip("Если не задан, используется позиция самой зоны.")]
@@ -49,11 +51,13 @@ namespace _Project.Core.Camera
         [Tooltip("Положение игрока на экране (0..1). 0.5 – центр.")]
         public Vector2 playerScreenPosition = new Vector2(0.5f, 0.5f);
 
+        private float lastValidSlopeY; // последняя валидная Y для Slope
+        private bool hasLastValidSlopeY = false;
+
         private void Reset()
         {
             GetComponent<BoxCollider2D>().isTrigger = true;
 
-            // Автосоздание маркера для Fixed-режима
             if (fixedCameraMarker == null)
             {
                 Transform existing = transform.Find("FixedCameraMarker");
@@ -84,7 +88,6 @@ namespace _Project.Core.Camera
                 case Mode.Elevator:
                     state.followX = false;
                     state.followY = true;
-                    // X берём из маркера, если он есть, иначе из позиции зоны
                     float targetX = elevatorXMarker != null 
                         ? elevatorXMarker.position.x 
                         : transform.position.x;
@@ -107,13 +110,21 @@ namespace _Project.Core.Camera
                     {
                         state.followX = true;
                         state.followY = false;
-                        state.targetY = Mathf.Lerp(startMarker.position.y, endMarker.position.y, t);
+                        float newY = Mathf.Lerp(startMarker.position.y, endMarker.position.y, t);
+                        state.targetY = newY;
+                        // сохраняем как последнюю валидную
+                        lastValidSlopeY = newY;
+                        hasLastValidSlopeY = true;
                     }
                     else
                     {
                         state.followX = true;
                         state.followY = false;
-                        state.targetY = transform.position.y + fixedY;
+                        // если есть сохранённое значение, используем его, иначе fallback
+                        if (hasLastValidSlopeY)
+                            state.targetY = lastValidSlopeY;
+                        else
+                            state.targetY = transform.position.y + fixedY + slopeFallbackYOffset;
                     }
                     break;
             }
